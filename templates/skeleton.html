@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+    <head>
+        {% block head %}
+        <meta charset="utf-8" />
+        <title>{% block title %}{% endblock %} - Smear Blood Project</title>
+        {% endblock %}
+    </head>
+        <body>
+            <header>
+                {% block header %}
+                Header
+                {% endblock %}
+            </header>
+            <nav>
+                Nav
+            </nav>
+            <section id="content">
+                {% block content %}
+                <article>
+                    Article
+                </article>
+                {% endblock %}
+            </section>
+            <aside>
+                {% block aside %}
+                Aside
+                {% endblock %}
+            </aside>
+            <footer>
+                {% block footer %}
+                Footer
+                {% endblock %}
+            </footer>
+  </body>
+</html>
