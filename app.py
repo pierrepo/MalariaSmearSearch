@@ -1,5 +1,9 @@
 from flask import Flask
+import config
+
 app = Flask(__name__)
+app.config.from_object('config.DevelopmentConfig')
+
 
 @app.route("/")
 def main():
@@ -7,7 +11,6 @@ def main():
     Define the basic route / and its corresponding request handler
     """
     return "Welcome!"
-
 
 
 
