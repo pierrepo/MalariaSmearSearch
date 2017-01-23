@@ -21,6 +21,15 @@ class User(db.Model):
         'autoload_with': db.engine
     }
 
+    def __repr__(self):
+        return 'User : %r , email = %r, password = %r, level = %r, institution = %r' %  (
+            self.username , 
+            self.email, 
+            self.password , 
+            self.level, 
+            self.institution 
+        )
+
 
 @app.route("/")
 def main():
