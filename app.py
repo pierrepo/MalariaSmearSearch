@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 import config
 
 app = Flask(__name__)
@@ -10,8 +10,7 @@ def main():
     """
     Define the basic route / and its corresponding request handler
     """
-    return "Welcome!"
-
+    return render_template('index.html')
 
 
 if __name__ == "__main__":
