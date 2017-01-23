@@ -1,0 +1,62 @@
+{% extends "skeleton.html" %}
+
+{% block title %}Account page{% endblock %}
+
+{% block content %}
+    <h1>self.title()</h1>
+
+
+    <h2>Change Email address </h2>
+
+    <form action="">
+        <input type="text" name="email" id="email" />
+        <label for="email">Change Email Address</label>
+
+        <input type="submit" name="change-email-submit" id="change-email-submit" value="Change Email" class="button" />
+
+    </form>
+
+
+    <hr />
+
+    <h2>Change Username </h2>
+
+    <form action="">
+        <input type="text" name="username" id="username" />
+        <label for="username">Change Username</label>
+
+        <input type="submit" name="change-username-submit" id="change-username-submit" value="Change Username" class="button" />
+
+    </form>
+
+
+
+    <hr />
+
+    <h2>Change Password</h2>
+
+    <form action="#">
+        <div>
+            <input type="password" id="new-password" />
+            <label for="password">New Password</label>
+
+            <input type="password" id="repeat-new-password" />
+            <label for="repeat-new-password">Repeat New Password</label>
+
+            <input type="submit" name="change-password-submit" id="change-password-submit" value="Change Password" class="button" />
+        </div>
+    </form>
+
+
+    <hr />
+
+    <h2>Delete Account</h2>
+
+    <form action="" id="delete-account-form">
+
+        <input type="submit" name="delete-account-submit" id="delete-account-submit" value="Delete Account?" class="button" />
+
+    </form>
+
+
+{% endblock %}
