@@ -1,8 +1,25 @@
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+
+
 import config
 
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
+
+
+db = SQLAlchemy(app)
+
+# Table already exist, so do not redefine it and just
+# load them from the database using the "autoload" feature.
+
+class User(db.Model):
+    __tablename__ = 'tbl_user'
+    __table_args__ = {
+        'autoload': True,
+        #'schema': 'test.db',
+        'autoload_with': db.engine
+    }
 
 
 @app.route("/")
