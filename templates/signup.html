@@ -5,14 +5,26 @@
 {% block content %}
     <h1>self.title()</h1>
 
-    You will receive an email to signup
+    You will receive an email to complete registration
 
-    <form action="">
-        <input type="text" name="email" id="email" />
-        <label for="email">Email Address</label>
 
-        <input type="submit" name="submit" id="submit" value="" class="button" />
 
+    {% if form.errors %}
+        <p class="error"><strong>Unable to register. See error messages below.</strong>
+    {% endif %}
+    
+    {% from "_formhelpers.html" import render_field %}
+    <form method="POST" action="">
+      <dl>
+      
+        {{ render_field(form.username) }}
+        {{ render_field(form.email) }}
+        {{ render_field(form.password) }}
+        {{ render_field(form.confirm) }}
+        {{ render_field(form.accept_tos) }}
+        <dd>{{ form.submit }}</dd>
+      </dl>
+      {{ form.hidden_tag() }}
     </form>
 
 
