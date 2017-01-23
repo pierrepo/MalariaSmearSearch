@@ -11,7 +11,7 @@ CREATE TABLE tbl_user (
   'username' VARCHAR(45) PRIMARY KEY ,
   'email' VARCHAR(45) NULL,
   'password' VARCHAR(45) NULL,
-  'level' REFERENCES tbl_level(name), 
+  'level' DEFAULT 'technician' REFERENCES tbl_level(name), 
   'institution'  VARCHAR(45) NULL
 );
   
