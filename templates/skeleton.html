@@ -10,6 +10,15 @@
             <header>
                 {% block header %}
                 Header
+                <div id="control">
+
+                    {% if not session.logged_in %} <!-- IF LOGGED OUT -->
+                        <a class="button" href="{{ url_for('signup') }}">Sign up</a>&nbsp;<a class="button" href="{{ url_for('login') }}">Log in</a>
+                    {% else %} <!-- IF LOGGED IN -->
+                        <a class="button" href="{{ url_for('logout') }}">Log Out</a>&nbsp;<a class="button" href="{{ url_for('account') }}">Your Account</a>
+                    {% endif %} <!-- END OF IF STATEMENT -->
+
+                </div>
                 {% endblock %}
             </header>
             <nav>
