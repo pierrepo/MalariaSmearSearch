@@ -4,6 +4,10 @@ from flask_sqlalchemy import SQLAlchemy
 
 import config
 
+
+from forms import RegisterForm
+
+
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
 
@@ -38,11 +42,43 @@ def main():
     """
     return render_template('index.html')
 
-@app.route("/signup")
+@app.route("/signup", methods = ['GET', 'POST'])
 def signup():
     """
     """
-    return render_template('signup.html')
+    form = RegisterForm()
+    if form.validate_on_submit() :
+        okay = True
+        #-----
+        # TODO : check provided data in request.form['tag'], flash (u 'msg', 'error') if pb : 
+
+        # username not already use, 
+
+        # password is secure enough
+        
+        # email adress okay
+
+        if okay : 
+            # TODO : send confirmation email
+
+            # save the guy
+            new_user = User()
+            form.populate_obj(new_user)
+            print (new_user)
+            print (form)
+
+
+            try :
+                db.session.add(new_user)
+                db.session.commit()
+                print('New user added to database')
+            except Exception, e:
+                print (e)
+                db.session.rollback()
+                print('An error occurred accessing the database.')
+                redirect('/')
+
+    return render_template('signup.html', form=form) 
 
 @app.route("/login")
 def login():
