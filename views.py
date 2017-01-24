@@ -1,8 +1,30 @@
 from flask import render_template
 
-from app import app
+from app import app, login_manager
 from forms import RegisterForm
 from model import *
+
+
+
+@login_manager.user_loader
+def load_user(username):
+    """
+    Callback used to reload the user object associated to a given username.
+
+    Argument :
+    ----------
+    username : string
+    a possible username of a user
+
+    Return :
+    --------
+    user : None / User
+    the corresponding user object
+    """
+    print (User.query.filter(User.username == username).first() )
+    return User.query.filter(User.username == username).first()
+
+
 
 @app.route("/")
 def index():
