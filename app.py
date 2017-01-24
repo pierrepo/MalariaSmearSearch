@@ -27,16 +27,16 @@ class User(db.Model):
 
     def __repr__(self):
         return 'User : %r , email = %r, password = %r, level = %r, institution = %r' %  (
-            self.username , 
-            self.email, 
-            self.password , 
-            self.level, 
-            self.institution 
+            self.username ,
+            self.email,
+            self.password ,
+            self.level,
+            self.institution
         )
 
 
 @app.route("/")
-def main():
+def index():
     """
     Define the basic route / and its corresponding request handler
     """
@@ -50,15 +50,15 @@ def signup():
     if form.validate_on_submit() :
         okay = True
         #-----
-        # TODO : check provided data in request.form['tag'], flash (u 'msg', 'error') if pb : 
+        # TODO : check provided data in request.form['tag'], flash (u 'msg', 'error') if pb :
 
-        # username not already use, 
+        # username not already use,
 
         # password is secure enough
-        
+
         # email adress okay
 
-        if okay : 
+        if okay :
             # TODO : send confirmation email
 
             # save the guy
@@ -78,7 +78,7 @@ def signup():
                 print('An error occurred accessing the database.')
                 redirect('/')
 
-    return render_template('signup.html', form=form) 
+    return render_template('signup.html', form=form)
 
 @app.route("/login")
 def login():
