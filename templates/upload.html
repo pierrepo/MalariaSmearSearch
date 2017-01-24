@@ -1,0 +1,27 @@
+{% extends "skeleton.html" %}
+
+{% block title %}Upload an image{% endblock %}
+
+{% block content %}
+    <h1>self.title()</h1>
+
+        {% if form.errors %}
+            <p class="error"><strong>Unable to upload image. See error messages below.</strong>
+        {% endif %}
+
+        {% from "_formhelpers.html" import render_field %}
+        <form method="POST" action="" enctype="multipart/form-data">
+          <dl>
+            {{ render_field(form.photo) }}
+            {{ render_field(form.preparation_type) }}
+            {{ render_field(form.comment) }}
+            {{ render_field(form.magnification) }}
+            {{ render_field(form.microscope_model) }}
+            <dd>{{ form.submit }}</dd>
+          </dl>
+          {{ form.hidden_tag() }}
+        </form>
+
+
+{% endblock %}
+
