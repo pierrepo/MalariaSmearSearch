@@ -1,4 +1,5 @@
 from flask import render_template
+from flask_login import login_required
 
 from app import app, login_manager
 from forms import RegisterForm
@@ -25,6 +26,13 @@ def load_user(username):
     return User.query.filter(User.username == username).first()
 
 
+
+@app.route('/restrictedarea')
+@login_required
+def test():
+    """Restricted area"""
+
+    return "here you are ! in a restricted area, oh my gosh"
 
 @app.route("/")
 def index():
