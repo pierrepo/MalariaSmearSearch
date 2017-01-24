@@ -72,7 +72,7 @@ def signup():
                 db.session.add(new_user)
                 db.session.commit()
                 print('New user added to database')
-            except Exception, e:
+            except Exception as e:
                 print (e)
                 db.session.rollback()
                 print('An error occurred accessing the database.')
