@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, request, redirect, url_for
 from flask_login import login_required, login_user
 
 from app import app, login_manager
@@ -93,6 +93,13 @@ def login():
         if user and user.password == form.password.data :
             login_user(user)
             print('Logged in successfully.')
+            next = request.args.get('next')
+            #TODO check that next is safe !
+            # is_safe_url should check if the url is safe for redirects.
+            # See http://flask.pocoo.org/snippets/62/ for an example.
+            if not True :#is_safe_url(next):
+                return flask.abort(400)
+            return redirect(next or url_for('index'))
         else :
             print ('Authentification failed')
     return render_template('login.html', form = form)
