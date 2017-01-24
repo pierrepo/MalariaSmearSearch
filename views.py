@@ -95,7 +95,8 @@ def login():
             print('Logged in successfully.')
         else :
             print ('Authentification failed')
-    return render_template('login.html')
+    return render_template('login.html', form = form)
+
 
 @app.route("/logout")
 def logout():
