@@ -1,8 +1,8 @@
 from flask import render_template
-from flask_login import login_required
+from flask_login import login_required, login_user
 
 from app import app, login_manager
-from forms import RegisterForm
+from forms import RegisterForm, LoginForm
 from model import *
 
 
@@ -79,10 +79,22 @@ def signup():
 
     return render_template('signup.html', form=form)
 
-@app.route("/login")
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     """
     """
+    form = LoginForm()
+    if form.validate_on_submit():
+        print ("=========== validation du log form !!! ")
+        print (form.password)
+        print (form.username.data, form.password.data)
+        # validate the user then log the user
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.password == form.password.data :
+            login_user(user)
+            print('Logged in successfully.')
+        else :
+            print ('Authentification failed')
     return render_template('login.html')
 
 @app.route("/logout")
