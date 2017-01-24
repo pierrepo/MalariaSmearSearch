@@ -1,8 +1,8 @@
 from flask import render_template, request, redirect, url_for, Response
 from flask_login import login_required, login_user, logout_user
 
-from app import app, login_manager
-from forms import RegisterForm, LoginForm
+from app import app, login_manager, photos
+from forms import RegisterForm, LoginForm, UploadForm
 from model import *
 
 
@@ -33,6 +33,37 @@ def test():
     """Restricted area"""
 
     return "here you are ! in a restricted area, oh my gosh"
+
+@login_required
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    form = UploadForm()
+    if form.validate_on_submit() :
+        new_photo = Photo()
+        form.populate_obj(new_photo)
+        print (new_photo)
+        print (form)
+
+        try :
+            # add image in db
+            db.session.add(new_photo)
+            db.session.commit()
+            # get its name (photo.id)
+            print('New photo added to database, tis id is {0}'.format(new_photo.id))
+            # save the file
+            # it seems that Flask-Uploads calls werkzeug.secure_filename()
+            filename = photos.save( storage = form.photo.data, # The uploaded file to save.
+                name = '{0}.'.format(new_photo.id) #The name to save the file as. It ends with a dot so the file’s extension will be appended to the end.
+            )
+            # TODO get its URL
+            # TODO print its URL
+        except Exception as e:
+            print (e)
+            db.session.rollback()
+            print('An error occurred accessing the database.')
+            redirect('/')
+
+    return render_template('upload.html', form = form)
 
 @app.route("/")
 def index():
@@ -109,7 +140,7 @@ def login():
 def logout():
     """
     """
-    # TODO : what happen if a logout user access logout page ? 
+    # TODO : what happen if a logout user access logout page ?
     logout_user()
     return Response('<p>Logged out</p>')
 
