@@ -1,5 +1,5 @@
-from flask import render_template, request, redirect, url_for
-from flask_login import login_required, login_user
+from flask import render_template, request, redirect, url_for, Response
+from flask_login import login_required, login_user, logout_user
 
 from app import app, login_manager
 from forms import RegisterForm, LoginForm
@@ -109,7 +109,9 @@ def login():
 def logout():
     """
     """
-    return "logout"
+    # TODO : what happen if a logout user access logout page ? 
+    logout_user()
+    return Response('<p>Logged out</p>')
 
 @app.route("/account")
 def account():
