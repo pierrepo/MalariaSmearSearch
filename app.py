@@ -75,7 +75,3 @@ def account():
     return render_template('account-page.html')
 
 
-
-if __name__ == "__main__":
-    # Run the app if the executed file is the main program
-    app.run()
