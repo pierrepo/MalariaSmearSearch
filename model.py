@@ -35,3 +35,11 @@ class User(db.Model, UserMixin):
     @property
     def id (self) :
         return self.username
+
+class Photo(db.Model):
+    """docstring for photo."""
+    __tablename__ = 'tbl_photo'
+    __table_args__ = {
+        'autoload': True,
+        'autoload_with': db.engine
+    }
