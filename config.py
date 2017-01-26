@@ -3,7 +3,7 @@ class Config(object):
     TESTING = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db' #'sqlite://:memory:'
     #engine://user:password@host:port/database
-    
+
     TOP_LEVEL_DIR = '.'
     # Uploads
     UPLOADS_DEFAULT_DEST = TOP_LEVEL_DIR + '/default_up'
