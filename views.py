@@ -1,3 +1,8 @@
+"""
+Define views of the application
+
+URLs are define without trailing slashes.
+"""
 from flask import render_template, request, redirect, url_for, Response
 from flask_login import login_required, login_user, logout_user
 
