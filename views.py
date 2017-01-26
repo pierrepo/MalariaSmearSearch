@@ -52,9 +52,10 @@ def upload():
             print('New photo added to database, tis id is {0}'.format(new_photo.id))
             # save the file
             # it seems that Flask-Uploads calls werkzeug.secure_filename()
-            filename = photos.save( storage = form.photo.data, # The uploaded file to save.
+            new_photo.filename = photos.save( storage = form.photo.data, # The uploaded file to save.
                 name = '{0}.'.format(new_photo.id) #The name to save the file as. It ends with a dot so the file’s extension will be appended to the end.
             )
+            new_photo.path=photos.path(new_photo.filename)
             # TODO get its URL
             # TODO print its URL
         except Exception as e:
