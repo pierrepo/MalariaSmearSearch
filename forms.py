@@ -1,3 +1,6 @@
+"""
+Define the forms used in the views.
+"""
 from flask_wtf import FlaskForm
 from wtforms.fields import TextField, BooleanField, PasswordField, RadioField, SubmitField, TextField, IntegerField
 from wtforms.validators import Optional,  Required, Email, EqualTo, Length
