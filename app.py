@@ -8,6 +8,7 @@ app : instance of the flask.Flask class
     a WSGI application
 
 photos : instance of the UploadSet class
+    define photo / image collection.
 """
 from flask import Flask
 from flask_login import LoginManager
