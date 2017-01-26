@@ -1,5 +1,9 @@
 """
 Define the forms used in the views.
+
+Forms are defined using FlaskForm class of Flask-WTF module.
+They have several fields defined, and a CSRF token hidden field that is created
+automatically.
 """
 from flask_wtf import FlaskForm
 from wtforms.fields import TextField, BooleanField, PasswordField, RadioField, SubmitField, TextField, IntegerField
