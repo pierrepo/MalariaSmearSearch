@@ -176,4 +176,5 @@ def account():
     """
     View of the account page.
     """
+    #TODO
     return render_template('account-page.html')
