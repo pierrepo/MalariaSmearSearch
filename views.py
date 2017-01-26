@@ -12,7 +12,7 @@ from forms import RegisterForm, LoginForm, UploadForm
 from model import *
 
 # the route() decorator tells Flask what URL should trigger the function.
-# the functions render associated template
+# the functions render associated template stored in templates folder.
 
 @login_manager.user_loader
 def load_user(username):
