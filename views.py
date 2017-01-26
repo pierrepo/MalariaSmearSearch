@@ -22,12 +22,12 @@ def load_user(username):
     Argument :
     ----------
     username : string
-    a possible username of a user
+        a possible username of a user.
 
     Return :
     --------
     user : None / User
-    the corresponding user object
+        the corresponding user object.
     """
     print (User.query.filter(User.username == username).first() )
     return User.query.filter(User.username == username).first()
