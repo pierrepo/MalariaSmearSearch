@@ -1,3 +1,14 @@
+"""
+This module defines and configure the application
+
+Attributes
+----------
+
+app : instance of the flask.Flask class
+    a WSGI application
+
+photos : instance of the UploadSet class
+"""
 from flask import Flask
 from flask_login import LoginManager
 from flask_uploads import configure_uploads, UploadSet, IMAGES
