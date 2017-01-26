@@ -37,13 +37,17 @@ def load_user(username):
 @app.route('/restrictedarea')
 @login_required
 def test():
-    """Restricted area"""
-
+    """
+    View test for a page restricted to logged in users.
+    """
     return "here you are ! in a restricted area, oh my gosh"
 
 @login_required
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
+    """
+    View of the page where logged in users can access the form to upload photos.
+    """
     form = UploadForm()
     if form.validate_on_submit() :
         new_photo = Photo()
@@ -77,13 +81,20 @@ def upload():
 @app.route("/")
 def index():
     """
-    Define the basic route / and its corresponding request handler
+    View of the index page.
     """
     return render_template('index.html')
 
 @app.route("/signup", methods = ['GET', 'POST'])
 def signup():
     """
+    View of the signup page.
+
+    The page contain a form to register new users.
+    If posted, data in the form are processed to add a new user in the database.
+
+    If an error occured accessing the database, there is a redirection to the
+    index page.
     """
     form = RegisterForm()
     if form.validate_on_submit() :
@@ -122,6 +133,10 @@ def signup():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     """
+    View of the login page.
+
+    A user can log in if the provided username and password match.
+    Else, the authentification fails.
     """
     form = LoginForm()
     if form.validate_on_submit():
@@ -148,6 +163,9 @@ def login():
 @app.route("/logout")
 def logout():
     """
+    View of the logout page.
+
+    A logged in user accessing this page is logged out.
     """
     # TODO : what happen if a logout user access logout page ?
     logout_user()
@@ -156,5 +174,6 @@ def logout():
 @app.route("/account")
 def account():
     """
+    View of the account page.
     """
     return render_template('account-page.html')
