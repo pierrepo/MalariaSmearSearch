@@ -5,7 +5,7 @@ from app import app, login_manager, photos
 from forms import RegisterForm, LoginForm, UploadForm
 from model import *
 
-
+# the route() decorator tells Flask what URL should trigger the function.
 
 @login_manager.user_loader
 def load_user(username):
