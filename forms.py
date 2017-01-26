@@ -14,6 +14,9 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 import app
 
 class UploadForm(FlaskForm):
+    """
+    Form for image upload.
+    """
     photo = FileField('photo', validators=[
         FileRequired(),
         FileAllowed( app.photos, 'Images only!')
