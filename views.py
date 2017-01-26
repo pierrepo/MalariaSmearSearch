@@ -56,6 +56,7 @@ def upload():
                 name = '{0}.'.format(new_photo.id) #The name to save the file as. It ends with a dot so the file’s extension will be appended to the end.
             )
             new_photo.path=photos.path(new_photo.filename)
+            new_photo.make_chunks()
             # TODO get its URL
             # TODO print its URL
         except Exception as e:
