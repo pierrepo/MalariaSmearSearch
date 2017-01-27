@@ -1,3 +1,14 @@
+"""
+Define the model layer with the database instance and model declaration
+
+Attributes :
+------------
+
+db : instance of the flask_sqlalchemy.SQLAlchemy class
+    controls the SQLAlchemy integration to a very specific Flask application
+    (that is app.app)
+
+"""
 from app import app, photos
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
