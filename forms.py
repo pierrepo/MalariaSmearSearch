@@ -34,6 +34,9 @@ class UploadForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
+    """
+    Form for user login.
+    """
     username = TextField('Username', validators=[Required(), Length(min=8, max=80)])
     password = PasswordField('Password', validators=[Required()])
     idle_ttl = RadioField('Idle Session Timeout', default='tmp', choices=[
@@ -45,6 +48,9 @@ class LoginForm(FlaskForm):
 
 
 class ProfileForm(FlaskForm):
+    """
+    For for the user to change infos of his own account.
+    """
     email = TextField('Email Adress', validators=[Optional(), Email() ])
     password = PasswordField('New Password', validators=[
             Optional(),
@@ -57,6 +63,9 @@ class ProfileForm(FlaskForm):
 
 
 class RegisterForm(FlaskForm):
+    """
+    For for new user registration.
+    """
     username = TextField('Username', validators=[Required(), Length(min=8, max=80)])
 
     email = TextField('Email Address', validators = [Required(), Email()])
