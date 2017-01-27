@@ -78,6 +78,8 @@ class User(db.Model, UserMixin):
 class Photo(db.Model):
     """
     Photo Model
+
+    Interact with the database.
     """
     __tablename__ = 'tbl_photo'
     __table_args__ = {
