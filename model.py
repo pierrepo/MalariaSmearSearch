@@ -87,7 +87,8 @@ class Photo(db.Model):
         img = Image.open(self.path)
         width, height = img.size
 
-        # compute crop properties using image measure and the wanted number of pieces
+        # compute crop properties using image measure
+        # and the wanted number of pieces
         h_crop_width = width / num_h_crop
         v_crop_width = height / num_v_crop
 
