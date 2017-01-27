@@ -1,3 +1,9 @@
+"""
+Define views of the application
+
+URLs are define without trailing slashes.
+HTML templates are in the templates folder.
+"""
 from flask import render_template, request, redirect, url_for, Response
 from flask_login import login_required, login_user, logout_user
 
@@ -5,7 +11,8 @@ from app import app, login_manager, photos
 from forms import RegisterForm, LoginForm, UploadForm
 from model import *
 
-
+# the route() decorator tells Flask what URL should trigger the function.
+# the functions render associated template stored in templates folder.
 
 @login_manager.user_loader
 def load_user(username):
@@ -15,12 +22,12 @@ def load_user(username):
     Argument :
     ----------
     username : string
-    a possible username of a user
+        a possible username of a user.
 
     Return :
     --------
     user : None / User
-    the corresponding user object
+        the corresponding user object.
     """
     print (User.query.filter(User.username == username).first() )
     return User.query.filter(User.username == username).first()
@@ -30,36 +37,49 @@ def load_user(username):
 @app.route('/restrictedarea')
 @login_required
 def test():
-    """Restricted area"""
-
+    """
+    View test for a page restricted to logged in users.
+    """
     return "here you are ! in a restricted area, oh my gosh"
 
 @login_required
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
+    """
+    View of the page where logged in users can access the form to upload photos.
+    """
     form = UploadForm()
-    if form.validate_on_submit() :
+
+    if form.validate_on_submit() : # -> it is a POST request and it is valid
+
+        # get the photo and its database attributes !
         new_photo = Photo()
         form.populate_obj(new_photo)
         print (new_photo)
         print (form)
 
         try :
-            # add image in db
+            # add the photo in the database :
             db.session.add(new_photo)
             db.session.commit()
-            # get its name (photo.id)
+
             print('New photo added to database, tis id is {0}'.format(new_photo.id))
-            # save the file
-            # it seems that Flask-Uploads calls werkzeug.secure_filename()
-            new_photo.filename = photos.save( storage = form.photo.data, # The uploaded file to save.
-                name = '{0}.'.format(new_photo.id) #The name to save the file as. It ends with a dot so the file’s extension will be appended to the end.
+            # upload the photo
+            # its name is the photo id in the database
+            new_photo.filename = photos.save(
+                storage = form.photo.data, # The uploaded file to save.
+                name = '{0}.'.format(new_photo.id) #The name to save the file.
+                    # as it ends with a dot, the file’s extension
+                    # will be appended automatically to the end.
             )
+            # save its path
             new_photo.path=photos.path(new_photo.filename)
+            # cut the photo into chunks :
             new_photo.make_chunks()
             # TODO get its URL
             # TODO print its URL
         except Exception as e:
+            # TODO : catch the different kind of exception that could occurred.
             print (e)
             db.session.rollback()
             print('An error occurred accessing the database.')
@@ -70,16 +90,24 @@ def upload():
 @app.route("/")
 def index():
     """
-    Define the basic route / and its corresponding request handler
+    View of the index page.
     """
     return render_template('index.html')
 
 @app.route("/signup", methods = ['GET', 'POST'])
 def signup():
     """
+    View of the signup page.
+
+    The page contain a form to register new users.
+    If posted, data in the form are processed to add a new user in the database.
+
+    If an error occured accessing the database, there is a redirection to the
+    index page.
     """
     form = RegisterForm()
-    if form.validate_on_submit() :
+
+    if form.validate_on_submit() : # -> it is a POST request and it is valid
         okay = True
         #-----
         # TODO : check provided data in request.form['tag'], flash (u 'msg', 'error') if pb :
@@ -93,13 +121,13 @@ def signup():
         if okay :
             # TODO : send confirmation email
 
-            # save the guy
+            # Crate the user profil
             new_user = User()
             form.populate_obj(new_user)
             print (new_user)
             print (form)
 
-
+            # Save the guy in the db
             try :
                 db.session.add(new_user)
                 db.session.commit()
@@ -115,9 +143,13 @@ def signup():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     """
+    View of the login page.
+
+    A user can log in if the provided username and password match.
+    Else, the authentification fails.
     """
     form = LoginForm()
-    if form.validate_on_submit():
+    if form.validate_on_submit():  # -> it is a POST request and it is valid
         print ("=========== validation du log form !!! ")
         print (form.password)
         print (form.username.data, form.password.data)
@@ -141,6 +173,9 @@ def login():
 @app.route("/logout")
 def logout():
     """
+    View of the logout page.
+
+    A logged in user accessing this page is logged out.
     """
     # TODO : what happen if a logout user access logout page ?
     logout_user()
@@ -149,5 +184,7 @@ def logout():
 @app.route("/account")
 def account():
     """
+    View of the account page.
     """
+    #TODO
     return render_template('account-page.html')

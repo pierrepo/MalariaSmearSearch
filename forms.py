@@ -1,3 +1,10 @@
+"""
+Define the forms used in the views.
+
+Forms are defined using FlaskForm class of Flask-WTF module.
+They have several fields defined, and a CSRF token hidden field that is created
+automatically.
+"""
 from flask_wtf import FlaskForm
 from wtforms.fields import TextField, BooleanField, PasswordField, RadioField, SubmitField, TextField, IntegerField
 from wtforms.validators import Optional,  Required, Email, EqualTo, Length
@@ -7,6 +14,9 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 import app
 
 class UploadForm(FlaskForm):
+    """
+    Form for image upload.
+    """
     photo = FileField('photo', validators=[
         FileRequired(),
         FileAllowed( app.photos, 'Images only!')
@@ -24,6 +34,9 @@ class UploadForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
+    """
+    Form for user login.
+    """
     username = TextField('Username', validators=[Required(), Length(min=8, max=80)])
     password = PasswordField('Password', validators=[Required()])
     idle_ttl = RadioField('Idle Session Timeout', default='tmp', choices=[
@@ -35,6 +48,9 @@ class LoginForm(FlaskForm):
 
 
 class ProfileForm(FlaskForm):
+    """
+    For for the user to change infos of his own account.
+    """
     email = TextField('Email Adress', validators=[Optional(), Email() ])
     password = PasswordField('New Password', validators=[
             Optional(),
@@ -47,6 +63,9 @@ class ProfileForm(FlaskForm):
 
 
 class RegisterForm(FlaskForm):
+    """
+    For for new user registration.
+    """
     username = TextField('Username', validators=[Required(), Length(min=8, max=80)])
 
     email = TextField('Email Address', validators = [Required(), Email()])

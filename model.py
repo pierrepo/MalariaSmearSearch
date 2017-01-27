@@ -1,3 +1,27 @@
+"""
+Define the model layer with the database instance and model declaration
+
+Attributes :
+------------
+
+db : instance of the flask_sqlalchemy.SQLAlchemy class
+    controls the SQLAlchemy integration to a very specific Flask application
+    (that is app.app)
+
+# learn to :
+## insert record in the database :
+http://flask-sqlalchemy.pocoo.org/2.1/queries/#inserting-records
+## delete record :
+http://flask-sqlalchemy.pocoo.org/2.1/queries/#deleting-records
+
+About the model declared here :
+-------------------------------
+They inherite attribute of flask_sqlalchemy.SQLAlchemy.Model
+
+# learn to get data back out of the database :
+http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
+
+"""
 from app import app, photos
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
@@ -6,10 +30,15 @@ import itertools
 
 db = SQLAlchemy(app)
 
-# Table already exist, so do not redefine it and just
-# load them from the database using the "autoload" feature.
+# Whan table already exist, we do not need to redefine them
+# we can just load them from the database using the "autoload" feature.
 
 class User(db.Model, UserMixin):
+    """
+    User model.
+
+    Interact with the database and with the Flask-login module.
+    """
     __tablename__ = 'tbl_user'
     __table_args__ = {
         'autoload': True,
@@ -18,6 +47,14 @@ class User(db.Model, UserMixin):
     }
 
     def __repr__(self):
+        """
+        Build a printable representation of a user.
+
+        Return :
+        --------
+        repr : string
+            printable representation of a user.
+        """
         return 'User : %r , email = %r, password = %r, level = %r, institution = %r' %  (
             self.username ,
             self.email,
@@ -39,7 +76,11 @@ class User(db.Model, UserMixin):
         return self.username
 
 class Photo(db.Model):
-    """docstring for photo."""
+    """
+    Photo Model
+
+    Interact with the database.
+    """
     __tablename__ = 'tbl_photo'
     __table_args__ = {
         'autoload': True,
@@ -47,11 +88,22 @@ class Photo(db.Model):
     }
 
     def make_chunks(self, num_h_crop = 2, num_v_crop = 2):
-        """slice an image into parts """
+        """
+        Slice an image into (default : 4) equal parts.
+
+        Arguments :
+        -----------
+        num_h_crop : int (default 2)
+            The number of horizontal chunks we will end up with.
+        num_v_crop : int (default 2)
+            The number of vertical chunks we will end up with.
+        """
+
         img = Image.open(self.path)
         width, height = img.size
 
-        # compute crop properties using image measure and the wanted number of pieces
+        # compute crop properties using image measure
+        # and the wanted number of pieces
         h_crop_width = width / num_h_crop
         v_crop_width = height / num_v_crop
 
