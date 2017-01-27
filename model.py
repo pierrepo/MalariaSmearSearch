@@ -17,8 +17,8 @@ import itertools
 
 db = SQLAlchemy(app)
 
-# Table already exist, so do not redefine it and just
-# load them from the database using the "autoload" feature.
+# Whan table already exist, we do not need to redefine them
+# we can just load them from the database using the "autoload" feature.
 
 class User(db.Model, UserMixin):
     __tablename__ = 'tbl_user'
