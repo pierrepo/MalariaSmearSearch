@@ -8,6 +8,19 @@ db : instance of the flask_sqlalchemy.SQLAlchemy class
     controls the SQLAlchemy integration to a very specific Flask application
     (that is app.app)
 
+# learn to :
+## insert record in the database :
+http://flask-sqlalchemy.pocoo.org/2.1/queries/#inserting-records
+## delete record :
+http://flask-sqlalchemy.pocoo.org/2.1/queries/#deleting-records
+
+About the model declared here :
+-------------------------------
+They inherite attribute of flask_sqlalchemy.SQLAlchemy.Model
+
+# learn to get data back out of our the database :
+http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
+
 """
 from app import app, photos
 from flask_sqlalchemy import SQLAlchemy
