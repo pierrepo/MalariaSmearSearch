@@ -49,28 +49,37 @@ def upload():
     View of the page where logged in users can access the form to upload photos.
     """
     form = UploadForm()
-    if form.validate_on_submit() :
+
+    if form.validate_on_submit() : # -> it is a POST request and it is valid
+
+        # get the photo and its database attributes !
         new_photo = Photo()
         form.populate_obj(new_photo)
         print (new_photo)
         print (form)
 
         try :
-            # add image in db
+            # add the photo in the database :
             db.session.add(new_photo)
             db.session.commit()
-            # get its name (photo.id)
+
             print('New photo added to database, tis id is {0}'.format(new_photo.id))
-            # save the file
-            # it seems that Flask-Uploads calls werkzeug.secure_filename()
-            new_photo.filename = photos.save( storage = form.photo.data, # The uploaded file to save.
-                name = '{0}.'.format(new_photo.id) #The name to save the file as. It ends with a dot so the file’s extension will be appended to the end.
+            # upload the photo
+            # its name is the photo id in the database
+            new_photo.filename = photos.save(
+                storage = form.photo.data, # The uploaded file to save.
+                name = '{0}.'.format(new_photo.id) #The name to save the file.
+                    # as it ends with a dot, the file’s extension
+                    # will be appended automatically to the end.
             )
+            # save its path
             new_photo.path=photos.path(new_photo.filename)
+            # cut the photo into chunks :
             new_photo.make_chunks()
             # TODO get its URL
             # TODO print its URL
         except Exception as e:
+            # TODO : catch the different kind of exception that could occurred.
             print (e)
             db.session.rollback()
             print('An error occurred accessing the database.')
@@ -97,7 +106,8 @@ def signup():
     index page.
     """
     form = RegisterForm()
-    if form.validate_on_submit() :
+
+    if form.validate_on_submit() : # -> it is a POST request and it is valid
         okay = True
         #-----
         # TODO : check provided data in request.form['tag'], flash (u 'msg', 'error') if pb :
@@ -111,13 +121,13 @@ def signup():
         if okay :
             # TODO : send confirmation email
 
-            # save the guy
+            # Crate the user profil
             new_user = User()
             form.populate_obj(new_user)
             print (new_user)
             print (form)
 
-
+            # Save the guy in the db
             try :
                 db.session.add(new_user)
                 db.session.commit()
@@ -139,7 +149,7 @@ def login():
     Else, the authentification fails.
     """
     form = LoginForm()
-    if form.validate_on_submit():
+    if form.validate_on_submit():  # -> it is a POST request and it is valid
         print ("=========== validation du log form !!! ")
         print (form.password)
         print (form.username.data, form.password.data)
