@@ -18,7 +18,7 @@ About the model declared here :
 -------------------------------
 They inherite attribute of flask_sqlalchemy.SQLAlchemy.Model
 
-# learn to get data back out of our the database :
+# learn to get data back out of the database :
 http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
 
 """
