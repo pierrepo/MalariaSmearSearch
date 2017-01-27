@@ -1,11 +1,21 @@
 class Config(object):
+
+    #-----
+    # general configuration :
     DEBUG = False
     TESTING = False
+
+    #-----
+    # configaration of Flask-SQLAlchemy
+
+    # which db :
     SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db' #'sqlite://:memory:'
     #engine://user:password@host:port/database
 
+    #-----
+    # configuration of Flask-Uploads
     TOP_LEVEL_DIR = '.'
-    # Uploads
+    
     UPLOADS_DEFAULT_DEST = TOP_LEVEL_DIR + '/default_up'
     UPLOADED_PHOTOS_DEST = TOP_LEVEL_DIR + '/up'
 
