@@ -21,6 +21,11 @@ db = SQLAlchemy(app)
 # we can just load them from the database using the "autoload" feature.
 
 class User(db.Model, UserMixin):
+    """
+    User model.
+
+    Interact with the database and with the Flask-login module.
+    """
     __tablename__ = 'tbl_user'
     __table_args__ = {
         'autoload': True,
@@ -29,6 +34,14 @@ class User(db.Model, UserMixin):
     }
 
     def __repr__(self):
+        """
+        Build a printable representation of a user.
+
+        Return :
+        --------
+        repr : string
+            printable representation of a user.
+        """
         return 'User : %r , email = %r, password = %r, level = %r, institution = %r' %  (
             self.username ,
             self.email,
@@ -50,7 +63,9 @@ class User(db.Model, UserMixin):
         return self.username
 
 class Photo(db.Model):
-    """docstring for photo."""
+    """
+    Photo Model
+    """
     __tablename__ = 'tbl_photo'
     __table_args__ = {
         'autoload': True,
@@ -58,7 +73,17 @@ class Photo(db.Model):
     }
 
     def make_chunks(self, num_h_crop = 2, num_v_crop = 2):
-        """slice an image into parts """
+        """
+        Slice an image into (default : 4) equal parts.
+
+        Arguments :
+        -----------
+        num_h_crop : int (default 2)
+            The number of horizontal chunks we will end up with.
+        num_v_crop : int (default 2)
+            The number of vertical chunks we will end up with.
+        """
+
         img = Image.open(self.path)
         width, height = img.size
 
