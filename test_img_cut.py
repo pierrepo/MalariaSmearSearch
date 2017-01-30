@@ -24,7 +24,7 @@ def make_chunks(image_path, num_h_crop = 2, num_v_crop = 2):
 
     chunks_coords = zip (chunks_starting_coords, chunks_ending_coords)
     for chunk_idx, chunk_coords in enumerate(chunks_coords) :
-        ((left, upper), (right, lower)) = chunk_coords
+        ((upper, left ), (lower, right)) = chunk_coords
         box = (left , upper , right , lower) # pixel coords of the chunk
         print (chunk_idx, box)
         new_chunk = img.crop(box)
