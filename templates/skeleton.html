@@ -71,18 +71,9 @@
             </nav>
 
             <div class="container">
-                <section id="content">
-                    {% block content %}
-                    <article>
-                        Article
-                    </article>
-                    {% endblock %}
-                </section>
-                <aside>
-                    {% block aside %}
-                    Aside
-                    {% endblock %}
-                </aside>
+                {% block content %}
+                    Skeleton content
+                {% endblock %}
             </div>
             <footer>
                 {% block footer %}
