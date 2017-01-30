@@ -21,15 +21,6 @@
             <header>
                 {% block header %}
                 Header
-                <div id="control">
-
-                    {% if not session.logged_in %} <!-- IF LOGGED OUT -->
-                        <a class="button" href="{{ url_for('signup') }}">Sign up</a>&nbsp;<a class="button" href="{{ url_for('login') }}">Log in</a>
-                    {% else %} <!-- IF LOGGED IN -->
-                        <a class="button" href="{{ url_for('logout') }}">Log Out</a>&nbsp;<a class="button" href="{{ url_for('account') }}">Your Account</a>
-                    {% endif %} <!-- END OF IF STATEMENT -->
-
-                </div>
                 {% endblock %}
             </header>
 
@@ -63,8 +54,16 @@
                             <li><a href="#">Page 2</a></li>
                             <li><a href="#">Page 3</a></li>
                         </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><a href="{{url_for('login')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                        <ul class="nav navbar-nav navbar-right"> <!-- {{current_user.username}} -->
+                            {% if current_user.is_authenticated %}
+                            <li>  <a href="{{url_for('account')}}"> Your account</a> </li>
+                            <li>  <a href="{{url_for('logout')}}"><span class="glyphicon glyphicon-log-out"></span> Logout</a> </li>
+                            {% else %}
+                            <li> <a href="{{url_for('login')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a> </li>
+                            {% endif %}
+
+
+
                         </ul>
                     </div>
                 </div>
