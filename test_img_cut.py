@@ -2,7 +2,7 @@ from PIL import Image
 import math
 import itertools
 
-def make_chunks(image_path, num_h_crop = 2, num_v_crop = 2):
+def make_chunks(image_path, num_h_crop = 2, num_v_crop = 2, overlap = 100):
     """slice an image into parts """
     img = Image.open(image_path)
     width, height = img.size
@@ -19,8 +19,8 @@ def make_chunks(image_path, num_h_crop = 2, num_v_crop = 2):
     y = [v_crop_width * e for e in range (num_v_crop +1)]
     # +1 in order to have coord of rigth limit of the image
 
-    chunks_starting_coords = itertools.product(x[:-1], y[:-1])
-    chunks_ending_coords = itertools.product(x[1:], y[1:])
+    chunks_starting_coords = itertools.product( (xe - overlap for xe in x[:-1] ), (ye - overlap for ye in y[:-1] ))
+    chunks_ending_coords = itertools.product( (xe + overlap for xe in x[1:] ), (ye + overlap for ye in y[1:] ))
 
     chunks_coords = zip (chunks_starting_coords, chunks_ending_coords)
     for chunk_idx, chunk_coords in enumerate(chunks_coords) :
