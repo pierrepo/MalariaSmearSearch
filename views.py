@@ -42,8 +42,8 @@ def test():
     """
     return "here you are ! in a restricted area, oh my gosh"
 
-@login_required
 @app.route('/upload', methods=['GET', 'POST'])
+@login_required
 def upload():
     """
     View of the page where logged in users can access the form to upload photos.
