@@ -35,18 +35,21 @@
             <nav>
                 Nav
             </nav>
-            <section id="content">
-                {% block content %}
-                <article>
-                    Article
-                </article>
-                {% endblock %}
-            </section>
-            <aside>
-                {% block aside %}
-                Aside
-                {% endblock %}
-            </aside>
+            <div class="container">
+
+                <section id="content">
+                    {% block content %}
+                    <article>
+                        Article
+                    </article>
+                    {% endblock %}
+                </section>
+                <aside>
+                    {% block aside %}
+                    Aside
+                    {% endblock %}
+                </aside>
+            </div>
             <footer>
                 {% block footer %}
                 Footer
