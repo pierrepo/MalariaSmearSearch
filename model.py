@@ -132,3 +132,16 @@ class Photo(db.Model):
                 *chunks_numerotation[chunk_idx],
                 self.path.split('.')[-1]) # extention
             )
+
+class Chunk(db.Model):
+    """
+    Chunk Model
+
+    Interact with the database.
+    """
+    __tablename__ = 'tbl_chunk'
+    __table_args__ = {
+        'autoload': True,
+        'autoload_with': db.engine
+    }
+    
