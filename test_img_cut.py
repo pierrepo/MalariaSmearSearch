@@ -11,6 +11,8 @@ def make_chunks(image_path, num_crop_col = 2, num_crop_row = 2):
     width_crop_col = width / num_crop_col
     width_crop_row = height / num_crop_row
 
+    chunks_numerotation = [(col,row) for col in  range(num_crop_col) for row in range(num_crop_row)  ]
+
     # x and y represent Cartesian pixel coordinates.
     # 0,0 is up left
     # the norm between 2 ticks on horizontal x axis is width_crop_col
@@ -27,4 +29,4 @@ def make_chunks(image_path, num_crop_col = 2, num_crop_row = 2):
         box = list(itertools.chain.from_iterable(chunk_coords)) #(left , upper , right , lower) # pixel coords of the chunk
         print (chunk_idx, box)
         new_chunk = img.crop(box)
-        new_chunk.save("out_{0}.jpg".format(chunk_idx) )
+        new_chunk.save("out_{:d}_{:d}.jpg".format(*chunks_numerotation[chunk_idx]) )
