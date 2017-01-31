@@ -145,3 +145,31 @@ class Chunk(db.Model):
         'autoload_with': db.engine
     }
     
+    def __init__(self, photo, chunk_numerotation, chunk_coords):
+        """
+        Constructor of an instance of the Chunk class
+
+        Arguments :
+        -----------
+        photo : instance of Image
+            photo of which the chunk is derived
+        chunk_numerotation : tuple of 2 int
+            (col, row) coordinates of the chunk
+        chunks_coords : tuple of 2 tuples of 2 int / float
+            pixel coordinates of the chunk :
+            ((left , upper) , (right , lower))
+        """
+        super().__init__(photo.id, *chunk_numerotation)
+        self.path = './chunks/{0}_{1}_{2}.{3}'.format(
+            photo.id,
+            self.col, self.row,
+            photo.path.split('.')[-1] # extention
+        )
+        self.make_chunk(photo, chunks_coords )
+
+    def make_chunk(self, photo, chunks_coords):
+        img = Image.open(photo.path)
+        box = list(itertools.chain.from_iterable(chunk_coords)) #(left , upper , right , lower) # pixel coords of the chunk
+        print (self.col, self.row, box)
+        new_chunk = img.crop(box)
+        new_chunk.save (self.path)
