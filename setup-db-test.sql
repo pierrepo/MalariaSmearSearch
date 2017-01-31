@@ -33,6 +33,13 @@ INSERT INTO tbl_photo ('username', 'preparation_type', 'comment', 'magnification
     VALUES ('imtech', 'thick',  'je suis un commentaire', 1000, 'super microscope trop swag') ;
 
 
+CREATE TABLE tbl_chunk (
+  'id_photo' REFERENCES tbl_level(name),
+  'col' INTEGER  ,
+  'row' INTEGER , 
+  PRIMARY KEY ('id_photo', 'col', 'row')
+);
+
 
 SELECT * FROM tbl_user ;
 
