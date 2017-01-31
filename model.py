@@ -107,6 +107,8 @@ class Photo(db.Model):
         width_crop_col = width / num_crop_col
         width_crop_row = height / num_crop_row
 
+        chunks_numerotation = [(col,row) for col in  range(num_crop_col) for row in range(num_crop_row)  ]
+
         # values in cut_col and cut_row represent Cartesian pixel coordinates.
         # 0,0 is up left
         # the norm between 2 ticks on horizontal x axis is width_crop_col
@@ -125,8 +127,8 @@ class Photo(db.Model):
             new_chunk = img.crop(box)
             print (self.path.split('.')[-1])
             print ("=========== ici")
-            new_chunk.save ('./chunks/{0}_{1}.{2}'.format(
+            new_chunk.save ('./chunks/{0}_{1}_{2}.{3}'.format(
                 self.id,
-                chunk_idx,
+                *chunks_numerotation[chunk_idx],
                 self.path.split('.')[-1]) # extention
             )
