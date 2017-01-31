@@ -75,7 +75,11 @@ def upload():
             # save its path
             new_photo.path=photos.path(new_photo.filename)
             # cut the photo into chunks :
-            new_photo.make_chunks()
+            chunks_numerotation, chunks_coords = new_photo.get_chunks_infos()
+            for chunk_idx, chunk_coords in enumerate(chunks_coords) :
+                new_chunk = Chunk(new_photo, chunks_numerotation[chunk_idx], chunk_coords)
+                db.session.add(new_chunk)
+            db.session.commit()
             # TODO get its URL
             # TODO print its URL
         except Exception as e:
