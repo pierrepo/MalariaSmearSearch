@@ -205,15 +205,21 @@ class Chunk(db.Model):
             pixel coordinates of the chunk :
             ((left , upper) , (right , lower))
         """
-        super().__init__(photo.id, *chunk_numerotation)
+        print ('laa')
+        # TODO : use :
+        #super().__init__()#photo.id, *chunk_numerotation)
+        # ?
+        self.id_photo = photo.id
+        (self.col, self.row) = chunk_numerotation
+        print ('dooo')
         self.path = './chunks/{0}_{1}_{2}.{3}'.format(
             photo.id,
             self.col, self.row,
             photo.path.split('.')[-1] # extention
         )
-        self.make_chunk(photo, chunks_coords )
+        self.make_chunk(photo, chunk_coords)
 
-    def make_chunk(self, photo, chunks_coords):
+    def make_chunk(self, photo, chunk_coords):
         img = Image.open(photo.path)
         box = list(itertools.chain.from_iterable(chunk_coords)) #(left , upper , right , lower) # pixel coords of the chunk
         print (self.col, self.row, box)
