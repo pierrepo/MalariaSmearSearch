@@ -22,6 +22,7 @@ CREATE TABLE tbl_user (
 
 INSERT INTO tbl_user VALUES ('imtech', 'tech@test.com',  'pswtech', 'technician', 'up7d') ;
 INSERT INTO tbl_user VALUES  ( 'imsup','sup@sup.com', 'pswsup', 'supervisor', 'up7d');
+INSERT INTO tbl_user VALUES  ( 'azertyuiop','bim@bim.bim', 'ioioioioio', 'supervisor', 'up7d');
 
 
 CREATE TABLE tbl_photo (
