@@ -3,9 +3,63 @@
 {% block title %}Chunk annotatotation{% endblock %}
 
 {% block content %}
-    <div style="height: 500px; width: 500px; overflow: scroll;">
+    <div id = 'map' style="height: 500px; width: 500px; overflow: scroll;">
         {% set path = '1_0_0.jpg' %}
         {{path}}
         <img src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
     </div>
+
+    <script>
+
+        /***********************************************************************
+            Make the chunk div movable using middle mouse button click and drag
+        ***********************************************************************/
+
+        //chunk is in a div. its id is map :
+        var map_div = document.getElementById("map") ;
+        // At the begining : do not set cursor position :
+        var curYPos = NULL, curXPos = NULL ;
+        //mouse is not currently down :
+        var curDown = false;
+        // make bigger to go slower :
+        speed = 5 ;
+
+        // the move has 3 steps :
+
+        // middle mouse button click -> mousedown event with buttun number 1
+        map_div.addEventListener('mousedown', function(e){
+            console.log  (e.button)
+            if (e.button == 1 ){ // middle button
+                console.log  (e)
+                curDown = true; curYPos = e.pageY; curXPos = e.pageX;
+            }
+        });
+
+        // mousemove when middle mouse button is down
+        // take the move into account
+        map_div.addEventListener('mousemove', function(e){
+
+            if(curDown === true){ // only when mousedown and middle button
+                //console.log (e)
+                console.log (map_div.scrollLeft)
+
+                map_div.scrollLeft += (curXPos - e.pageX)/speed ;
+                map_div.scrollTop += (curYPos - e.pageY)/speed ;
+
+                // TODO : e.screenX ; e.screenY VS e.pageX ; e.pageY VS e.clientX ; e.clientY
+
+            }
+        });
+
+        // middle mouse button is up -> mousedown event with buttun number 1
+        map_div.addEventListener('mouseup', function(e){
+
+            if (e.button == 1 ){
+                console.log  (e)
+                curDown = false;
+                console.log  ("===============")
+            }
+        });
+
+    </script>
 {% endblock %}
