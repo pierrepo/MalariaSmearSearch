@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS tbl_level ;
+DROP TABLE IF EXISTS tbl_user ;
+DROP TABLE IF EXISTS tbl_photo ;
+DROP TABLE IF EXISTS tbl_chunk ;
 
 CREATE TABLE tbl_level (
   'name' VARCHAR(45) PRIMARY KEY
