@@ -212,3 +212,7 @@ def download(photo_id):
         # return to the photo list with a flash error message
         print("Photo {photo_id} doesn't exists.".format(photo_id=photo_id))
         return redirect(url_for('browse'))
+
+@app.route('/annotate_chunk/<chunk_id>')
+def annotate_chunk(chunk_id):
+        return render_template('annotate-chunk.html')
