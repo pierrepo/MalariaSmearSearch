@@ -4,7 +4,7 @@ Define views of the application
 URLs are define without trailing slashes.
 HTML templates are in the templates folder.
 """
-from flask import render_template, request, redirect, url_for, Response
+from flask import render_template, request, redirect, url_for, Response, send_file
 from flask_login import login_required, login_user, logout_user
 import os
 
@@ -199,4 +199,16 @@ def browse():
     # list photo in dir upload :
     photos = os.listdir(app.config['UPLOADED_PHOTOS_DEST'] )
     print (photos)
-    return render_template('browse.html', photos = photos)
+    return render_template('browse.html', photos = photos, app = app )
+
+@app.route('/download/<photo_id>')
+def download(photo_id):
+    #photo_id = secure_filename(photo_id)
+    print (app.root_path + '/' + app.config['UPLOADED_PHOTOS_DEST'] + '/' +  photo_id)
+    if os.path.isfile(app.root_path + '/' + app.config['UPLOADED_PHOTOS_DEST'] + '/' + photo_id): # if the file exists
+        # send it :
+        return send_file(app.root_path + '/' + app.config['UPLOADED_PHOTOS_DEST']+ '/' +  photo_id, as_attachment=True)
+    else:
+        # return to the photo list with a flash error message
+        print("Photo {photo_id} doesn't exists.".format(photo_id=photo_id))
+        return redirect(url_for('browse'))

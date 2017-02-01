@@ -9,7 +9,12 @@
     	<ul class="fichiers">
 
     	{% for photo in photos %}
-        <li>{{ photo }}</li>
+        <li>
+            <a href="{{ url_for('download', photo_id=photo) }}">
+                <span class="glyphicon glyphicon-download"></span>
+            </a>
+            {{ photo }}
+        </li>
 
     	{% endfor %}
     	</ul>
