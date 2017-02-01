@@ -6,6 +6,7 @@ HTML templates are in the templates folder.
 """
 from flask import render_template, request, redirect, url_for, Response
 from flask_login import login_required, login_user, logout_user
+import os
 
 from app import app, login_manager, photos
 from forms import RegisterForm, LoginForm, UploadForm
@@ -192,3 +193,10 @@ def account():
     """
     #TODO
     return render_template('account-page.html')
+
+@app.route('/browse')
+def browse():
+    # list photo in dir upload :
+    photos = os.listdir(app.config['UPLOADED_PHOTOS_DEST'] )
+    print (photos)
+    return render_template('browse.html', photos = photos)

@@ -1,0 +1,19 @@
+{% extends "skeleton.html" %}
+
+{% block title %}Image list{% endblock %}
+
+{% block content %}
+
+    {% if photos %}
+        They are the photos uploaded :
+    	<ul class="fichiers">
+
+    	{% for photo in photos %}
+        <li>{{ photo }}</li>
+
+    	{% endfor %}
+    	</ul>
+    {% else %}
+        No photo was uploaded, yet.
+    {% endif %}
+{% endblock %}
