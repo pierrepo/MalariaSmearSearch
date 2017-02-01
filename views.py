@@ -196,8 +196,8 @@ def account():
 
 @app.route('/browse')
 def browse():
-    # list photo in dir upload :
-    photos = os.listdir(app.config['UPLOADED_PHOTOS_DEST'] )
+    # list uploaded photo in db :
+    photos = Photo.query.all()
     print (photos)
     return render_template('browse.html', photos = photos, app = app )
 
