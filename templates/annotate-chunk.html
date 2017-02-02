@@ -9,13 +9,30 @@
     <link type="text/css" rel="stylesheet" href="http://annotorious.github.com/latest/annotorious.css" />
     <script type="text/javascript" src="http://annotorious.github.com/latest/annotorious.min.js"></script>
 
+    <style>
+        #map-annotate-button {
+            position:relative;
+            top:3px;
+            right:3px;
+            background-color:#000;
+            color:#fff;
+            padding:3px 8px;
+            z-index:10000;
+            font-size:11px;
+            text-decoration:none;
+        }
+    </style>
+
 {% endblock%}
 
 {% block content %}
     <div id = 'map' style="height: 500px; width: 500px; overflow: scroll;">
+        <button href="#" id = "map-annotate-button" >
+          ADD ANNOTATION
+        </button>
         {% set path = '1_0_0.jpg' %}
         {{path}}
-        <img class="annotatable" src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
+        <img id = 'photo' src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
     </div>
 
     <script>
@@ -69,6 +86,34 @@
                 console.log  ("===============")
             }
         });
+
+
+
+        /***********************************************************************
+            Toggle annnotation :
+        ***********************************************************************/
+
+        // TODO : use anno.activateselector ?
+
+
+
+        toggle_button = document.getElementById('map-annotate-button');
+        toggle_button.addEventListener('click', function(e){
+            var button = document.getElementById('map-annotate-button');
+            var photo = document.getElementById('photo');
+            console.log  ("toggle annotation");
+            console.log  (button.textContent);
+
+            if (button.textContent == 'ADD ANNOTATION') {
+                anno.makeAnnotatable(photo)
+                button.textContent = 'MOVE ON THE CHUNK'
+            }else{
+                anno.hideSelectionWidget(photo)
+                anno.destroy()
+                button.textContent = 'ADD ANNOTATION' ;
+            }
+        }
+        );
 
     </script>
 {% endblock %}
