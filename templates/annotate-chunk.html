@@ -1,6 +1,15 @@
 {% extends "skeleton.html" %}
 
-{% block title %}Chunk annotatotation{% endblock %}
+
+{% block head%}
+    {{super()}}
+    {% block title %}Chunk annotatotation{% endblock %}
+
+    <!-- Set up Annotorious : -->
+    <link type="text/css" rel="stylesheet" href="http://annotorious.github.com/latest/annotorious.css" />
+    <script type="text/javascript" src="http://annotorious.github.com/latest/annotorious.min.js"></script>
+
+{% endblock%}
 
 {% block content %}
     <div id = 'map' style="height: 500px; width: 500px; overflow: scroll;">
