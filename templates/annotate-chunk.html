@@ -26,6 +26,24 @@
         <img id='chunk' src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
     </div>
 
+    <form action="" id="add-new">
+        <input type="number" readonly>
+        <input type="number" readonly>
+        <input type="number" readonly>
+        <input type="number" readonly>
+
+        <select  id="new-list-item-text" name="new-list-item-text">
+            <option selected="selected" disabled="disabled">Select an annotation</option>
+            <option value="parasite">parasite</option>
+            <option value="red">red cell</option>
+            <option value="white">white cell</option>
+            <option value="other">other</option>
+        </select>
+
+        <input type="submit" id="add-new-submit" value="Add" class="button" />
+
+    </form>
+
     <script>
     var chunk = document.getElementById('chunk');
     var cropper = new Cropper(chunk, {
