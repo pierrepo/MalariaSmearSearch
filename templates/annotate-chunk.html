@@ -6,12 +6,23 @@
 
     <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js"></script>
+
+    <style>
+
+        #chunk{
+            /* According to Cropperjs documentation :
+             "Limit image width to avoid overflow the container
+             This rule is very important, please do not ignore this! "*/
+            max-width: 100%;
+        }
+
+    </style>
 {% endblock %}
 
 {% block content %}
-    <div style="height: 500px; width: 500px; overflow: scroll;">
+    <div style="height: 500px; width: 500px;">
         {% set path = '1_0_0.jpg' %}
         {{path}}
-        <img src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
+        <img id='chunk' src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
     </div>
 {% endblock %}
