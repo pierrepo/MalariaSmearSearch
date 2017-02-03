@@ -5,11 +5,36 @@ console.log("pouet");
 
 $(document).ready(function(){
 
+    function bindAllTabs(editableTarget) {
+        /*
+        Target an element
+        and use the Jeditable plugin  editable() function on it
+        with some parameters :
+            callback file path,
+            list items require a double-click to edit
+            tooltip message
+            text in the saving button
+        */
+        $(editableTarget).editable("/callback/file/path", {
+            id        : 'listItemID',
+            indicator : 'Saving...',
+            tooltip   : 'Double-click to edit...',
+            event     : 'dblclick',
+            data      : " {'parasite':'parasite','red':'red cell','white':'white cell', 'other':'other'}",
+            type      : 'select',
+            submit    : 'Save',
+            submitdata: {action : "update"}
+        });
+    }
+
+
     // wrap list item text in a span, and appply functionality buttons
     $("#annotations-list li")
         .wrapInner("<span>")
         .append("<button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button>");
 
+    // make annotation selects editable :
+    bindAllTabs("#annotations-list li span");
 
     /* link li item buttons to events using the on() function
     because :
