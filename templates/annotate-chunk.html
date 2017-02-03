@@ -44,6 +44,12 @@
 
     </form>
 
+    <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}"></script>
+    <script>
+        initialize()
+    </script>
+    {{ url_for('static', filename='js/annotation.js') }}
+
     <script>
     var chunk = document.getElementById('chunk');
 
