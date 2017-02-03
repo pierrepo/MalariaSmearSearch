@@ -4,9 +4,6 @@
 
     {{super()}}
 
-    <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js"></script>
-
     <style>
 
         #chunk{
@@ -52,10 +49,14 @@
 
     </form>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}"></script>
+{% endblock %}
 
-    {{ url_for('static', filename='js/annotation.js') }}
+{% block imports %}
+    {{super()}}
+    <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}"></script>
 
     <script>
     var chunk = document.getElementById('chunk');
