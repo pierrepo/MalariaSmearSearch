@@ -45,7 +45,7 @@ $(document).ready(function(){
         the same handler. Killer.
     */
 
-    $('#annotations-list li').on('click', '.glyphicon-trash', function(){
+    $('#annotations-list').on('click', '.glyphicon-trash', function(){
         /*
         The delete action has a little extra insurance against accidentally
         fat-fingerings. It requires two clicks to actually delete something.
@@ -74,7 +74,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#annotations-list li').on('click', '.glyphicon-pencil', function(){
+    $('#annotations-list').on('click', '.glyphicon-pencil', function(){
         console.log("edit");
     });
 
