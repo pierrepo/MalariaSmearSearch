@@ -1,6 +1,14 @@
 console.log("pouet");
 
-function initialize() {
-  // TODO
-  console.log("BIIIIM");
-};
+
+
+
+$(document).ready(function(){
+
+    // wrap list item text in a span, and appply functionality buttons
+    $("#annotations-list li")
+        .wrapInner("<span>")
+        .append("<button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button>");
+
+
+});
