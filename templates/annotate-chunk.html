@@ -12,11 +12,16 @@
              This rule is very important, please do not ignore this! "*/
             max-width: 100%;
         }
+        #add-new{
+            display: none;
+        }
 
     </style>
 {% endblock %}
 
 {% block content %}
+    <button value = 'view' id = 'toggle-mode' class='glyphicon glyphicon-plus'>Annotate</button>
+
     <div style="height: 500px; width: 500px;">
         {% set path = '1_0_0.jpg' %}
         {{path}}

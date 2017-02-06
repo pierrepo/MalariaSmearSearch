@@ -5,22 +5,49 @@ console.log("pouet");
 
 $(document).ready(function(){
 
-    $('#chunk').cropper({
-        viewMode :1, //the crop box should be within the canvas
-        dragMode : 'move' , //dragging mode of the cropper.
-        crop: function(e) {
-            // Output the result data for cropping image.
-            console.log(e.x);
-            $('#add-sel-x').val( e.x)
-            console.log(e.y);
-            $('#add-sel-y').val(e.y)
-            console.log(e.width);
-            $('#add-sel-width').val(e.width)
-            console.log(e.height);
-            $('#add-sel-height').val(e.height)
-            //console.log(e.detail.rotate);
-            //console.log(e.detail.scaleX);
-            //console.log(e.detail.scaleY);
+    $( "#toggle-mode" ).click(function() {
+
+        value = $(this).val() ;
+
+        console.log (value)
+
+        if ($(this).val() == 'view' ) {
+            // Change button attribute to handle reclick -> return in view mode
+            $(this).val('annotation')
+            $(this).toggleClass( 'glyphicon-plus');
+            $(this).toggleClass( 'glyphicon-eye-open');
+            $(this).text('View');
+            // Show the input form
+            $('#add-new').show()
+            // Set the cropper :
+            $('#chunk').cropper({
+                viewMode :1, //the crop box should be within the canvas
+                dragMode : 'move' , //dragging mode of the cropper.
+                crop: function(e) {
+                    // Output the result data for cropping image.
+                    console.log(e.x);
+                    $('#add-sel-x').val( e.x)
+                    console.log(e.y);
+                    $('#add-sel-y').val(e.y)
+                    console.log(e.width);
+                    $('#add-sel-width').val(e.width)
+                    console.log(e.height);
+                    $('#add-sel-height').val(e.height)
+                    //console.log(e.detail.rotate);
+                    //console.log(e.detail.scaleX);
+                    //console.log(e.detail.scaleY);
+                }
+            });
+        }else{
+            // Change button attribute to handle reclick -> return in annotation mode
+            $(this).val('view');
+            $(this).toggleClass( 'glyphicon-plus');
+            $(this).toggleClass( 'glyphicon-eye-open');
+            $(this).text('Annotate');
+            // Hide the input form :
+            $('#add-new').hide();
+            // Destroy the cropper :
+            $('#chunk').cropper("destroy");
         }
     });
 
