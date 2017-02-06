@@ -77,4 +77,34 @@ $(document).ready(function(){
     $('#annotations-list li').on('click', '.glyphicon-pencil', function(){
         console.log("edit");
     });
+
+    $('#add-new').submit(function(){
+        var newAnnotationText= $( "#new-list-item-text option:selected" ).text();
+
+        $.ajax({
+
+            // DEVELOPER, save new list item!
+
+            success: function(theResponse){
+                // the new list item is appended
+                $("#annotations-list")
+                    .append("<li><span id='' title='Double-click to edit...'>" + newAnnotationText + "</span><button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button></li>");
+                // ensures the click-to-edit functionality is working
+                // on newly appended list items even before a page refresh :
+                // TODO
+                //bindAllTabs("li #"+theResponse);
+                bindAllTabs("#annotations-list li span");
+
+                // clear the input fields after submission :
+                $('#add-new').get(0).reset()
+                // That makes adding a bunch of annotation items in sequence very easy and natural.
+            },
+            error: function(){
+                // TODO
+                // uh oh, didn't work. Error message?
+            }
+        });
+
+        return false; // prevent default form submission -> no page refresh
+    });
 });
