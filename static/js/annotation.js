@@ -5,6 +5,14 @@ console.log("pouet");
 
 $(document).ready(function(){
 
+    var img = document.getElementById("chunk-img");
+    canvas = $( "canvas" )[0]
+    ctx=canvas.getContext('2d');
+    console.log(img.clientWidth); 
+    ctx.drawImage(img,
+        0, 0, img.clientWidth, img.clientHeight,     // source rectangle
+        0, 0, canvas.width, canvas.height); // destination rectangle
+
     $( "#toggle-mode" ).click(function() {
 
         value = $(this).val() ;

@@ -22,10 +22,12 @@
 {% block content %}
     <button value = 'view' id = 'toggle-mode' class='glyphicon glyphicon-plus'>Annotate</button>
 
+    {% set path = '1_0_0.jpg' %}
+    {{path}}
+    <img id='chunk-img' src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
+
     <div style="height: 500px; width: 500px;">
-        {% set path = '1_0_0.jpg' %}
-        {{path}}
-        <img id='chunk' src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
+        <canvas id = "chunk" width="500" height="500" style="border:1px solid #d3d3d3;"></canvas>
     </div>
 
     <ul id = "annotations-list">
