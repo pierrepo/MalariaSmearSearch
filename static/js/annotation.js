@@ -5,6 +5,20 @@ console.log("pouet");
 
 $(document).ready(function(){
 
+    $(function () {
+            $('#ImageMap1').maphilight();
+        });
+
+
+    var data = {};
+    $('#chunk').maphilight();
+    data.alwaysOn = true; // area always colored
+    data.fillColor = '3498db';
+    data.strokeColor = '2c3e50';
+    data.fillOpacity = '1';
+    $('area').data('maphilight', data).trigger('alwaysOn.maphilight');
+
+
     $( "#toggle-mode" ).click(function() {
 
         value = $(this).val() ;

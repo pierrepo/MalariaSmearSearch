@@ -28,7 +28,16 @@
     <div >
         {% set path = '1_0_0.jpg' %}
         {{path}}
-        <img usemap='#anno-map' id='chunk' src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
+        <img class = "clickable" usemap='#anno-map' id='chunk' src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
+    </div>
+
+
+    <div style="float: left">
+        <img id="ImageMap1" src={{url_for('static', filename = "test/"+path )}} usemap="#ImageMapmapAreas" />
+        <map id="ImageMapmapAreas" name="ImageMapmapAreas">
+            <area alt="" title="" href="#Earth" coords="0,0,500,500" shape="rect"
+                data-maphilight="{'strokeColor':'0000ff','strokeWidth':5,'fillColor':'ff0000','fillOpacity':0.6}"/>
+        </map>
     </div>
 
     <map name='anno-map' width = 'responsive'>
@@ -69,6 +78,7 @@
     <link  href="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jeditable.js/1.7.3/jeditable.min.js"></script>
+    <script src="http://davidlynch.org/projects/maphilight/jquery.maphilight.js"></script>
 
     <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}"></script>
 
