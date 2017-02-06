@@ -9,3 +9,7 @@
         <img src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
     </div>
 {% endblock %}
+
+{% block imports %}
+    {{super()}}
+{% endblock %}
