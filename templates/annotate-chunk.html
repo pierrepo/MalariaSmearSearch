@@ -6,7 +6,7 @@
     <div style="height: 500px; width: 500px; overflow: scroll;">
         {% set path = '1_0_0.jpg' %}
         {{path}}
-        <img src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
+        <img class="annotatable" src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
     </div>
 {% endblock %}
 
