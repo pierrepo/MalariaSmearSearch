@@ -10,7 +10,7 @@
             /* According to Cropperjs documentation :
              "Limit image width to avoid overflow the container
              This rule is very important, please do not ignore this! "*/
-            max-width: 100%;
+            /*max-width: 100%;*/
         }
         #add-new{
             display: none;
@@ -22,11 +22,16 @@
 {% block content %}
     <button value = 'view' id = 'toggle-mode' class='glyphicon glyphicon-plus'>Annotate</button>
 
-    <div style="height: 500px; width: 500px;">
+    <div >
         {% set path = '1_0_0.jpg' %}
         {{path}}
-        <img id='chunk' src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
+        <img usemap='#anno-map' id='chunk' src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
     </div>
+
+    <map name='anno-map' width = 'responsive'>
+        <area shape="rect" coords="0,0,100,100"  alt="bim1" href="#">
+        <area shape="rect" coords="1500,1500,2540,2280" alt="bim2" href="#">
+    </map>
 
     <ul id = "annotations-list">
 
