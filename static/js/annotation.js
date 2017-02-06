@@ -4,30 +4,24 @@ console.log("pouet");
 
 
 $(document).ready(function(){
-    var chunk = document.getElementById('chunk');
 
-    var add_sel_x = document.getElementById('add-sel-x')
-    var add_sel_y = document.getElementById('add-sel-y')
-    var add_sel_width = document.getElementById('add-sel-width')
-    var add_sel_height = document.getElementById('add-sel-height')
-
-    var cropper = new Cropper(chunk, {
+    $('#chunk').cropper({
         viewMode :1, //the crop box should be within the canvas
         dragMode : 'move' , //dragging mode of the cropper.
-
         crop: function(e) {
-            console.log(e.detail.x);
-            add_sel_x.value = e.detail.x
-            console.log(e.detail.y);
-            add_sel_y.value = e.detail.y
-            console.log(e.detail.width);
-            add_sel_width.value = e.detail.width
-            console.log(e.detail.height);
-            add_sel_height.value = e.detail.height
+            // Output the result data for cropping image.
+            console.log(e.x);
+            $('#add-sel-x').val( e.x)
+            console.log(e.y);
+            $('#add-sel-y').val(e.y)
+            console.log(e.width);
+            $('#add-sel-width').val(e.width)
+            console.log(e.height);
+            $('#add-sel-height').val(e.height)
             //console.log(e.detail.rotate);
             //console.log(e.detail.scaleX);
             //console.log(e.detail.scaleY);
-    }
+        }
     });
 
 
