@@ -2,14 +2,26 @@ console.log("pouet");
 
 
 
+img = new Image();
+img.src = img_source ;
+canvas = document.createElement("canvas");
+context = canvas.getContext("2d");
 
 $(document).ready(function(){
 
-    var img = document.getElementById("chunk-img");
-    canvas = $("canvas" )[0] ;
-    ctx=canvas.getContext('2d');
-    console.log(img.clientWidth);
-    ctx.drawImage(img, 0, 0); // destination rectangle
+    img.onload = function(){
+        // fit the canvas to the image :
+        canvas.width  = img.width;
+        canvas.height = img.height;
+        // load the image in the canvas
+        context.drawImage(img, 0, 0);// destination
+        // load the existing annotations :
+        context.fillRect(25,25,100,100);
+
+        // put the annotated img in the div dedicated to the cropper plugin :
+        console.log (canvas.toDataURL() );
+        $("#chunk").attr("src", canvas.toDataURL() );
+    };
 
     $( "#toggle-mode" ).click(function() {
 

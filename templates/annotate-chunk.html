@@ -22,15 +22,11 @@
 {% block content %}
     <button value = 'view' id = 'toggle-mode' class='glyphicon glyphicon-plus'>Annotate</button>
 
-    {% set path = '1_0_0.jpg' %}
-    {{path}}
-    <img id='chunk-img' src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
-
     <div style="height: 500px; width: 500px;">
 
+        <img id='chunk' alt="a chunk of an uploaded image with previous annotation and that can be annotated" >
     </div>
 
-    <canvas id = "canvas-id" width="2640" height="2280" style="border:1px solid #d3d3d3;"></canvas>
     <ul id = "annotations-list">
 
         <li>
@@ -65,6 +61,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jeditable.js/1.7.3/jeditable.min.js"></script>
 
+    <script>
+    img_source = '{{url_for("static", filename = "test/"+ "1_0_0.jpg" )}}' ;
+    </script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}"></script>
 
 {% endblock %}
