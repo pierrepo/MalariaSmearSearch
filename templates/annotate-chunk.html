@@ -6,7 +6,7 @@
 
     {% set path = '1_0_0.jpg' %}
     {{path}}
-    <img class="annotatable" src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
+    <img id = "chunk" class="annotatable" src="{{url_for('static', filename = 'test/'+path )}}" alt="a chunk of an uploaded image" >
 
     <ul id = "annotations-list"q>
         <li> test 1 </li>
