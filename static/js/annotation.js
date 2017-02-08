@@ -35,6 +35,10 @@ $(document).ready(function(){
     };
     imageObj.src = img_source;
 
+    // - the other for the annotations :
+    var anno_layer = new Konva.Layer();
+
+
 
     $( "#toggle-mode" ).click(function() {
 
