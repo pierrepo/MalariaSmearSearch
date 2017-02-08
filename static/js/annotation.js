@@ -74,7 +74,21 @@ $(document).ready(function(){
     // add the layer to the stage
     stage.add(anno_layer);
 
-
+    // listeners for user input events
+    stage.on('mouseover', function(evt) {
+        var annotation = evt.target;
+        if (annotation) {
+            console.log('mouseover');
+            console.log(annotation);
+        }
+    });
+    stage.on('mousedown', function(evt) {
+        var annotation = evt.target;
+        if (annotation) {
+            console.log('mousedown');
+            console.log(annotation);
+        }
+    });
 
 
     $( "#toggle-mode" ).click(function() {
