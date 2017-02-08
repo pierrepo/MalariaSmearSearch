@@ -77,7 +77,13 @@ $(document).ready(function(){
     // once data are loaded TODO
     // render (false) annotations = add the shape to the layer // TODO : is there a for each loop in js ?
     for(var i = 0; i < data.length; i++) {
-        addAnno(data[i], anno_layer);
+        ratio = 0.1893939393939394  // TODO : use ratio computed once the image is loaded
+        ratio_data = {
+            x: data[i].x * ratio,
+            y: data[i].y * ratio,
+            id: data[i].i
+        };
+        addAnno(ratio_data, anno_layer);
     }
 
     // add the layer to the stage
