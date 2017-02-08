@@ -44,7 +44,7 @@ $(document).ready(function(){
     // create a Konva stage
     var stage = new Konva.Stage({
       container: 'konva',   // id of container <div>
-      width: 500,
+      width: 500, // TODO : dimention given by bootstrap
       height: 500
     });
     // then, layers creation :
