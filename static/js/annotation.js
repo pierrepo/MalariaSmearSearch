@@ -15,6 +15,27 @@ $(document).ready(function(){
       height: 500
     });
 
+    // then, layers creation :
+
+    // - one for the image :
+    var img_layer = new Konva.Layer();
+    var imageObj = new Image();
+    imageObj.onload = function() {
+      var chunk = new Konva.Image({
+        x: 50,
+        y: 50,
+        image: this,
+        width: 106,
+        height: 118
+      });
+      // add the shape to the layer
+      img_layer.add(chunk);
+      // add the layer to the stage
+      stage.add(img_layer);
+    };
+    imageObj.src = img_source;
+
+
     $( "#toggle-mode" ).click(function() {
 
         value = $(this).val() ;
