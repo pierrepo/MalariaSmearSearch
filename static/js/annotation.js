@@ -32,6 +32,7 @@ $(document).ready(function(){
       img_layer.add(chunk);
       // add the layer to the stage
       stage.add(img_layer);
+      img_layer.moveToBottom();
     };
     imageObj.src = img_source;
 
