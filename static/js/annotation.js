@@ -114,6 +114,9 @@ $(document).ready(function(){
             $(this).text('View');
             // Show the input form
             $('#add-new').show()
+            // put the annotated img in the div dedicated to the cropper plugin :
+            console.log (stage.toDataURL() );
+            $("#chunk").attr("src", stage.toDataURL() );
             // Set the cropper :
             $('#chunk').cropper({
                 viewMode :1, //the crop box should be within the canvas

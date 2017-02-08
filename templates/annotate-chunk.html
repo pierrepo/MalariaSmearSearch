@@ -25,9 +25,7 @@
     <div id="konva"></div>
 
     <div style="height: 500px; width: 500px;">
-        {% set path = '1_0_0.jpg' %}
-        {{path}}
-        <img id='chunk' src={{url_for('static', filename = "test/"+path )}} alt="a chunk of an uploaded image" >
+        <img id='chunk' alt="a chunk of an uploaded image" >
     </div>
 
     <ul id = "annotations-list">
