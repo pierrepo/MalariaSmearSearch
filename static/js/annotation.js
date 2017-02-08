@@ -5,6 +5,16 @@ console.log("pouet");
 
 $(document).ready(function(){
 
+    /*
+        Konva usage :
+    */
+    // first we create a Konva stage
+    var stage = new Konva.Stage({
+      container: 'konva',   // id of container <div>
+      width: 500,
+      height: 500
+    });
+
     $( "#toggle-mode" ).click(function() {
 
         value = $(this).val() ;
