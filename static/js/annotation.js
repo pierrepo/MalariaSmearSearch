@@ -41,7 +41,12 @@ $(document).ready(function(){
     console.log(data) ;
 
 
-    // create a Konva stage
+    // create Konva stages
+    var hidden_stage = new Konva.Stage({
+      container: 'hidden-konva',  // id of container <div>
+      width : 1,
+      height : 1
+    });
     var stage = new Konva.Stage({
       container: 'konva',   // id of container <div>
       width: 500, // TODO : dimention given by bootstrap
@@ -49,8 +54,10 @@ $(document).ready(function(){
     // then, layers creation :
     // - one for the image :
     var img_layer = new Konva.Layer();
+    var hidden_img_layer = new Konva.Layer();
     // - the other for the annotations :
     var anno_layer = new Konva.Layer();
+    var hidden_anno_layer = new Konva.Layer();
 
     // once the image is loaded :
     imageObj.onload = function() {
@@ -65,13 +72,26 @@ $(document).ready(function(){
         width: imageObj.naturalWidth * ratio,
         height: imageObj.naturalHeight * ratio
       });
+      var hidden_chunk = new Konva.Image({
+        x: 0,
+        y: 0,
+        image: this,
+        width: imageObj.naturalWidth,
+        height: imageObj.naturalHeight
+      });
       //adjust stage height :
       stage.height( chunk.height() );
+      // and the hidden stage dimention :
+      hidden_stage.height( hidden_chunk.height() );
+      hidden_stage.width( hidden_chunk.width() );
       // add the shape to the layer
       img_layer.add(chunk);
+      hidden_img_layer.add(hidden_chunk);
       // add the layer to the stage
       stage.add(img_layer);
       img_layer.moveToBottom();
+      hidden_stage.add(hidden_img_layer);
+      hidden_img_layer.moveToBottom();
     };
 
     // once data are loaded TODO
@@ -83,11 +103,16 @@ $(document).ready(function(){
             y: data[i].y * ratio,
             id: data[i].i
         };
+        console.log ('lààààààààààà') ;
+        console.log(data[i]) ;
+        console.log(ratio_data) ;
         addAnno(ratio_data, anno_layer);
+        addAnno(data[i], hidden_anno_layer);
     }
 
     // add the layer to the stage
     stage.add(anno_layer);
+    hidden_stage.add(hidden_anno_layer);
 
     // listeners for user input events
     stage.on('mouseover', function(evt) {
@@ -122,7 +147,7 @@ $(document).ready(function(){
             $('#add-new').show()
             // put the annotated img in the div dedicated to the cropper plugin :
             console.log (stage.toDataURL() );
-            $("#chunk").attr("src", stage.toDataURL() );
+            $("#chunk").attr("src", hidden_stage.toDataURL() );
             // Set the cropper :
             $('#chunk').cropper({
                 viewMode :1, //the crop box should be within the canvas
