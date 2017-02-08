@@ -38,6 +38,42 @@ $(document).ready(function(){
     // - the other for the annotations :
     var anno_layer = new Konva.Layer();
 
+    // add false annotations :
+
+    // build data
+    var data = [];
+    for(var i = 0; i < 20; i++) {
+        var x = Math.random() * 100;
+        var y = 100 + (Math.random() * 200) - 100 + (100 / 100) * -1 * x;
+        data.push({
+            x: x,
+            y: y,
+            id: i
+        });
+    }
+    console.log(data) ;
+    // render data =  add the shape to the layer // TODO : is there a for each loop in js ?
+    for(var i = 0; i < data.length; i++) {
+        addAnno(data[i], anno_layer);
+    }
+
+    function addAnno(obj, layer) {
+        console.log(obj) ;
+        var rect = new Konva.Rect({
+          x: obj.x,
+          y: obj.y,
+          width: 100,
+          height: 50,
+          stroke: 'black',
+          strokeWidth: 4
+        });
+        layer.add(rect);
+    }
+
+    // add the layer to the stage
+    stage.add(anno_layer);
+
+
 
 
     $( "#toggle-mode" ).click(function() {
