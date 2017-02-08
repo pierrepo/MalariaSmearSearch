@@ -45,7 +45,6 @@ $(document).ready(function(){
     var stage = new Konva.Stage({
       container: 'konva',   // id of container <div>
       width: 500, // TODO : dimention given by bootstrap
-      height: 500
     });
     // then, layers creation :
     // - one for the image :
@@ -55,13 +54,19 @@ $(document).ready(function(){
 
     // once the image is loaded :
     imageObj.onload = function() {
+      // compute ratio :
+      console.log(imageObj.naturalWidth)
+      ratio = stage.width()/imageObj.naturalWidth;
+      console.log(ratio);
       var chunk = new Konva.Image({
-        x: 50,
-        y: 50,
+        x: 0,
+        y: 0,
         image: this,
-        width: 106,
-        height: 118
+        width: imageObj.naturalWidth * ratio,
+        height: imageObj.naturalHeight * ratio
       });
+      //adjust stage height :
+      stage.height( chunk.height() );
       // add the shape to the layer
       img_layer.add(chunk);
       // add the layer to the stage
