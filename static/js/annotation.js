@@ -4,22 +4,56 @@ console.log("pouet");
 
 
 $(document).ready(function(){
+    /**************************************************************************/
+    // util functions :
 
-    /*
-        Konva usage :
-    */
-    // first we create a Konva stage
+    function addAnno(obj, layer) {
+        console.log(obj) ;
+        var rect = new Konva.Rect({
+          x: obj.x,
+          y: obj.y,
+          width: 100,
+          height: 50,
+          stroke: 'black',
+          strokeWidth: 4
+        });
+        layer.add(rect);
+    }
+    /**************************************************************************/
+
+
+    // fetch image :
+    var imageObj = new Image();
+    imageObj.src = img_source;
+
+    // fetch (false) corresponding annotation data : TODO : use AJAX / var
+    // build data
+    var data = [];
+    for(var i = 0; i < 20; i++) {
+        var x = Math.random() * 100;
+        var y = 100 + (Math.random() * 200) - 100 + (100 / 100) * -1 * x;
+        data.push({
+            x: x,
+            y: y,
+            id: i
+        });
+    }
+    console.log(data) ;
+
+
+    // create a Konva stage
     var stage = new Konva.Stage({
       container: 'konva',   // id of container <div>
       width: 500,
       height: 500
     });
-
     // then, layers creation :
-
     // - one for the image :
     var img_layer = new Konva.Layer();
-    var imageObj = new Image();
+    // - the other for the annotations :
+    var anno_layer = new Konva.Layer();
+
+    // once the image is loaded :
     imageObj.onload = function() {
       var chunk = new Konva.Image({
         x: 50,
@@ -34,41 +68,11 @@ $(document).ready(function(){
       stage.add(img_layer);
       img_layer.moveToBottom();
     };
-    imageObj.src = img_source;
 
-    // - the other for the annotations :
-    var anno_layer = new Konva.Layer();
-
-    // add false annotations :
-
-    // build data
-    var data = [];
-    for(var i = 0; i < 20; i++) {
-        var x = Math.random() * 100;
-        var y = 100 + (Math.random() * 200) - 100 + (100 / 100) * -1 * x;
-        data.push({
-            x: x,
-            y: y,
-            id: i
-        });
-    }
-    console.log(data) ;
-    // render data =  add the shape to the layer // TODO : is there a for each loop in js ?
+    // once data are loaded TODO
+    // render (false) annotations = add the shape to the layer // TODO : is there a for each loop in js ?
     for(var i = 0; i < data.length; i++) {
         addAnno(data[i], anno_layer);
-    }
-
-    function addAnno(obj, layer) {
-        console.log(obj) ;
-        var rect = new Konva.Rect({
-          x: obj.x,
-          y: obj.y,
-          width: 100,
-          height: 50,
-          stroke: 'black',
-          strokeWidth: 4
-        });
-        layer.add(rect);
     }
 
     // add the layer to the stage
