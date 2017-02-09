@@ -115,14 +115,14 @@ $(document).ready(function(){
     hidden_stage.add(hidden_anno_layer);
 
     // listeners for user input events
-    stage.on('mouseover', function(evt) {
+    stage.find('Rect').on('mouseover', function(evt) {
         var annotation = evt.target;
         if (annotation) {
             console.log('mouseover');
             console.log(annotation);
         }
     });
-    stage.on('mousedown', function(evt) {
+    stage.find('Rect').on('mousedown', function(evt) {
         var annotation = evt.target;
         if (annotation) {
             console.log('mousedown');
