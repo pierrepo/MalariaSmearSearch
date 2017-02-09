@@ -4,6 +4,140 @@ console.log("pouet");
 
 
 $(document).ready(function(){
+    /**************************************************************************/
+    // util functions :
+
+    function addAnno(obj, layer) {
+        console.log(obj) ;
+        var rect = new Konva.Rect({
+          x: obj.x,
+          y: obj.y,
+          width: obj.width,
+          height: obj.height,
+          stroke: obj.stroke,
+          strokeWidth:  obj.strokeWidth,
+          name: obj.name
+        });
+        layer.add(rect);
+    }
+    /**************************************************************************/
+
+
+    // fetch image :
+    var imageObj = new Image();
+    imageObj.src = img_source;
+
+    // fetch (false) corresponding annotation data : TODO : use AJAX / var
+    // build data
+    var data = [];
+    for(var i = 0; i < 20; i++) {
+        var x = Math.random() * 100;
+        var y = 100 + (Math.random() * 200) - 100 + (100 / 100) * -1 * x;
+        data.push({
+            x: x,
+            y: y,
+            width : 100,
+            height : 50,
+            stroke: 'black',
+            strokeWidth: 4,
+            name: i
+        });
+    }
+    console.log(data) ;
+
+
+    // create Konva stages
+    var hidden_stage = new Konva.Stage({
+      container: 'hidden-konva',  // id of container <div>
+      width : 1,
+      height : 1
+    });
+    var stage = new Konva.Stage({
+      container: 'konva',   // id of container <div>
+      width: 500, // TODO : dimention given by bootstrap
+    });
+    // then, layers creation :
+    // - one for the image :
+    var img_layer = new Konva.Layer();
+    var hidden_img_layer = new Konva.Layer();
+    // - the other for the annotations :
+    var anno_layer = new Konva.Layer();
+    var hidden_anno_layer = new Konva.Layer();
+
+    // once the image is loaded :
+    imageObj.onload = function() {
+      // compute ratio :
+      console.log(imageObj.naturalWidth)
+      ratio = stage.width()/imageObj.naturalWidth;
+      console.log(ratio);
+      var chunk = new Konva.Image({
+        x: 0,
+        y: 0,
+        image: this,
+        width: imageObj.naturalWidth * ratio,
+        height: imageObj.naturalHeight * ratio
+      });
+      var hidden_chunk = new Konva.Image({
+        x: 0,
+        y: 0,
+        image: this,
+        width: imageObj.naturalWidth,
+        height: imageObj.naturalHeight
+      });
+      //adjust stage height :
+      stage.height( chunk.height() );
+      // and the hidden stage dimention :
+      hidden_stage.height( hidden_chunk.height() );
+      hidden_stage.width( hidden_chunk.width() );
+      // add the shape to the layer
+      img_layer.add(chunk);
+      hidden_img_layer.add(hidden_chunk);
+      // add the layer to the stage
+      stage.add(img_layer);
+      img_layer.moveToBottom();
+      hidden_stage.add(hidden_img_layer);
+      hidden_img_layer.moveToBottom();
+    };
+
+    // once data are loaded TODO
+    // render (false) annotations = add the shape to the layer // TODO : is there a for each loop in js ?
+    for(var i = 0; i < data.length; i++) {
+        ratio = 0.1893939393939394  // TODO : use ratio computed once the image is loaded
+        ratio_data = {
+            x: data[i].x * ratio,
+            y: data[i].y * ratio,
+            width: data[i].width * ratio,
+            height: data[i].height * ratio,
+            strokeWidth: data[i].strokeWidth * ratio,
+            id: data[i].i
+        };
+        console.log ('lààààààààààà') ;
+        console.log(data[i]) ;
+        console.log(ratio_data) ;
+        addAnno(ratio_data, anno_layer);
+        addAnno(data[i], hidden_anno_layer);
+    }
+
+    // add the layer to the stage
+    stage.add(anno_layer);
+    hidden_stage.add(hidden_anno_layer);
+
+    // listeners for user input events
+    stage.find('Rect').on('mouseover', function(evt) {
+        var annotation = evt.target;
+        if (annotation) {
+            console.log('mouseover');
+            console.log(annotation);
+        }
+    });
+    stage.find('Rect').on('mousedown', function(evt) {
+        var annotation = evt.target;
+        if (annotation) {
+            console.log('mousedown');
+            console.log(annotation);
+        }
+    });
+
 
     $( "#toggle-mode" ).click(function() {
 
@@ -19,6 +153,9 @@ $(document).ready(function(){
             $(this).text('View');
             // Show the input form
             $('#add-new').show()
+            // put the annotated img in the div dedicated to the cropper plugin :
+            console.log (stage.toDataURL() );
+            $("#chunk").attr("src", hidden_stage.toDataURL() );
             // Set the cropper :
             $('#chunk').cropper({
                 viewMode :1, //the crop box should be within the canvas
