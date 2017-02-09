@@ -14,7 +14,7 @@ $(document).ready(function(){
           y: obj.y,
           width: obj.width,
           height: obj.height,
-          stroke: 'black',
+          stroke: obj.stroke,
           strokeWidth:  obj.strokeWidth
         });
         layer.add(rect);
@@ -37,6 +37,7 @@ $(document).ready(function(){
             y: y,
             width : 100,
             height : 50,
+            stroke: 'black',
             strokeWidth: 4,
             id: i
         });
