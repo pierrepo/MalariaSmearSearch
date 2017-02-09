@@ -15,7 +15,8 @@ $(document).ready(function(){
           width: obj.width,
           height: obj.height,
           stroke: obj.stroke,
-          strokeWidth:  obj.strokeWidth
+          strokeWidth:  obj.strokeWidth,
+          name: obj.name
         });
         layer.add(rect);
     }
@@ -39,7 +40,7 @@ $(document).ready(function(){
             height : 50,
             stroke: 'black',
             strokeWidth: 4,
-            id: i
+            name: i
         });
     }
     console.log(data) ;
