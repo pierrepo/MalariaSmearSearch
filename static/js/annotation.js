@@ -12,10 +12,10 @@ $(document).ready(function(){
         var rect = new Konva.Rect({
           x: obj.x,
           y: obj.y,
-          width: 100,
-          height: 50,
+          width: obj.width,
+          height: obj.height,
           stroke: 'black',
-          strokeWidth: 4
+          strokeWidth:  obj.strokeWidth
         });
         layer.add(rect);
     }
@@ -35,6 +35,9 @@ $(document).ready(function(){
         data.push({
             x: x,
             y: y,
+            width : 100,
+            height : 50,
+            strokeWidth: 4,
             id: i
         });
     }
@@ -101,6 +104,9 @@ $(document).ready(function(){
         ratio_data = {
             x: data[i].x * ratio,
             y: data[i].y * ratio,
+            width: data[i].width * ratio,
+            height: data[i].height * ratio,
+            strokeWidth: data[i].strokeWidth * ratio,
             id: data[i].i
         };
         console.log ('lààààààààààà') ;
