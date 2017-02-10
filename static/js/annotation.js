@@ -40,7 +40,7 @@ $(document).ready(function(){
             height : 50,
             stroke: 'black',
             strokeWidth: 4,
-            name: i
+            name: i.toString()
         });
     }
     console.log(data) ;
