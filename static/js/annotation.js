@@ -152,8 +152,10 @@ $(document).ready(function(){
             $(this).toggleClass( 'glyphicon-plus');
             $(this).toggleClass( 'glyphicon-eye-open');
             $(this).text('View');
-            // Show the input form
-            $('#add-new').show()
+            // Show annotation stuff : the cropper div and the input form
+            $('.anno-stuff').show()
+            // Hide rendered kanva : 
+            $('#konva').hide()
             // put the annotated img in the div dedicated to the cropper plugin :
             console.log (stage.toDataURL() );
             $("#chunk").attr("src", hidden_stage.toDataURL() );
@@ -182,8 +184,10 @@ $(document).ready(function(){
             $(this).toggleClass( 'glyphicon-plus');
             $(this).toggleClass( 'glyphicon-eye-open');
             $(this).text('Annotate');
-            // Hide the input form :
-            $('#add-new').hide();
+            // Hide anno stuff : cropper div, the input form :
+            $('.anno-stuff').hide();
+            // Show rendered kanva : 
+            $('#konva').show()
             // Destroy the cropper :
             $('#chunk').cropper("destroy");
         }
