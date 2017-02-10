@@ -40,7 +40,7 @@ $(document).ready(function(){
             height : 50,
             stroke: 'black',
             strokeWidth: 4,
-            name: i
+            name: i.toString()
         });
     }
     console.log(data) ;
@@ -108,6 +108,7 @@ $(document).ready(function(){
             y: data[i].y * ratio,
             width: data[i].width * ratio,
             height: data[i].height * ratio,
+            stroke: data[i].stroke,
             strokeWidth: data[i].strokeWidth * ratio,
             id: data[i].i
         };
