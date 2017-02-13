@@ -330,7 +330,34 @@ $(document).ready(function(){
                 // ensures the click-to-edit functionality is working
                 // on newly appended list items even before a page refresh :
                 bindAllTabs("#annotations-list li[name="+theResponse+"]");
+                // draw the annotation on the konvas :  
+                new_anno = {
+                    x: $('#add-sel-x').val(),
+                    y: $('#add-sel-y').val(),
+                    width: $('#add-sel-width').val(),
+                    height: $('#add-sel-height').val(),
+                    stroke: 'red',
+                    strokeWidth: 4,
+                    name: theResponse
+                };
+                addAnno(new_anno, chunk_anno_layer);
+                chunk_anno_layer.draw(); 
 
+                ratio_new_anno = {
+                    x: new_anno.x * ratio,
+                    y: new_anno.y * ratio,
+                    width: new_anno.width * ratio,
+                    height: new_anno.height * ratio,
+                    stroke: new_anno.stroke,
+                    strokeWidth: new_anno.strokeWidth * ratio,
+                    name: new_anno.name
+                };
+                addAnno(ratio_new_anno, anno_layer);
+                anno_layer.draw(); 
+
+                console.log ("new");
+                console.log (new_anno);
+                console.log(ratio_new_anno);
                 // clear the input fields after submission :
                 $('#add-new').get(0).reset()
                 // That makes adding a bunch of annotation items in sequence very easy and natural.
