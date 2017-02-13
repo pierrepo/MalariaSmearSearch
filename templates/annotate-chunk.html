@@ -18,6 +18,10 @@
         #hidden-konva{
             display: none; /*no space allocated for it between the other tags*/
         }
+        #annotations-list li span:hover, 
+        #annotations-list li span.hover{
+            background-color: yellow;
+        }
 
     </style>
 {% endblock %}
@@ -34,7 +38,7 @@
 
     <ul id = "annotations-list">
 
-        <li>
+        <li name = "0">
             an annotation
         </li>
     </ul>

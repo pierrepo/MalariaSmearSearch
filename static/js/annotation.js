@@ -14,11 +14,36 @@ $(document).ready(function(){
           y: obj.y,
           width: obj.width,
           height: obj.height,
+          fill : null,
           stroke: obj.stroke,
           strokeWidth:  obj.strokeWidth,
           name: obj.name
         });
         layer.add(rect);
+    }
+
+    /*
+    * This function handles the event 'hover annotations'. 
+    * If the mouse is on a rect or on an annotation item in the anotation list, 
+    * the corresponding rect and annotation item are filled in yellow
+    * (with transparency of 0.5). 
+    * Else nothing happens.
+    * Nota Bene : 
+    * after using this function, you have to redray the layer containing the rect annotations
+    * using the draw() function. 
+    *
+    * @param {bool} activate - tells if the mouse is on a annotation (True) or not (False).
+    * @param {string} name - the name of a konva rect annotation and of an annotation item in the annotation list.
+    * @param {Konva.stage} stage - stage where the annotations will be colored
+    *
+    */
+    function handleHoverAnno(activate, name, stage){
+        console.log('in handleHoverAnno');
+        transparency = (activate ? 0.5 : 0).toString();
+        console.log (activate * 0.5) ;
+        rect = stage.findOne('.'+name);
+        rect.setFill('rgba(255,255,0,'+0.5 * activate+')'); // 'rgba(255,255,0,'+transparency+')'
+        $("#annotations-list li[name="+name+"] span").toggleClass('hover');
     }
     /**************************************************************************/
 
@@ -110,7 +135,7 @@ $(document).ready(function(){
             height: data[i].height * ratio,
             stroke: data[i].stroke,
             strokeWidth: data[i].strokeWidth * ratio,
-            id: data[i].i
+            name: data[i].name
         };
         console.log ('lààààààààààà') ;
         console.log(data[i]) ;
@@ -128,9 +153,22 @@ $(document).ready(function(){
         var annotation = evt.target;
         if (annotation) {
             console.log('mouseover');
-            console.log(annotation);
+            console.log(annotation, true);
+            handleHoverAnno(true, this.name(), stage);
+            anno_layer.draw(); 
         }
     });
+
+    stage.find('Rect').on('mouseout', function(evt) {
+        var annotation = evt.target;
+        if (annotation) {
+            console.log('mouseover');
+            console.log(annotation, false);
+            handleHoverAnno(false, this.name(), stage);
+            anno_layer.draw(); 
+        }
+    });
+
     stage.find('Rect').on('mousedown', function(evt) {
         var annotation = evt.target;
         if (annotation) {
