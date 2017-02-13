@@ -303,6 +303,15 @@ $(document).ready(function(){
         console.log("edit");
     });
 
+    // static varaiable. 
+    // will be deleted when adding a new annotation in db by ajax will return the id of the annotation
+    var incr = (function () {
+        var i = 20; // There are 20 rect on the canvas
+        return function () {
+            return i++;
+        }
+    })();
+
     $('#add-new').submit(function(){
         var newAnnotationText= $( "#new-list-item-text option:selected" ).text();
 
@@ -311,6 +320,9 @@ $(document).ready(function(){
             // DEVELOPER, save new list item!
 
             success: function(theResponse){
+
+                theResponse = incr()
+
                 // the new list item is appended
                 $("#annotations-list")
                     .append("<li><span id='' title='Double-click to edit...'>" + newAnnotationText + "</span><button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button></li>");
