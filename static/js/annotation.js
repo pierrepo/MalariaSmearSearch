@@ -321,16 +321,15 @@ $(document).ready(function(){
 
             success: function(theResponse){
 
-                theResponse = incr()
+                theResponse = incr().toString();
+                console.log(theResponse);
 
                 // the new list item is appended
                 $("#annotations-list")
-                    .append("<li><span id='' title='Double-click to edit...'>" + newAnnotationText + "</span><button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button></li>");
+                    .append("<li name="+theResponse+"><span id='' title='Double-click to edit...'>" + newAnnotationText + "</span><button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button></li>");
                 // ensures the click-to-edit functionality is working
                 // on newly appended list items even before a page refresh :
-                // TODO
-                //bindAllTabs("li #"+theResponse);
-                bindAllTabs("#annotations-list li span");
+                bindAllTabs("#annotations-list li[name="+theResponse+"]");
 
                 // clear the input fields after submission :
                 $('#add-new').get(0).reset()
