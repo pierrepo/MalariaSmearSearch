@@ -11,12 +11,10 @@
              "Limit image width to avoid overflow the container
              This rule is very important, please do not ignore this! "*/
             max-width: 100%;
+            overflow: auto;
         }
         .anno-stuff{
             display: none;
-        }
-        #hidden-konva{
-            display: none; /*no space allocated for it between the other tags*/
         }
         #annotations-list li span:hover, 
         #annotations-list li span.hover{
@@ -29,11 +27,9 @@
 {% block content %}
     <button value = 'view' id = 'toggle-mode' class='glyphicon glyphicon-plus'>Annotate</button>
 
-    <div id="hidden-konva"></div>
     <div id="konva"></div>
 
-    <div class='anno-stuff' style="height: 500px; width: 500px;">
-        <img id='chunk' alt="a chunk of an uploaded image" >
+    <div id="chunk" class='anno-stuff' style="height: 500px; width: 500px;">
     </div>
 
     <ul id = "annotations-list">
