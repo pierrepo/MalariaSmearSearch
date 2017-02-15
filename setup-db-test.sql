@@ -55,7 +55,7 @@ CREATE TABLE tbl_annotation (
   'y' INT,
   'width' INT,
   'height' INT,
-  'annotation' VARCHAR(2) CHECK ('annotation' IN ('P' , 'RC', 'WC', 'O') ), /* parasite, red cell, white cell, other  */
+  annotation VARCHAR(2) CHECK (annotation IN ('P' , 'RC', 'WC', 'O') ), /* parasite, red cell, white cell, other  */
   FOREIGN KEY('id_photo', 'col', 'row') REFERENCES tbl_chunk('id_photo', 'col', 'row')
 );
 
