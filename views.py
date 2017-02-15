@@ -5,7 +5,7 @@ URLs are define without trailing slashes.
 HTML templates are in the templates folder.
 """
 from flask import render_template, request, redirect, url_for, Response, send_file
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, current_user
 import os
 
 from app import app, login_manager, photos
@@ -216,3 +216,50 @@ def download(photo_id):
 @app.route('/annotate_chunk/<chunk_id>')
 def annotate_chunk(chunk_id):
         return render_template('annotate-chunk.html')
+
+@app.route('/testgetchunk' )
+@login_required
+def add_anno() :
+
+    print (current_user)
+
+    chunk = Chunk.query.get([1, 0, 0]) # Primary Key -> image_id, col, row
+    print (chunk)
+
+    x =  10
+    y =  10
+    width =  100
+    height =  100
+    annotation =  'O'
+
+    new_anno = Annotation(
+        current_user,
+        chunk,
+        x, y, width, height,
+        annotation
+    )
+
+    print (new_anno)
+
+    print (new_anno.username)
+    print (new_anno.id_photo )
+    print (new_anno.col)
+    print (new_anno.row)
+    print (new_anno.date )
+    print (new_anno.x )
+    print (new_anno.y )
+    print (new_anno.width )
+    print (new_anno.height )
+    print (new_anno.annotation)
+
+    try :
+        db.session.add(new_anno)
+        db.session.commit()
+        print('New anno added to database')
+    except Exception as e:
+        print (e)
+        db.session.rollback()
+        print('An error occurred accessing the database.')
+        redirect('/')
+
+    return ''
