@@ -38,7 +38,7 @@ CREATE TABLE tbl_photo (
 
 
 CREATE TABLE tbl_chunk (
-  'id_photo' REFERENCES tbl_level(name),
+  'id_photo' REFERENCES tbl_photo('id'),
   'col' INTEGER  ,
   'row' INTEGER , 
   PRIMARY KEY ('id_photo', 'col', 'row')
