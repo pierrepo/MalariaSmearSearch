@@ -23,14 +23,14 @@ $(document).ready(function(){
     }
 
     /*
-    * This function handles the event 'hover annotations'. 
-    * If the mouse is on a rect or on an annotation item in the anotation list, 
+    * This function handles the event 'hover annotations'.
+    * If the mouse is on a rect or on an annotation item in the anotation list,
     * the corresponding rect and annotation item are filled in yellow
-    * (with transparency of 0.5). 
+    * (with transparency of 0.5).
     * Else nothing happens.
-    * Nota Bene : 
+    * Nota Bene :
     * after using this function, you have to redray the layer containing the rect annotations
-    * using the draw() function. 
+    * using the draw() function.
     *
     * @param {bool} activate - tells if the mouse is on a annotation (True) or not (False).
     * @param {string} name - the name of a konva rect annotation and of an annotation item in the annotation list.
@@ -155,7 +155,7 @@ $(document).ready(function(){
             console.log('mouseover');
             console.log(annotation, true);
             handleHoverAnno(true, this.name(), stage);
-            anno_layer.draw(); 
+            anno_layer.draw();
         }
     });
 
@@ -165,7 +165,7 @@ $(document).ready(function(){
             console.log('mouseover');
             console.log(annotation, false);
             handleHoverAnno(false, this.name(), stage);
-            anno_layer.draw(); 
+            anno_layer.draw();
         }
     });
 
@@ -192,7 +192,7 @@ $(document).ready(function(){
             $(this).text('View');
             // Show annotation stuff : the cropper div and the input form
             $('.anno-stuff').show()
-            // Hide rendered kanva : 
+            // Hide rendered kanva :
             $('#konva').hide()
             // Set the cropper :
             $('#chunk .konvajs-content canvas').cropper({
@@ -221,7 +221,7 @@ $(document).ready(function(){
             $(this).text('Annotate');
             // Hide anno stuff : cropper div, the input form :
             $('.anno-stuff').hide();
-            // Show rendered kanva : 
+            // Show rendered kanva :
             $('#konva').show()
             // Destroy the cropper :
             $('#chunk').cropper("destroy");
@@ -303,7 +303,7 @@ $(document).ready(function(){
         console.log("edit");
     });
 
-    // static varaiable. 
+    // static varaiable.
     // will be deleted when adding a new annotation in db by ajax will return the id of the annotation
     var incr = (function () {
         var i = 20; // There are 20 rect on the canvas
@@ -330,7 +330,7 @@ $(document).ready(function(){
                 // ensures the click-to-edit functionality is working
                 // on newly appended list items even before a page refresh :
                 bindAllTabs("#annotations-list li[name="+theResponse+"]");
-                // draw the annotation on the konvas :  
+                // draw the annotation on the konvas :
                 new_anno = {
                     x: $('#add-sel-x').val(),
                     y: $('#add-sel-y').val(),
@@ -341,7 +341,7 @@ $(document).ready(function(){
                     name: theResponse
                 };
                 addAnno(new_anno, chunk_anno_layer);
-                chunk_anno_layer.draw(); 
+                chunk_anno_layer.draw();
 
                 ratio_new_anno = {
                     x: new_anno.x * ratio,
@@ -353,7 +353,7 @@ $(document).ready(function(){
                     name: new_anno.name
                 };
                 addAnno(ratio_new_anno, anno_layer);
-                anno_layer.draw(); 
+                anno_layer.draw();
 
                 console.log ("new");
                 console.log (new_anno);
