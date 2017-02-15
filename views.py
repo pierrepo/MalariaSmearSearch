@@ -4,7 +4,7 @@ Define views of the application
 URLs are define without trailing slashes.
 HTML templates are in the templates folder.
 """
-from flask import render_template, request, redirect, url_for, Response, send_file
+from flask import render_template, request, redirect, url_for, Response, send_file, jsonify
 from flask_login import login_required, login_user, logout_user, current_user
 import os
 
@@ -217,7 +217,7 @@ def download(photo_id):
 def annotate_chunk(chunk_id):
         return render_template('annotate-chunk.html')
 
-@app.route('/testgetchunk' )
+@app.route('/add_anno' , methods = ['POST'])
 @login_required
 def add_anno() :
 
@@ -226,11 +226,11 @@ def add_anno() :
     chunk = Chunk.query.get([1, 0, 0]) # Primary Key -> image_id, col, row
     print (chunk)
 
-    x =  10
-    y =  10
-    width =  100
-    height =  100
-    annotation =  'O'
+    x =  request.form['x']
+    y =  request.form['y']
+    width =  request.form['width']
+    height =  request.form['height']
+    annotation =  request.form['new-list-item-text']
 
     new_anno = Annotation(
         current_user,
@@ -262,4 +262,4 @@ def add_anno() :
         print('An error occurred accessing the database.')
         redirect('/')
 
-    return ''
+    return jsonify(new_anno.id)

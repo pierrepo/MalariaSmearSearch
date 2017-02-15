@@ -317,7 +317,9 @@ $(document).ready(function(){
 
         $.ajax({
 
-            // DEVELOPER, save new list item!
+            url : '/add_anno',
+            type: "POST",
+            data : $('#add-new').serialize(),
 
             success: function(theResponse){
 

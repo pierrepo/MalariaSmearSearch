@@ -40,18 +40,18 @@
     </ul>
 
 
-    <form action="" class='anno-stuff' id="add-new">
-        <input type="number" id = 'add-sel-x' readonly>
-        <input type="number" id = 'add-sel-y' readonly>
-        <input type="number" id = 'add-sel-width' readonly>
-        <input type="number" id = 'add-sel-height' readonly>
+    <form action="/add_anno" method='POST' class='anno-stuff' id="add-new">
+        <input type="number" name = 'x' id = 'add-sel-x' readonly>
+        <input type="number" name = 'y' id = 'add-sel-y' readonly>
+        <input type="number" name = 'width'  id = 'add-sel-width' readonly>
+        <input type="number" name = 'height' id = 'add-sel-height' readonly>
 
         <select  id="new-list-item-text" name="new-list-item-text">
             <option selected="selected" disabled="disabled">Select an annotation</option>
-            <option value="parasite">parasite</option>
-            <option value="red">red cell</option>
-            <option value="white">white cell</option>
-            <option value="other">other</option>
+            <option value="P">parasite</option>
+            <option value="RC">red cell</option>
+            <option value="WC">white cell</option>
+            <option value="O">other</option>
         </select>
 
         <input type="submit" id="add-new-submit" value="Add" class="button" />
