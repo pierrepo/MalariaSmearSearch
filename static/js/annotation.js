@@ -285,7 +285,6 @@ $(document).ready(function(){
             console.log("deleeeete");
             $.ajax({
                 // TODO the user wants to delete this list item, commence deleting!
-                // if success : reorder the list
                 success: function(r){
                     thiscache
                         .parent()
