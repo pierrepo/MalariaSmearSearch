@@ -4,6 +4,7 @@ Define views of the application
 URLs are define without trailing slashes.
 HTML templates are in the templates folder.
 """
+import datetime
 from flask import render_template, request, redirect, url_for, Response, send_file, jsonify
 from flask_login import login_required, login_user, logout_user, current_user
 import os
@@ -263,3 +264,27 @@ def add_anno() :
         redirect('/')
 
     return jsonify(new_anno.id)
+
+
+@app.route('/update_anno_text' , methods = ['POST'])
+def update_anno_text() :
+    print(request.form['id'])
+    print(request.form['value'])
+
+    anno = Annotation.query.get( request.form['id'] )
+    anno.annotation = request.form['value']
+    print (anno.annotation)
+    anno.date = datetime.datetime.utcnow().isoformat()
+    #TODO : make the date update automatically when setting a field -> use setter decorator
+
+    try :
+        db.session.commit()
+        print('anno was modified in the database')
+        return '', 200
+
+    except Exception as e:
+        print (e)
+        db.session.rollback()
+        print('An error occurred accessing the database.')
+        redirect('/')
+        return '', 500

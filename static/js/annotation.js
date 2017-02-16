@@ -240,26 +240,34 @@ $(document).ready(function(){
             tooltip message
             text in the saving button
         */
-        $(editableTarget).editable("/callback/file/path", {
-            id        : 'listItemID',
-            indicator : 'Saving...',
-            tooltip   : 'Double-click to edit...',
-            event     : 'dblclick',
-            data      : " {'parasite':'parasite','red':'red cell','white':'white cell', 'other':'other'}",
-            type      : 'select',
-            submit    : 'Save',
-            submitdata: {action : "update"}
+        $(editableTarget).editable("/update_anno_text", {
+            event     : 'dblclick', /*event triggering the edition*/
+            tooltip   : 'Double-click to edit...', /*tooltip msg*/
+            submit    : 'Save', /*message on the submit button*/
+            indicator : 'Saving...', /*msg printed when saving*/
+
+            type      : 'select', /*to use select as input type and not free text*/
+            /*select is built from JSON encoded array.
+             - Array keys are values for <option> tag.
+             - Array values are text shown in pulldown.*/
+            data      : " {'P':'parasite','RC':'red cell','WC':'white cell', 'O':'other'}",
+
+            /*NB for server side : */
+            method    : 'POST', /*the default = POST TODO : think about PUT*/
+            name      : 'value' /*change default name of parameter 'name' to 'value'*/
+
         });
     }
 
 
     // wrap list item text in a span, and appply functionality buttons
     $("#annotations-list li")
-        .wrapInner("<span>")
+        .wrapInner("<span id = '1'>") // TODO : make name derived from annotation item id
         .append("<button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button>");
 
     // make annotation selects editable :
     bindAllTabs("#annotations-list li span");
+    // TODO : bindAllTabs("#annotations-list li span") with span having the name = id of the annotation
 
     /* link li item buttons to events using the on() function
     because :
