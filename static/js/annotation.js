@@ -69,7 +69,8 @@ $(document).ready(function(){
         });
     }
     console.log(data) ;
-
+    // TODO : put data as li in annotation list. NB : name will begin with 1 because sqlite autoincrement begin from 1.
+    // make li name derived from annotation item name / id
 
     // create Konva stages
     var chunk_stage = new Konva.Stage({
@@ -254,20 +255,19 @@ $(document).ready(function(){
 
             /*NB for server side : */
             method    : 'POST', /*the default = POST TODO : think about PUT*/
-            name      : 'value' /*change default name of parameter 'name' to 'value'*/
-
+            name      : 'value', /*change default name of parameter 'name' to 'value'*/
+            submitdata: { id : $(editableTarget).closest("li").attr("name") } /*return li parent attr. use closest function because it is more foolproof than parent*/
         });
     }
 
 
     // wrap list item text in a span, and appply functionality buttons
     $("#annotations-list li")
-        .wrapInner("<span id = '1'>") // TODO : make name derived from annotation item id
+        .wrapInner("<span>")
         .append("<button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button>");
 
     // make annotation selects editable :
     bindAllTabs("#annotations-list li span");
-    // TODO : bindAllTabs("#annotations-list li span") with span having the name = id of the annotation
 
     /* link li item buttons to events using the on() function
     because :
