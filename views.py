@@ -288,3 +288,22 @@ def update_anno_text() :
         print('An error occurred accessing the database.')
         redirect('/')
         return '', 500
+
+
+
+@app.route('/del_anno' , methods = ['DELETE'])
+def del_anno() :
+    print(request.form['id'])
+
+    try :
+        Annotation.query.filter_by(id= request.form['id'] ).delete()
+        db.session.commit()
+        print('anno was deleted drom the database')
+        return '', 200
+
+    except Exception as e:
+        print (e)
+        db.session.rollback()
+        print('An error occurred accessing the database.')
+        redirect('/')
+        return '', 500

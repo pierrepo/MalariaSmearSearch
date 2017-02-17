@@ -292,7 +292,12 @@ $(document).ready(function(){
         if (thiscache.data("readyToDelete") == "go for it") {
             console.log("deleeeete");
             $.ajax({
-                // TODO the user wants to delete this list item, commence deleting!
+
+                url : '/del_anno',
+                type: "DELETE", /*TODO : REST - the DELETE method requests thant the origin server delete the resource identified by the request URI*/
+                data : {'id': $(this).closest("li").attr("name")},
+
+
                 success: function(r){
                     thiscache
                         .parent()
