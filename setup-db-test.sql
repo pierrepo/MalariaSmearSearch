@@ -38,10 +38,25 @@ CREATE TABLE tbl_photo (
 
 
 CREATE TABLE tbl_chunk (
-  'id_photo' REFERENCES tbl_level(name),
+  'id_photo' REFERENCES tbl_photo('id'),
   'col' INTEGER  ,
   'row' INTEGER , 
   PRIMARY KEY ('id_photo', 'col', 'row')
+);
+
+CREATE TABLE tbl_annotation (
+  'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+  'username' REFERENCES tbl_user(username),
+  'id_photo' INTEGER,
+  'col' INTEGER,
+  'row' INTEGER,
+  'date' TEXT, /*ISO8601 strings ("YYYY-MM-DDTHH:MM:SS.SSS")*/
+  'x' INT,
+  'y' INT,
+  'width' INT,
+  'height' INT,
+  annotation VARCHAR(2) CHECK (annotation IN ('P' , 'RC', 'WC', 'O') ), /* parasite, red cell, white cell, other  */
+  FOREIGN KEY('id_photo', 'col', 'row') REFERENCES tbl_chunk('id_photo', 'col', 'row')
 );
 
 
