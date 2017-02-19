@@ -27,6 +27,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from PIL import Image
 import itertools
+import datetime
 
 db = SQLAlchemy(app)
 
@@ -90,7 +91,7 @@ class Photo(db.Model):
     def get_chunks_infos(self, num_crop_col = 2, num_crop_row = 2) :
         """
         Get infos (numerotation and coordinates) of desired chunks
-        
+
         Arguments :
         -----------
         num_crop_col : int (default 2)
@@ -225,3 +226,48 @@ class Chunk(db.Model):
         print (self.col, self.row, box)
         new_chunk = img.crop(box)
         new_chunk.save (self.path)
+
+class Annotation(db.Model) :
+    """
+    Annotation model
+
+    Interact with the database.
+    """
+    __tablename__ = 'tbl_annotation'
+    __table_args__ = {
+        'autoload': True,
+        'autoload_with': db.engine
+    }
+
+    def __init__(self, user, chunk, x, y, width, height, annotation):
+        """
+        Constructor of an instance of the Annotation class
+
+        Arguments :
+        -----------
+        user : instance of user
+            user that added the annotation
+        chunk : instance of Chunk
+            chunk on which the annotation is made
+        x : int
+            col coord of the rectangle area
+        y : int
+            row coord of the rectangle area
+        width : int
+            (horizontal) width of the rectangle area
+        height : int
+            (vertical) height of the rectangle area
+        annotation : string
+            the description of the annotation picked in the taxonomy
+        """
+
+        self.username = user.username
+        self.id_photo = chunk.id_photo
+        self.col = chunk.col
+        self.row = chunk.row
+        self.date = datetime.datetime.utcnow().isoformat()
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.annotation = annotation

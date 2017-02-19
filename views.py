@@ -4,8 +4,9 @@ Define views of the application
 URLs are define without trailing slashes.
 HTML templates are in the templates folder.
 """
-from flask import render_template, request, redirect, url_for, Response, send_file
-from flask_login import login_required, login_user, logout_user
+import datetime
+from flask import render_template, request, redirect, url_for, Response, send_file, jsonify
+from flask_login import login_required, login_user, logout_user, current_user
 import os
 
 from app import app, login_manager, photos
@@ -196,8 +197,8 @@ def account():
 
 @app.route('/browse')
 def browse():
-    # list photo in dir upload :
-    photos = os.listdir(app.config['UPLOADED_PHOTOS_DEST'] )
+    # list uploaded photo in db :
+    photos = Photo.query.all()
     print (photos)
     return render_template('browse.html', photos = photos, app = app )
 
@@ -212,3 +213,97 @@ def download(photo_id):
         # return to the photo list with a flash error message
         print("Photo {photo_id} doesn't exists.".format(photo_id=photo_id))
         return redirect(url_for('browse'))
+
+@app.route('/annotate_chunk/<chunk_id>')
+def annotate_chunk(chunk_id):
+        return render_template('annotate-chunk.html')
+
+@app.route('/add_anno' , methods = ['POST'])
+@login_required
+def add_anno() :
+
+    print (current_user)
+
+    chunk = Chunk.query.get([1, 0, 0]) # Primary Key -> image_id, col, row
+    print (chunk)
+
+    x =  request.form['x']
+    y =  request.form['y']
+    width =  request.form['width']
+    height =  request.form['height']
+    annotation =  request.form['new-list-item-text']
+
+    new_anno = Annotation(
+        current_user,
+        chunk,
+        x, y, width, height,
+        annotation
+    )
+
+    print (new_anno)
+
+    print (new_anno.username)
+    print (new_anno.id_photo )
+    print (new_anno.col)
+    print (new_anno.row)
+    print (new_anno.date )
+    print (new_anno.x )
+    print (new_anno.y )
+    print (new_anno.width )
+    print (new_anno.height )
+    print (new_anno.annotation)
+
+    try :
+        db.session.add(new_anno)
+        db.session.commit()
+        print('New anno added to database')
+    except Exception as e:
+        print (e)
+        db.session.rollback()
+        print('An error occurred accessing the database.')
+        redirect('/')
+
+    return jsonify(new_anno.id)
+
+
+@app.route('/update_anno_text' , methods = ['POST'])
+def update_anno_text() :
+    print(request.form['id'])
+    print(request.form['value'])
+
+    anno = Annotation.query.get( request.form['id'] )
+    anno.annotation = request.form['value']
+    print (anno.annotation)
+    anno.date = datetime.datetime.utcnow().isoformat()
+    #TODO : make the date update automatically when setting a field -> use setter decorator
+
+    try :
+        db.session.commit()
+        print('anno was modified in the database')
+        return '', 200
+
+    except Exception as e:
+        print (e)
+        db.session.rollback()
+        print('An error occurred accessing the database.')
+        redirect('/')
+        return '', 500
+
+
+
+@app.route('/del_anno' , methods = ['DELETE'])
+def del_anno() :
+    print(request.form['id'])
+
+    try :
+        Annotation.query.filter_by(id= request.form['id'] ).delete()
+        db.session.commit()
+        print('anno was deleted drom the database')
+        return '', 200
+
+    except Exception as e:
+        print (e)
+        db.session.rollback()
+        print('An error occurred accessing the database.')
+        redirect('/')
+        return '', 500
