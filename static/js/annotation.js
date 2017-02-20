@@ -92,7 +92,7 @@ $(document).ready(function(){
     var anno_stage_img_layer = new Konva.Layer();
     // - the other for the annotations :
     var view_stage_anno_layer = new Konva.Layer();
-    var anno_stage_anno_layer = new Konva.Layer();
+    var anno_stage_anno_layer = anno_stage_img_layer; // for anno stage : image and anno on the same layer because each layer has a canvas and Cropper can handle only one canvas at a time
 
     // once the image is loaded :
     imageObj.onload = function() {
