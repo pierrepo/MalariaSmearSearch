@@ -128,6 +128,27 @@ $(document).ready(function(){
       anno_stage.add(anno_stage_img_layer);
       anno_stage_img_layer.moveToBottom();
 
+      // Set the cropper :
+      $('#anno-konvajs .konvajs-content canvas').cropper({
+          viewMode :1, //the crop box should be within the canvas
+          dragMode : 'move' , //dragging mode of the cropper.
+          crop: function(e) {
+              // Output the result data for cropping image.
+              console.log(e.x);
+              $('#add-sel-x').val( e.x)
+              console.log(e.y);
+              $('#add-sel-y').val(e.y)
+              console.log(e.width);
+              $('#add-sel-width').val(e.width)
+              console.log(e.height);
+              $('#add-sel-height').val(e.height)
+              //console.log(e.detail.rotate);
+              //console.log(e.detail.scaleX);
+              //console.log(e.detail.scaleY);
+          }
+      });
+
+      
       image_loaded =true ;
       init_anno() ;
     };
@@ -207,25 +228,6 @@ $(document).ready(function(){
             $('.anno-stuff').show()
             // Hide rendered kanva :
             $('#view-konvajs').hide()
-            // Set the cropper :
-            $('#anno-konvajs .konvajs-content canvas').cropper({
-                viewMode :1, //the crop box should be within the canvas
-                dragMode : 'move' , //dragging mode of the cropper.
-                crop: function(e) {
-                    // Output the result data for cropping image.
-                    console.log(e.x);
-                    $('#add-sel-x').val( e.x)
-                    console.log(e.y);
-                    $('#add-sel-y').val(e.y)
-                    console.log(e.width);
-                    $('#add-sel-width').val(e.width)
-                    console.log(e.height);
-                    $('#add-sel-height').val(e.height)
-                    //console.log(e.detail.rotate);
-                    //console.log(e.detail.scaleX);
-                    //console.log(e.detail.scaleY);
-                }
-            });
         }else{
             // Change button attribute to handle reclick -> return in annotation mode
             $(this).val('view');
