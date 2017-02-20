@@ -369,6 +369,16 @@ $(document).ready(function(){
                 addAnno(new_anno, anno_stage_anno_layer);
                 anno_stage_anno_layer.draw();
 
+                //Resource the cropper to take the new annotation into account/
+                new_url = $('#anno-konvajs .konvajs-content canvas')[0].toDataURL();
+                //the first (and the only one) canvas selected here corresponds both to the image and annotation layer of the annotation stage.
+                console.log (new_url);
+                $('#anno-konvajs .konvajs-content canvas').cropper(
+                    'replace',
+                    new_url,
+                    true
+                );
+
                 ratio_new_anno = {
                     x: new_anno.x * ratio,
                     y: new_anno.y * ratio,
