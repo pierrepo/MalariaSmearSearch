@@ -49,10 +49,12 @@ $(document).ready(function(){
 
 
     // fetch image :
+    image_loaded = false ;
     var imageObj = new Image();
     imageObj.src = img_source;
 
     // fetch (false) corresponding annotation data : TODO : use AJAX / var
+    data_loaded = false ;
     // build data
     var data = [];
     for(var i = 0; i < 20; i++) {
@@ -68,6 +70,8 @@ $(document).ready(function(){
             name: i.toString()
         });
     }
+    data_loaded = true ;
+    init_anno() ;
     console.log(data) ;
     // TODO : put data as li in annotation list. NB : name will begin with 1 because sqlite autoincrement begin from 1.
     // make li name derived from annotation item name / id
@@ -80,7 +84,7 @@ $(document).ready(function(){
     });
     var stage = new Konva.Stage({
       container: 'view-konvajs',   // id of container <div>
-      width: 500, // TODO : dimention given by bootstrap
+      width: $('#view-konvajs').width()
     });
     // then, layers creation :
     // - one for the image :
@@ -123,60 +127,68 @@ $(document).ready(function(){
       img_layer.moveToBottom();
       chunk_stage.add(chunk_img_layer);
       chunk_img_layer.moveToBottom();
+
+      image_loaded =true ;
+      init_anno() ;
     };
 
-    // once data are loaded TODO
-    // render (false) annotations = add the shape to the layer // TODO : is there a for each loop in js ?
-    for(var i = 0; i < data.length; i++) {
-        ratio = 0.1893939393939394  // TODO : use ratio computed once the image is loaded
-        ratio_data = {
-            x: data[i].x * ratio,
-            y: data[i].y * ratio,
-            width: data[i].width * ratio,
-            height: data[i].height * ratio,
-            stroke: data[i].stroke,
-            strokeWidth: data[i].strokeWidth * ratio,
-            name: data[i].name
-        };
-        console.log ('lààààààààààà') ;
-        console.log(data[i]) ;
-        console.log(ratio_data) ;
-        addAnno(ratio_data, anno_layer);
-        addAnno(data[i], chunk_anno_layer);
+    function init_anno(){
+        console.log("data_loaded", data_loaded, "image_loaded", image_loaded);
+        if(data_loaded && image_loaded) {
+        // once image is loaded
+        // AND once data are loaded
+            // render (false) annotations = add the shape to the layer // TODO : is there a for each loop in js ?
+            for(var i = 0; i < data.length; i++) {
+                ratio_data = {
+                    x: data[i].x * ratio,
+                    y: data[i].y * ratio,
+                    width: data[i].width * ratio,
+                    height: data[i].height * ratio,
+                    stroke: data[i].stroke,
+                    strokeWidth: data[i].strokeWidth * ratio,
+                    name: data[i].name
+                };
+                console.log ('lààààààààààà') ;
+                console.log(data[i]) ;
+                console.log(ratio_data) ;
+                addAnno(ratio_data, anno_layer);
+                addAnno(data[i], chunk_anno_layer);
+            }
+
+            // add the layer to the stage
+            stage.add(anno_layer);
+            chunk_stage.add(chunk_anno_layer);
+
+            // listeners for user input events
+            stage.find('Rect').on('mouseover', function(evt) {
+                var annotation = evt.target;
+                if (annotation) {
+                    console.log('mouseover');
+                    console.log(annotation, true);
+                    handleHoverAnno(true, this.name(), stage);
+                    anno_layer.draw();
+                }
+            });
+
+            stage.find('Rect').on('mouseout', function(evt) {
+                var annotation = evt.target;
+                if (annotation) {
+                    console.log('mouseover');
+                    console.log(annotation, false);
+                    handleHoverAnno(false, this.name(), stage);
+                    anno_layer.draw();
+                }
+            });
+
+            stage.find('Rect').on('mousedown', function(evt) {
+                var annotation = evt.target;
+                if (annotation) {
+                    console.log('mousedown');
+                    console.log(annotation);
+                }
+            });
+        }
     }
-
-    // add the layer to the stage
-    stage.add(anno_layer);
-    chunk_stage.add(chunk_anno_layer);
-
-    // listeners for user input events
-    stage.find('Rect').on('mouseover', function(evt) {
-        var annotation = evt.target;
-        if (annotation) {
-            console.log('mouseover');
-            console.log(annotation, true);
-            handleHoverAnno(true, this.name(), stage);
-            anno_layer.draw();
-        }
-    });
-
-    stage.find('Rect').on('mouseout', function(evt) {
-        var annotation = evt.target;
-        if (annotation) {
-            console.log('mouseover');
-            console.log(annotation, false);
-            handleHoverAnno(false, this.name(), stage);
-            anno_layer.draw();
-        }
-    });
-
-    stage.find('Rect').on('mousedown', function(evt) {
-        var annotation = evt.target;
-        if (annotation) {
-            console.log('mousedown');
-            console.log(annotation);
-        }
-    });
 
 
     $( "#toggle-mode" ).click(function() {
