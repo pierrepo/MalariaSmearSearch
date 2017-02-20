@@ -237,7 +237,7 @@ $(document).ready(function(){
             // Show rendered kanva :
             $('#view-konvajs').show()
             // Destroy the cropper :
-            $('#anno-konvajs').cropper("destroy");
+            //$('#anno-konvajs .konvajs-content canvas').cropper("destroy");
         }
     });
 
