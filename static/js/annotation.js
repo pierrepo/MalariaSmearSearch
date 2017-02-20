@@ -77,37 +77,37 @@ $(document).ready(function(){
     // make li name derived from annotation item name / id
 
     // create Konva stages
-    var chunk_stage = new Konva.Stage({
+    var anno_stage = new Konva.Stage({
       container: 'anno-konvajs',  // id of container <div>
       width : 1,
       height : 1
     });
-    var stage = new Konva.Stage({
+    var view_stage = new Konva.Stage({
       container: 'view-konvajs',   // id of container <div>
       width: $('#view-konvajs').width()
     });
     // then, layers creation :
     // - one for the image :
-    var img_layer = new Konva.Layer();
-    var chunk_img_layer = new Konva.Layer();
+    var view_stage_img_layer = new Konva.Layer();
+    var anno_stage_img_layer = new Konva.Layer();
     // - the other for the annotations :
-    var anno_layer = new Konva.Layer();
-    var chunk_anno_layer = new Konva.Layer();
+    var view_stage_anno_layer = new Konva.Layer();
+    var anno_stage_anno_layer = new Konva.Layer();
 
     // once the image is loaded :
     imageObj.onload = function() {
       // compute ratio :
       console.log(imageObj.naturalWidth)
-      ratio = stage.width()/imageObj.naturalWidth;
+      ratio = view_stage.width()/imageObj.naturalWidth;
       console.log(ratio);
-      var chunk = new Konva.Image({
+      var view_stage_image = new Konva.Image({
         x: 0,
         y: 0,
         image: this,
         width: imageObj.naturalWidth * ratio,
         height: imageObj.naturalHeight * ratio
       });
-      var chunk_chunk = new Konva.Image({
+      var anno_stage_image = new Konva.Image({
         x: 0,
         y: 0,
         image: this,
@@ -115,18 +115,18 @@ $(document).ready(function(){
         height: imageObj.naturalHeight
       });
       //adjust stage height :
-      stage.height( chunk.height() );
-      // and the chunk stage dimention :
-      chunk_stage.height( chunk_chunk.height() );
-      chunk_stage.width( chunk_chunk.width() );
+      view_stage.height( view_stage_image.height() );
+      // and the anno stage dimention :
+      anno_stage.height( anno_stage_image.height() );
+      anno_stage.width( anno_stage_image.width() );
       // add the shape to the layer
-      img_layer.add(chunk);
-      chunk_img_layer.add(chunk_chunk);
+      view_stage_img_layer.add(view_stage_image);
+      anno_stage_img_layer.add(anno_stage_image);
       // add the layer to the stage
-      stage.add(img_layer);
-      img_layer.moveToBottom();
-      chunk_stage.add(chunk_img_layer);
-      chunk_img_layer.moveToBottom();
+      view_stage.add(view_stage_img_layer);
+      view_stage_img_layer.moveToBottom();
+      anno_stage.add(anno_stage_img_layer);
+      anno_stage_img_layer.moveToBottom();
 
       image_loaded =true ;
       init_anno() ;
@@ -151,36 +151,36 @@ $(document).ready(function(){
                 console.log ('lààààààààààà') ;
                 console.log(data[i]) ;
                 console.log(ratio_data) ;
-                addAnno(ratio_data, anno_layer);
-                addAnno(data[i], chunk_anno_layer);
+                addAnno(ratio_data, view_stage_anno_layer);
+                addAnno(data[i], anno_stage_anno_layer);
             }
 
             // add the layer to the stage
-            stage.add(anno_layer);
-            chunk_stage.add(chunk_anno_layer);
+            view_stage.add(view_stage_anno_layer);
+            anno_stage.add(anno_stage_anno_layer);
 
             // listeners for user input events
-            stage.find('Rect').on('mouseover', function(evt) {
+            view_stage.find('Rect').on('mouseover', function(evt) {
                 var annotation = evt.target;
                 if (annotation) {
                     console.log('mouseover');
                     console.log(annotation, true);
-                    handleHoverAnno(true, this.name(), stage);
-                    anno_layer.draw();
+                    handleHoverAnno(true, this.name(), view_stage);
+                    view_stage_anno_layer.draw();
                 }
             });
 
-            stage.find('Rect').on('mouseout', function(evt) {
+            view_stage.find('Rect').on('mouseout', function(evt) {
                 var annotation = evt.target;
                 if (annotation) {
                     console.log('mouseover');
                     console.log(annotation, false);
-                    handleHoverAnno(false, this.name(), stage);
-                    anno_layer.draw();
+                    handleHoverAnno(false, this.name(), view_stage);
+                    view_stage_anno_layer.draw();
                 }
             });
 
-            stage.find('Rect').on('mousedown', function(evt) {
+            view_stage.find('Rect').on('mousedown', function(evt) {
                 var annotation = evt.target;
                 if (annotation) {
                     console.log('mousedown');
@@ -366,8 +366,8 @@ $(document).ready(function(){
                     strokeWidth: 4,
                     name: theResponse
                 };
-                addAnno(new_anno, chunk_anno_layer);
-                chunk_anno_layer.draw();
+                addAnno(new_anno, anno_stage_anno_layer);
+                anno_stage_anno_layer.draw();
 
                 ratio_new_anno = {
                     x: new_anno.x * ratio,
@@ -378,8 +378,8 @@ $(document).ready(function(){
                     strokeWidth: new_anno.strokeWidth * ratio,
                     name: new_anno.name
                 };
-                addAnno(ratio_new_anno, anno_layer);
-                anno_layer.draw();
+                addAnno(ratio_new_anno, view_stage_anno_layer);
+                view_stage_anno_layer.draw();
 
                 console.log ("new");
                 console.log (new_anno);
