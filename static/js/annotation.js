@@ -130,8 +130,10 @@ $(document).ready(function(){
 
       // Set the cropper :
       $('#anno-konvajs .konvajs-content canvas').cropper({
-          viewMode :1, //the crop box should be within the canvas
-          dragMode : 'move' , //dragging mode of the cropper.
+          viewMode :1, //   0: the crop box is just within the container  ;     1: the crop box should be within the canvas  ;     2: the canvas should not be within the container ;    3: the container should be within the canvas 
+          dragMode : 'crop', // 'crop': create a new crop box ; 'move': move the canvas  ;  'none': do nothing
+          autoCrop : true, //enable / disable the default image crop when initialize.
+          autoCropArea : 0.1,
           crop: function(e) {
               // Output the result data for cropping image.
               console.log(e.x);
@@ -148,7 +150,7 @@ $(document).ready(function(){
           }
       });
 
-      
+
       image_loaded =true ;
       init_anno() ;
     };
