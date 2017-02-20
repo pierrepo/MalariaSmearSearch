@@ -32,14 +32,6 @@
     <div id="anno-konvajs" class='anno-stuff' style="height: 500px; width: 500px;">
     </div>
 
-    <ul id = "annotations-list">
-
-        <li name = "1">
-            an annotation
-        </li>
-    </ul>
-
-
     <form action="/add_anno" method='POST' class='anno-stuff' id="add-new">
         <input type="number" name = 'x' id = 'add-sel-x' readonly>
         <input type="number" name = 'y' id = 'add-sel-y' readonly>
@@ -57,6 +49,14 @@
         <input type="submit" id="add-new-submit" value="Add" class="button" />
 
     </form>
+    
+    <ul id = "annotations-list">
+
+        <li name = "1">
+            an annotation
+        </li>
+    </ul>
+
 
 {% endblock %}
 
