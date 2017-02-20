@@ -74,12 +74,12 @@ $(document).ready(function(){
 
     // create Konva stages
     var chunk_stage = new Konva.Stage({
-      container: 'chunk',  // id of container <div>
+      container: 'anno-konvajs',  // id of container <div>
       width : 1,
       height : 1
     });
     var stage = new Konva.Stage({
-      container: 'konva',   // id of container <div>
+      container: 'view-konvajs',   // id of container <div>
       width: 500, // TODO : dimention given by bootstrap
     });
     // then, layers creation :
@@ -194,9 +194,9 @@ $(document).ready(function(){
             // Show annotation stuff : the cropper div and the input form
             $('.anno-stuff').show()
             // Hide rendered kanva :
-            $('#konva').hide()
+            $('#view-konvajs').hide()
             // Set the cropper :
-            $('#chunk .konvajs-content canvas').cropper({
+            $('#anno-konvajs .konvajs-content canvas').cropper({
                 viewMode :1, //the crop box should be within the canvas
                 dragMode : 'move' , //dragging mode of the cropper.
                 crop: function(e) {
@@ -223,9 +223,9 @@ $(document).ready(function(){
             // Hide anno stuff : cropper div, the input form :
             $('.anno-stuff').hide();
             // Show rendered kanva :
-            $('#konva').show()
+            $('#view-konvajs').show()
             // Destroy the cropper :
-            $('#chunk').cropper("destroy");
+            $('#anno-konvajs').cropper("destroy");
         }
     });
 

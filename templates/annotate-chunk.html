@@ -6,7 +6,7 @@
 
     <style>
 
-        #chunk{
+        #anno-konvajs{
             /* According to Cropperjs documentation :
              "Limit image width to avoid overflow the container
              This rule is very important, please do not ignore this! "*/
@@ -27,9 +27,9 @@
 {% block content %}
     <button value = 'view' id = 'toggle-mode' class='glyphicon glyphicon-plus'>Annotate</button>
 
-    <div id="konva"></div>
+    <div id="view-konvajs"></div>
 
-    <div id="chunk" class='anno-stuff' style="height: 500px; width: 500px;">
+    <div id="anno-konvajs" class='anno-stuff' style="height: 500px; width: 500px;">
     </div>
 
     <ul id = "annotations-list">
