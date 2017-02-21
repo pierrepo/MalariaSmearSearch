@@ -5,8 +5,9 @@ URLs are define without trailing slashes.
 HTML templates are in the templates folder.
 """
 import datetime
-from flask import render_template, request, redirect, url_for, Response, send_file, jsonify
+from flask import render_template, request, redirect, url_for, Response, send_file, jsonify, make_response
 from flask_login import login_required, login_user, logout_user, current_user
+import pathlib
 import os
 
 from app import app, login_manager, photos
@@ -214,9 +215,34 @@ def download(photo_id):
         print("Photo {photo_id} doesn't exists.".format(photo_id=photo_id))
         return redirect(url_for('browse'))
 
-@app.route('/annotate_chunk/<chunk_id>')
-def annotate_chunk(chunk_id):
-        return render_template('annotate-chunk.html')
+
+@app.route('/chunks/<chunk_filename>')
+def get_chunk_url(chunk_filename):
+    print('=====================================================')
+    print (chunk_filename)
+    chunk_path =  app.root_path + '/' +'chunks/' + chunk_filename
+    print (chunk_path)
+    resp = make_response(open(chunk_path, 'rb').read()) #open in binary mode
+    resp.content_type = "image/jpeg"
+    return resp
+
+@app.route('/annotate_chunk/<chunk_filename>')
+def annotate_chunk(chunk_filename):
+
+    # check if the requested chunk is on the disk :
+    try :
+        chunk_path = pathlib.Path( app.root_path + '/' +'chunks/' + chunk_filename)
+        print (chunk_path)
+        assert( chunk_path.is_file())
+    except AssertionError as e :
+        print ("can't refer to the chunk on the disk")
+
+    print ( url_for('get_chunk_url', chunk_filename = chunk_filename ) )
+
+    # give the URL the requested file uploaded to this set would be accessed at. It doesn’t check whether said file exists.
+
+
+    return render_template('annotate-chunk.html', img_url =   url_for('get_chunk_url', chunk_filename = chunk_filename )   )
 
 @app.route('/add_anno' , methods = ['POST'])
 @login_required
