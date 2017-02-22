@@ -197,7 +197,8 @@ def logout():
     """
     # TODO : what happen if a logout user access logout page ?
     logout_user()
-    return Response('<p>Logged out</p>')
+    flash("Logged out successfully", category='succes')
+    return redirect('/')
 
 @app.route("/account")
 def account():
