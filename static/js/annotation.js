@@ -70,7 +70,21 @@ $(document).ready(function(){
                 obj.name = obj.id.toString(); // TODO : Change the code to use id directly.
 
                 console.log(obj);
+
+                // put the annotation in the list :
+                //TODO : do not use the code but the complete word
+                $('#annotations-list').append("<li name = '"+ obj.name +"'>" + obj.annotation + "</li>");
+
             }
+
+            // wrap list item text in a span, and appply functionality buttons
+            $("#annotations-list li")
+                .wrapInner("<span>")
+                .append("<button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button>");
+
+            // make annotation selects editable :
+            bindAllTabs("#annotations-list li span");
+
 
             data_loaded = true ;
             init_anno(data) ;
@@ -284,13 +298,6 @@ $(document).ready(function(){
     }
 
 
-    // wrap list item text in a span, and appply functionality buttons
-    $("#annotations-list li")
-        .wrapInner("<span>")
-        .append("<button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button>");
-
-    // make annotation selects editable :
-    bindAllTabs("#annotations-list li span");
 
     /* link li item buttons to events using the on() function
     because :
