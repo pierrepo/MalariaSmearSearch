@@ -66,7 +66,7 @@ def upload():
             db.session.add(new_photo)
             db.session.commit()
 
-            print('New photo added to database, tis id is {0}'.format(new_photo.id))
+
             # upload the photo
             # its name is the photo id in the database
             new_photo.filename = photos.save(
@@ -77,6 +77,10 @@ def upload():
             )
             # save its path
             new_photo.path=photos.path(new_photo.filename)
+
+            print('New photo was uploded and added to database, its id is {0}'.format(new_photo.id))
+            flash('New photo was uploded and added to database, its id is {0}.'.format(new_photo.id), category = 'succes')
+
             # cut the photo into chunks :
             chunks_numerotation, chunks_coords = new_photo.get_chunks_infos()
             for chunk_idx, chunk_coords in enumerate(chunks_coords) :
@@ -85,11 +89,16 @@ def upload():
             db.session.commit()
             # TODO get its URL
             # TODO print its URL
+
+            print('Its chunks were added to database.')
+            flash('Its chunks were added to database.', category = 'succes')
+
         except Exception as e:
             # TODO : catch the different kind of exception that could occurred.
             print (e)
             db.session.rollback()
             print('An error occurred accessing the database.')
+            flash('An error occurred accessing the database.', category = 'error')
             redirect('/')
 
     return render_template('upload.html', form = form)
