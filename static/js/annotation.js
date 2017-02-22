@@ -352,7 +352,7 @@ $(document).ready(function(){
 
         $.ajax({
 
-            url : '/add_anno',
+            url : '/chunks/'+img_filename+'/annotations/',
             type: "POST",
             data : $('#add-new').serialize(),
 
