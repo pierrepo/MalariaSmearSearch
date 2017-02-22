@@ -80,6 +80,8 @@ $(document).ready(function(){
         '/chunks/'+img_filename+'/annotations/',
         function(data){
             console.log(data);
+
+            Flash.success('Annotation was retrieved from the server', 3000);
             for(var i = 0; i < data.length; i++) {
                 var obj = data[i];
 
@@ -135,6 +137,7 @@ $(document).ready(function(){
 
     // once the image is loaded :
     imageObj.onload = function() {
+      Flash.success('Image was retrieved from the server', 3000);
       // compute ratio :
       console.log(imageObj.naturalWidth)
       ratio = view_stage.width()/imageObj.naturalWidth;
@@ -188,6 +191,7 @@ $(document).ready(function(){
               //console.log(e.detail.scaleY);
           }
       });
+      Flash.success('The cropper was setted successfully', 3000);
 
 
       image_loaded =true ;
@@ -259,6 +263,8 @@ $(document).ready(function(){
                 new_url,
                 true
             );
+
+            Flash.success('The annotations were added on both the view and the annotation canvas. Everything is ready.', 3000);
         }
     }
 
