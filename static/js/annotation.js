@@ -58,7 +58,6 @@ $(document).ready(function(){
 
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
     console.log(img_filename);
-    var data = [] // is declared here because init_anno need data var do be defined
     $.getJSON(
         '/chunks/'+img_filename+'/annotations/',
         function(data){
@@ -74,7 +73,7 @@ $(document).ready(function(){
             }
 
             data_loaded = true ;
-            init_anno() ;
+            init_anno(data) ;
 
             // TODO : put data as li in annotation list. NB : name will begin with 1 because sqlite autoincrement begin from 1.
             // make li name derived from annotation item name / id
@@ -163,7 +162,7 @@ $(document).ready(function(){
       init_anno() ;
     };
 
-    function init_anno(){
+    function init_anno(data = []){
         console.log("data_loaded", data_loaded, "image_loaded", image_loaded);
         if(data_loaded && image_loaded) {
         // once image is loaded
