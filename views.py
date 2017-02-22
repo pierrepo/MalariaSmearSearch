@@ -243,7 +243,7 @@ def get_chunk_annotation(chunk_filename):
     for e in serialized_annotations : print (e)
 
 
-    return jsonify({'annotations': serialized_annotations})
+    return jsonify(serialized_annotations)
 
 
 @app.route('/annotate_chunk/<chunk_filename>')
