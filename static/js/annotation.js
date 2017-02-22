@@ -45,8 +45,26 @@ $(document).ready(function(){
         rect.setFill('rgba(255,255,0,'+0.5 * activate+')'); // 'rgba(255,255,0,'+transparency+')'
         $("#annotations-list li[name="+name+"] span").toggleClass('hover');
     }
-    /**************************************************************************/
 
+
+    /*Function that flash message : */
+    Flash = {}
+    Flash.success = function(msg, time =1000){
+        $('#flash-container')[0].innerHTML = "<div class='success message'>" + msg + "</div>";
+        $('#flash-container').addClass('showing');
+        setTimeout(function(){
+          $('#flash-container').removeClass('showing');
+        }, time);
+      };
+    Flash.error = function(msg, time =1000){
+        $('#flash-container')[0].innerHTML = "<div class='error message'>" + msg + "</div>";
+        $('#flash-container').addClass('showing');
+        setTimeout(function(){
+            $('#flash-container').removeClass('showing');
+        }, time);
+    };
+
+    /**************************************************************************/
 
     // fetch image :
     image_loaded = false ;
@@ -62,6 +80,8 @@ $(document).ready(function(){
         '/chunks/'+img_filename+'/annotations/',
         function(data){
             console.log(data);
+
+            Flash.success('Annotation was retrieved from the server', 3000);
             for(var i = 0; i < data.length; i++) {
                 var obj = data[i];
 
@@ -117,6 +137,7 @@ $(document).ready(function(){
 
     // once the image is loaded :
     imageObj.onload = function() {
+      Flash.success('Image was retrieved from the server', 3000);
       // compute ratio :
       console.log(imageObj.naturalWidth)
       ratio = view_stage.width()/imageObj.naturalWidth;
@@ -170,6 +191,7 @@ $(document).ready(function(){
               //console.log(e.detail.scaleY);
           }
       });
+      Flash.success('The cropper was setted successfully', 3000);
 
 
       image_loaded =true ;
@@ -241,6 +263,8 @@ $(document).ready(function(){
                 new_url,
                 true
             );
+
+            Flash.success('The annotations were added on both the view and the annotation canvas. Everything is ready.', 3000);
         }
     }
 
@@ -342,6 +366,7 @@ $(document).ready(function(){
                     thiscache
                         .parent()
                             .hide(400, function(){$(this).remove()});
+                    Flash.success("The annotation was deleted");
                 }
             });
         }
@@ -425,6 +450,9 @@ $(document).ready(function(){
                 // clear the input fields after submission :
                 $('#add-new').get(0).reset()
                 // That makes adding a bunch of annotation items in sequence very easy and natural.
+
+
+                Flash.success("The annotation was added");
             },
             error: function(){
                 // TODO
