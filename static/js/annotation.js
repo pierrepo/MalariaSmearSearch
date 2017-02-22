@@ -55,26 +55,33 @@ $(document).ready(function(){
 
     // fetch (false) corresponding annotation data : TODO : use AJAX / var
     data_loaded = false ;
-    // build data
-    var data = [];
-    for(var i = 0; i < 20; i++) {
-        var x = Math.random() * 100;
-        var y = 100 + (Math.random() * 200) - 100 + (100 / 100) * -1 * x;
-        data.push({
-            x: x,
-            y: y,
-            width : 100,
-            height : 50,
-            stroke: 'black',
-            strokeWidth: 4,
-            name: i.toString()
-        });
-    }
-    data_loaded = true ;
-    init_anno() ;
-    console.log(data) ;
-    // TODO : put data as li in annotation list. NB : name will begin with 1 because sqlite autoincrement begin from 1.
-    // make li name derived from annotation item name / id
+
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
+    console.log(img_filename);
+    $.getJSON(
+        '/chunks/'+img_filename+'/annotations/',
+        function(data){
+            console.log(data);
+            for(var i = 0; i < data.length; i++) {
+                var obj = data[i];
+
+                obj.stroke = 'black';
+                obj.strokeWidth = 4;
+                obj.name = obj.id.toString(); // TODO : Change the code to use id directly.
+
+                console.log(obj);
+            }
+
+            data_loaded = true ;
+            init_anno(data) ;
+
+            // TODO : put data as li in annotation list. NB : name will begin with 1 because sqlite autoincrement begin from 1.
+            // make li name derived from annotation item name / id
+        }
+    );
+
+
+
 
     // create Konva stages
     var anno_stage = new Konva.Stage({
@@ -155,7 +162,7 @@ $(document).ready(function(){
       init_anno() ;
     };
 
-    function init_anno(){
+    function init_anno(data = []){
         console.log("data_loaded", data_loaded, "image_loaded", image_loaded);
         if(data_loaded && image_loaded) {
         // once image is loaded

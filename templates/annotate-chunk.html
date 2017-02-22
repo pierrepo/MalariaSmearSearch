@@ -74,7 +74,8 @@
     <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
 
     <script>
-        img_source = '{{url_for("static", filename = "test/"+ "1_0_0.jpg" )}}' ;
+        var img_filename = "{{img_filename}}";
+        var img_source = " {{url_for('get_chunk_url', chunk_filename = img_filename )}} " ;
     </script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}"></script>
 
