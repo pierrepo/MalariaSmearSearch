@@ -5,7 +5,7 @@ URLs are define without trailing slashes.
 HTML templates are in the templates folder.
 """
 import datetime
-from flask import render_template, request, redirect, url_for, Response, send_file, jsonify, make_response
+from flask import render_template, request, redirect, url_for, Response, send_file, jsonify, make_response, flash
 from flask_login import login_required, login_user, logout_user, current_user
 import pathlib
 import os
@@ -164,6 +164,7 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.password == form.password.data :
             login_user(user)
+            flash('Logged in successfully.', category='succes')
             print('Logged in successfully.')
             next = request.args.get('next')
             #TODO check that next is safe !
@@ -173,6 +174,7 @@ def login():
                 return flask.abort(400)
             return redirect(next or url_for('index'))
         else :
+            flash ('Authentification failed', category='error')
             print ('Authentification failed')
     return render_template('login.html', form = form)
 
