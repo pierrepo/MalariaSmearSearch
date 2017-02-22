@@ -26,7 +26,46 @@
             background-color: yellow;
         }
 
+
+
+        /* Flashed message by js :  */
+
+        #flash-container {
+            /* Initially we don't want any height, and we want the contents to be hidden */
+            overflow: hidden;
+            max-height: 0;
+
+            width:100%;
+            text-align:center;
+
+            /* Set the transitions up. */
+            transition: max-height 2s ease-out;
+        }
+
+        #flash-container.showing {
+            max-height: 500px;
+            transition: max-height 2s ease-in;
+        }
+        .message {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 0 0 4px 4px;
+        }
+        .message.success {
+            color: green;
+        }
+        .message.error {
+            color: red;
+        }
+
+
+
     </style>
+{% endblock %}
+
+{% block header %}
+    {{super()}}
+    <div id='flash-container'></div>
 {% endblock %}
 
 {% block content %}

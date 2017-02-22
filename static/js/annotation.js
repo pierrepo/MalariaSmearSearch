@@ -45,8 +45,26 @@ $(document).ready(function(){
         rect.setFill('rgba(255,255,0,'+0.5 * activate+')'); // 'rgba(255,255,0,'+transparency+')'
         $("#annotations-list li[name="+name+"] span").toggleClass('hover');
     }
-    /**************************************************************************/
 
+
+    /*Function that flash message : */
+    Flash = {}
+    Flash.success = function(msg, time =1000){
+        $('#flash-container')[0].innerHTML = "<div class='success message'>" + msg + "</div>";
+        $('#flash-container').addClass('showing');
+        setTimeout(function(){
+          $('#flash-container').removeClass('showing');
+        }, time);
+      };
+    Flash.error = function(msg, time =1000){
+        $('#flash-container')[0].innerHTML = "<div class='error message'>" + msg + "</div>";
+        $('#flash-container').addClass('showing');
+        setTimeout(function(){
+            $('#flash-container').removeClass('showing');
+        }, time);
+    };
+
+    /**************************************************************************/
 
     // fetch image :
     image_loaded = false ;
