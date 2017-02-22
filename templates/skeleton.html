@@ -19,33 +19,19 @@
                 border: 1px solid black;
             }
             #flashes li {
-                color: white;
                 padding: 0.5em;
             }
             #flashes li.succes {
-                background-color: green;
+                color: green;
             }
             #flashes li.error {
-                background-color: red;
+                color: red;
             }
         </style>
 
         {% endblock %}
     </head>
         <body>
-            <header>
-                {% block header %}
-                    {% with messages = get_flashed_messages(with_categories=true) %}
-                        {% if messages %}
-                        <ul id=flashes>
-                        {% for category, message in messages %}
-                          <li class="{{ category }}">{{ message }}</li>
-                        {% endfor %}
-                        </ul>
-                        {% endif %}
-                    {% endwith %}
-                {% endblock %}
-            </header>
 
             <!-- collapsable navbar inspired of http://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_navbar_collapse&stacked=h -->
             <nav class="navbar navbar-inverse" role = "navigation">
@@ -91,6 +77,20 @@
                     </div>
                 </div>
             </nav>
+
+            <header>
+                {% block header %}
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                        <ul id=flashes>
+                        {% for category, message in messages %}
+                          <li class="{{ category }}">{{ message }}</li>
+                        {% endfor %}
+                        </ul>
+                        {% endif %}
+                    {% endwith %}
+                {% endblock %}
+            </header>
 
             <div class="container">
                 <h1>{{ self.title() }}</h1>
