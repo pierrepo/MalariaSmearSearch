@@ -262,7 +262,7 @@ def annotate_chunk(chunk_filename):
     # give the URL the requested file uploaded to this set would be accessed at. It doesn’t check whether said file exists.
 
 
-    return render_template('annotate-chunk.html', img_url =   url_for('get_chunk_url', chunk_filename = chunk_filename )   )
+    return render_template('annotate-chunk.html', img_filename =  chunk_filename    )
 
 @app.route('/add_anno' , methods = ['POST'])
 @login_required
