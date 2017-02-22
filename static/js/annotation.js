@@ -366,6 +366,7 @@ $(document).ready(function(){
                     thiscache
                         .parent()
                             .hide(400, function(){$(this).remove()});
+                    Flash.success("The annotation was deleted");
                 }
             });
         }
@@ -449,6 +450,9 @@ $(document).ready(function(){
                 // clear the input fields after submission :
                 $('#add-new').get(0).reset()
                 // That makes adding a bunch of annotation items in sequence very easy and natural.
+
+
+                Flash.success("The annotation was added");
             },
             error: function(){
                 // TODO
