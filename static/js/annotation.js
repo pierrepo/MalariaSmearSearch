@@ -67,7 +67,7 @@ $(document).ready(function(){
 
                 obj.stroke = 'black';
                 obj.strokeWidth = 4;
-                obj.name = obj.id; // TODO : Change the code to use id directly.
+                obj.name = obj.id.toString(); // TODO : Change the code to use id directly.
 
                 console.log(obj);
             }
