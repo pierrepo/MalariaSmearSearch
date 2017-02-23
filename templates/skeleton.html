@@ -77,6 +77,8 @@
                     <div class="collapse navbar-collapse" id="myNavbar">
                         <ul class="nav navbar-nav">
                             <li ><a href="{{url_for('index')}}">Home</a></li>
+                            <li ><a href="{{url_for('annotate_chunk', chunk_filename='1_0_0.jpg') }}">Image annotation</a></li>
+                            <li ><a href="{{url_for('browse')}}">Browse sample</a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right"> <!-- {{current_user.username}} -->
                             {% if current_user.is_authenticated %}
