@@ -15,6 +15,31 @@
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
         <style type="text/css">
+
+            /*** Sticky footer : ***/
+            /*https://www.codementor.io/tips/4292721368/twitter-bootstrap-3-sticky-footer*/
+
+            html {
+              position: relative;
+              min-height: 100%;
+              /* The html and body elements cannot have any padding or margin. */
+            }
+            body {
+              /* Margin bottom by footer height */
+              margin-bottom: 60px;
+            }
+            footer {
+              position: absolute;
+              bottom: 0;
+              width: 100%;
+              /* Set the fixed height of the footer here */
+              height: 60px;
+              background-color: #f5f5f5; /*grey*/
+            }
+
+
+            /******************************************************************/
+
             #flashes{
                 border: 1px solid black;
             }
@@ -99,9 +124,11 @@
                 {% endblock %}
             </div>
             <footer>
-                {% block footer %}
-                Footer
-                {% endblock %}
+                <div class="container">
+                    {% block footer %}
+                    sticky footer content
+                    {% endblock %}
+                </div>
             </footer>
 
             {% block imports %}
