@@ -5,7 +5,7 @@ URLs are define without trailing slashes.
 HTML templates are in the templates folder.
 """
 import datetime
-from flask import render_template, request, redirect, url_for, Response, send_file, jsonify, make_response
+from flask import render_template, request, redirect, url_for, Response, send_file, jsonify, make_response, flash
 from flask_login import login_required, login_user, logout_user, current_user
 import pathlib
 import os
@@ -66,7 +66,7 @@ def upload():
             db.session.add(new_photo)
             db.session.commit()
 
-            print('New photo added to database, tis id is {0}'.format(new_photo.id))
+
             # upload the photo
             # its name is the photo id in the database
             new_photo.filename = photos.save(
@@ -77,6 +77,10 @@ def upload():
             )
             # save its path
             new_photo.path=photos.path(new_photo.filename)
+
+            print('New photo was uploded and added to database, its id is {0}'.format(new_photo.id))
+            flash('New photo was uploded and added to database, its id is {0}.'.format(new_photo.id), category = 'succes')
+
             # cut the photo into chunks :
             chunks_numerotation, chunks_coords = new_photo.get_chunks_infos()
             for chunk_idx, chunk_coords in enumerate(chunks_coords) :
@@ -85,11 +89,16 @@ def upload():
             db.session.commit()
             # TODO get its URL
             # TODO print its URL
+
+            print('Its chunks were added to database.')
+            flash('Its chunks were added to database.', category = 'succes')
+
         except Exception as e:
             # TODO : catch the different kind of exception that could occurred.
             print (e)
             db.session.rollback()
             print('An error occurred accessing the database.')
+            flash('An error occurred accessing the database.', category = 'error')
             redirect('/')
 
     return render_template('upload.html', form = form)
@@ -164,6 +173,7 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.password == form.password.data :
             login_user(user)
+            flash('Logged in successfully.', category='succes')
             print('Logged in successfully.')
             next = request.args.get('next')
             #TODO check that next is safe !
@@ -173,6 +183,7 @@ def login():
                 return flask.abort(400)
             return redirect(next or url_for('index'))
         else :
+            flash ('Authentification failed', category='error')
             print ('Authentification failed')
     return render_template('login.html', form = form)
 
@@ -186,7 +197,8 @@ def logout():
     """
     # TODO : what happen if a logout user access logout page ?
     logout_user()
-    return Response('<p>Logged out</p>')
+    flash("Logged out successfully", category='succes')
+    return redirect('/')
 
 @app.route("/account")
 def account():
