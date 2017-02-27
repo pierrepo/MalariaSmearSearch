@@ -25,7 +25,8 @@
 
 5. Initialize database
 
-	???
+	sqlite3 test.db
+	sqlite> .read setup-db-test.sql
 
 6. Quit virtualenv
 
