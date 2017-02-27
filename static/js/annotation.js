@@ -80,6 +80,11 @@ $(document).ready(function(){
 
     /**************************************************************************/
 
+
+    /**************/
+    /* Fetch data */
+    /**************/
+
     // fetch image :
     image_loaded = false ;
     var imageObj = new Image();
@@ -347,8 +352,12 @@ $(document).ready(function(){
 
 
 
-    /* link li item buttons to events using the on() function
-    because :
+
+    /***********************************/
+    /* link li item buttons to events  */
+    /***********************************/
+
+    /* link li item buttons to events using the on() function because :
     - 1) it only creates one event handler which is more efficient
         than using the click function that creates a unique event handler for
         every single list item on the page, each one taking up browser memory
@@ -356,6 +365,7 @@ $(document).ready(function(){
         the same handler. Killer.
     */
 
+    // del button :
     $('#annotations-list').on('click', '.glyphicon-trash', function(){
         /*
         The delete action has a little extra insurance against accidentally
@@ -390,6 +400,7 @@ $(document).ready(function(){
         }
     });
 
+    // edit button :
     $('#annotations-list').on('click', '.glyphicon-pencil', function(){
         console.log("edit");
     });
