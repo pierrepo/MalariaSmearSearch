@@ -56,7 +56,7 @@ $(document).ready(function(){
     }
 
 
-    /*Function that flash message : */
+    /*Functions that flash messages : */
     Flash = {}
     Flash.success = function(msg, time =1000){
         $('#flash-container')[0].innerHTML = "<div class='success message'>" + msg + "</div>";
