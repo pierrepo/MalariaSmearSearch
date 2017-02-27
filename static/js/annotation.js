@@ -20,6 +20,7 @@ $(document).ready(function(){
           name: obj.name
         });
         layer.add(rect);
+        return rect ;
     }
 
     /*
@@ -441,8 +442,38 @@ $(document).ready(function(){
                     strokeWidth: new_anno.strokeWidth * ratio,
                     name: new_anno.name
                 };
-                addAnno(ratio_new_anno, view_stage_anno_layer);
+                rect = addAnno(ratio_new_anno, view_stage_anno_layer);
                 view_stage_anno_layer.draw();
+
+
+                // Bind events : //TODO : refactorize
+                rect.on('mouseover', function(evt) {
+                    var annotation = evt.target;
+                    if (annotation) {
+                        console.log('mouseover');
+                        console.log(annotation, true);
+                        handleHoverAnno(true, this.name(), view_stage);
+                        view_stage_anno_layer.draw();
+                    }
+                });
+
+                rect.on('mouseout', function(evt) {
+                    var annotation = evt.target;
+                    if (annotation) {
+                        console.log('mouseover');
+                        console.log(annotation, false);
+                        handleHoverAnno(false, this.name(), view_stage);
+                        view_stage_anno_layer.draw();
+                    }
+                });
+
+                rect.on('mousedown', function(evt) {
+                    var annotation = evt.target;
+                    if (annotation) {
+                        console.log('mousedown');
+                        console.log(annotation);
+                    }
+                });
 
                 console.log ("new");
                 console.log (new_anno);
