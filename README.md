@@ -49,7 +49,7 @@
 
 4. Run Python webserver
 
-	???
+	python __init__.py
 
 7. Open web browser at <http://127.0.0.0:????>
 
