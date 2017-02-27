@@ -7,30 +7,6 @@ $(document).ready(function(){
     /**************************************************************************/
     // util functions :
 
-    /* This function draw a rectangle corresponding to the given objet, on the given layer
-    *
-    * @param {Object} anno - the object representing an annotation
-    * @param {Konva.Layer} layer - the layer on which you want the rect to be drawn
-    *
-    * @return {Konva.Rect} rect - the shape that has been draw on the layer.
-    *
-    */
-    function drawAnno(anno, layer) {
-        console.log(anno) ;
-        var rect = new Konva.Rect({
-          x: anno.x,
-          y: anno.y,
-          width: anno.width,
-          height: anno.height,
-          fill : null,
-          stroke: anno.stroke,
-          strokeWidth:  anno.strokeWidth,
-          name: anno.name
-        });
-        layer.add(rect);
-        return rect ;
-    }
-
     /* This function adds a new annotation to the session
     * - It wraps the new annotation in action buttons (delete and edit)
     * - It puts the new anno in the annotations list
@@ -294,11 +270,6 @@ $(document).ready(function(){
                 obj.name = obj.id.toString(); // TODO : Change the code to use id directly.
 
                 console.log(obj);
-
-                // put the annotation in the list :
-                //TODO : do not use the code but the complete word
-                $('#annotations-list').append("<li name = '"+ obj.name +"'>" + obj.annotation + "</li>");
-
             }
 
             // wrap list item text in a span, and appply functionality buttons
@@ -327,54 +298,12 @@ $(document).ready(function(){
         // AND once data are loaded
             // render (false) annotations = add the shape to the layer // TODO : is there a for each loop in js ?
             for(var i = 0; i < data.length; i++) {
-                ratio_data = {
-                    x: data[i].x * ratio,
-                    y: data[i].y * ratio,
-                    width: data[i].width * ratio,
-                    height: data[i].height * ratio,
-                    stroke: data[i].stroke,
-                    strokeWidth: data[i].strokeWidth * ratio,
-                    name: data[i].name
-                };
-                console.log ('lààààààààààà') ;
-                console.log(data[i]) ;
-                console.log(ratio_data) ;
-                drawAnno(ratio_data, view_stage_anno_layer);
-                drawAnno(data[i], anno_stage_anno_layer);
+                addAnno(data[i]);
             }
 
             // add the layer to the stage
             view_stage.add(view_stage_anno_layer);
             anno_stage.add(anno_stage_anno_layer);
-
-            // listeners for user input events
-            view_stage.find('Rect').on('mouseover', function(evt) {
-                var annotation = evt.target;
-                if (annotation) {
-                    console.log('mouseover');
-                    console.log(annotation, true);
-                    handleHoverAnno(true, this.name(), view_stage);
-                    view_stage_anno_layer.draw();
-                }
-            });
-
-            view_stage.find('Rect').on('mouseout', function(evt) {
-                var annotation = evt.target;
-                if (annotation) {
-                    console.log('mouseover');
-                    console.log(annotation, false);
-                    handleHoverAnno(false, this.name(), view_stage);
-                    view_stage_anno_layer.draw();
-                }
-            });
-
-            view_stage.find('Rect').on('mousedown', function(evt) {
-                var annotation = evt.target;
-                if (annotation) {
-                    console.log('mousedown');
-                    console.log(annotation);
-                }
-            });
 
             //Resource the cropper to take the annotations into account
             new_url = $('#anno-konvajs .konvajs-content canvas')[0].toDataURL();
@@ -533,12 +462,6 @@ $(document).ready(function(){
                 theResponse = incr().toString();
                 console.log(theResponse);
 
-                // the new list item is appended
-                $("#annotations-list")
-                    .append("<li name="+theResponse+"><span id='' title='Double-click to edit...'>" + newAnnotationText + "</span><button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button></li>");
-                // ensures the click-to-edit functionality is working
-                // on newly appended list items even before a page refresh :
-                bindAllTabs("#annotations-list li[name="+theResponse+"]");
                 // draw the annotation on the konvas :
                 new_anno = {
                     x: $('#add-sel-x').val(),
@@ -549,7 +472,8 @@ $(document).ready(function(){
                     strokeWidth: 4,
                     name: theResponse
                 };
-                drawAnno(new_anno, anno_stage_anno_layer);
+                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!");
+                addAnno(new_anno);
                 anno_stage_anno_layer.draw();
 
                 //Resource the cropper to take the new annotation into account/
@@ -562,47 +486,7 @@ $(document).ready(function(){
                     true
                 );
 
-                ratio_new_anno = {
-                    x: new_anno.x * ratio,
-                    y: new_anno.y * ratio,
-                    width: new_anno.width * ratio,
-                    height: new_anno.height * ratio,
-                    stroke: new_anno.stroke,
-                    strokeWidth: new_anno.strokeWidth * ratio,
-                    name: new_anno.name
-                };
-                rect = drawAnno(ratio_new_anno, view_stage_anno_layer);
                 view_stage_anno_layer.draw();
-
-
-                // Bind events : //TODO : refactorize
-                rect.on('mouseover', function(evt) {
-                    var annotation = evt.target;
-                    if (annotation) {
-                        console.log('mouseover');
-                        console.log(annotation, true);
-                        handleHoverAnno(true, this.name(), view_stage);
-                        view_stage_anno_layer.draw();
-                    }
-                });
-
-                rect.on('mouseout', function(evt) {
-                    var annotation = evt.target;
-                    if (annotation) {
-                        console.log('mouseover');
-                        console.log(annotation, false);
-                        handleHoverAnno(false, this.name(), view_stage);
-                        view_stage_anno_layer.draw();
-                    }
-                });
-
-                rect.on('mousedown', function(evt) {
-                    var annotation = evt.target;
-                    if (annotation) {
-                        console.log('mousedown');
-                        console.log(annotation);
-                    }
-                });
 
                 console.log ("new");
                 console.log (new_anno);
