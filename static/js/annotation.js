@@ -7,7 +7,7 @@ $(document).ready(function(){
     /**************************************************************************/
     // util functions :
 
-    function addAnno(obj, layer) {
+    function drawAnno(obj, layer) {
         console.log(obj) ;
         var rect = new Konva.Rect({
           x: obj.x,
@@ -218,8 +218,8 @@ $(document).ready(function(){
                 console.log ('lààààààààààà') ;
                 console.log(data[i]) ;
                 console.log(ratio_data) ;
-                addAnno(ratio_data, view_stage_anno_layer);
-                addAnno(data[i], anno_stage_anno_layer);
+                drawAnno(ratio_data, view_stage_anno_layer);
+                drawAnno(data[i], anno_stage_anno_layer);
             }
 
             // add the layer to the stage
@@ -420,7 +420,7 @@ $(document).ready(function(){
                     strokeWidth: 4,
                     name: theResponse
                 };
-                addAnno(new_anno, anno_stage_anno_layer);
+                drawAnno(new_anno, anno_stage_anno_layer);
                 anno_stage_anno_layer.draw();
 
                 //Resource the cropper to take the new annotation into account/
@@ -442,7 +442,7 @@ $(document).ready(function(){
                     strokeWidth: new_anno.strokeWidth * ratio,
                     name: new_anno.name
                 };
-                rect = addAnno(ratio_new_anno, view_stage_anno_layer);
+                rect = drawAnno(ratio_new_anno, view_stage_anno_layer);
                 view_stage_anno_layer.draw();
 
 
