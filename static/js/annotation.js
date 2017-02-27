@@ -56,7 +56,12 @@ $(document).ready(function(){
     }
 
 
-    /*Functions that flash messages : */
+    /*Functions that flash messages in the flash div :
+    *
+    * @param {string} msg - the msg that have to be printed
+    * @param {int} time - the duration of the flash
+    *
+    */
     Flash = {}
     Flash.success = function(msg, time =1000){
         $('#flash-container')[0].innerHTML = "<div class='success message'>" + msg + "</div>";
