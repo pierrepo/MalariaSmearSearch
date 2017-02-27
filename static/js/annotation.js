@@ -9,20 +9,20 @@ $(document).ready(function(){
 
     /* This function draw a rectangle corresponding to the given objet, on the given layer
     *
-    * @param {objet} obj - the object representing an annotation
+    * @param {objet} anno - the object representing an annotation
     * @param {Konvajs.layer} - the layer on which you want the rect to be drawn
     */
-    function drawAnno(obj, layer) {
-        console.log(obj) ;
+    function drawAnno(anno, layer) {
+        console.log(anno) ;
         var rect = new Konva.Rect({
-          x: obj.x,
-          y: obj.y,
-          width: obj.width,
-          height: obj.height,
+          x: anno.x,
+          y: anno.y,
+          width: anno.width,
+          height: anno.height,
           fill : null,
-          stroke: obj.stroke,
-          strokeWidth:  obj.strokeWidth,
-          name: obj.name
+          stroke: anno.stroke,
+          strokeWidth:  anno.strokeWidth,
+          name: anno.name
         });
         layer.add(rect);
         return rect ;
