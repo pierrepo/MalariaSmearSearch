@@ -9,8 +9,11 @@ $(document).ready(function(){
 
     /* This function draw a rectangle corresponding to the given objet, on the given layer
     *
-    * @param {objet} anno - the object representing an annotation
-    * @param {Konvajs.layer} - the layer on which you want the rect to be drawn
+    * @param {Object} anno - the object representing an annotation
+    * @param {Konva.Layer} layer - the layer on which you want the rect to be drawn
+    *
+    * @return {Konva.Rect} rect - the shape that has been draw on the layer.
+    *
     */
     function drawAnno(anno, layer) {
         console.log(anno) ;
