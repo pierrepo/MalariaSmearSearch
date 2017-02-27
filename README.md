@@ -51,7 +51,7 @@
 
 	python __init__.py
 
-7. Open web browser at <http://127.0.0.0:????>
+7. Open web browser at <http://127.0.0.1:5000/>
 
 8. Kill web app
 
