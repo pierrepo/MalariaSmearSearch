@@ -85,7 +85,7 @@ $(document).ready(function(){
     var imageObj = new Image();
     imageObj.src = img_source;
 
-    // fetch (false) corresponding annotation data : TODO : use AJAX / var
+    // fetch corresponding annotation data :
     data_loaded = false ;
 
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
