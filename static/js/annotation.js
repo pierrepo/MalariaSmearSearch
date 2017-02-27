@@ -109,10 +109,11 @@ $(document).ready(function(){
 
     /* Fetch data */
 
-    // fetch image :
+    //***  fetch image :
     image_loaded = false ;
     var imageObj = new Image();
     imageObj.src = img_source;
+
     // once the image is loaded :
     imageObj.onload = function() {
       Flash.success('Image was retrieved from the server', 3000);
@@ -177,7 +178,7 @@ $(document).ready(function(){
     };
 
 
-    // fetch corresponding annotation data :
+    //*** fetch corresponding annotation data :
     data_loaded = false ;
 
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
