@@ -20,6 +20,7 @@ $(document).ready(function(){
           name: obj.name
         });
         layer.add(rect);
+        return rect ;
     }
 
     /*
