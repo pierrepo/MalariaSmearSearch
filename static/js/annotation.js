@@ -113,54 +113,6 @@ $(document).ready(function(){
     image_loaded = false ;
     var imageObj = new Image();
     imageObj.src = img_source;
-
-    // fetch corresponding annotation data :
-    data_loaded = false ;
-
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
-    console.log(img_filename);
-    $.getJSON(
-        '/chunks/'+img_filename+'/annotations/',
-        function(data){
-            console.log(data);
-
-            Flash.success('Annotation was retrieved from the server', 3000);
-            for(var i = 0; i < data.length; i++) {
-                var obj = data[i];
-
-                obj.stroke = 'black';
-                obj.strokeWidth = 4;
-                obj.name = obj.id.toString(); // TODO : Change the code to use id directly.
-
-                console.log(obj);
-
-                // put the annotation in the list :
-                //TODO : do not use the code but the complete word
-                $('#annotations-list').append("<li name = '"+ obj.name +"'>" + obj.annotation + "</li>");
-
-            }
-
-            // wrap list item text in a span, and appply functionality buttons
-            $("#annotations-list li")
-                .wrapInner("<span>")
-                .append("<button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button>");
-
-            // make annotation selects editable :
-            bindAllTabs("#annotations-list li span");
-
-
-            data_loaded = true ;
-            init_anno(data) ;
-
-            // TODO : put data as li in annotation list. NB : name will begin with 1 because sqlite autoincrement begin from 1.
-            // make li name derived from annotation item name / id
-        }
-    );
-
-
-
-
-
     // once the image is loaded :
     imageObj.onload = function() {
       Flash.success('Image was retrieved from the server', 3000);
@@ -223,6 +175,54 @@ $(document).ready(function(){
       image_loaded =true ;
       init_anno() ;
     };
+
+
+    // fetch corresponding annotation data :
+    data_loaded = false ;
+
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
+    console.log(img_filename);
+    $.getJSON(
+        '/chunks/'+img_filename+'/annotations/',
+        function(data){
+            console.log(data);
+
+            Flash.success('Annotation was retrieved from the server', 3000);
+            for(var i = 0; i < data.length; i++) {
+                var obj = data[i];
+
+                obj.stroke = 'black';
+                obj.strokeWidth = 4;
+                obj.name = obj.id.toString(); // TODO : Change the code to use id directly.
+
+                console.log(obj);
+
+                // put the annotation in the list :
+                //TODO : do not use the code but the complete word
+                $('#annotations-list').append("<li name = '"+ obj.name +"'>" + obj.annotation + "</li>");
+
+            }
+
+            // wrap list item text in a span, and appply functionality buttons
+            $("#annotations-list li")
+                .wrapInner("<span>")
+                .append("<button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button>");
+
+            // make annotation selects editable :
+            bindAllTabs("#annotations-list li span");
+
+
+            data_loaded = true ;
+            init_anno(data) ;
+
+            // TODO : put data as li in annotation list. NB : name will begin with 1 because sqlite autoincrement begin from 1.
+            // make li name derived from annotation item name / id
+        }
+    );
+
+
+
+
 
     function init_anno(data = []){
         console.log("data_loaded", data_loaded, "image_loaded", image_loaded);
