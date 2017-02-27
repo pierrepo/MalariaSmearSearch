@@ -31,6 +31,103 @@ $(document).ready(function(){
         return rect ;
     }
 
+    /* This function adds a new annotation to the session
+    * - It wraps the new annotation in action buttons (delete and edit)
+    * - It puts the new anno in the annotations list
+    * - It make the new item editable
+    * - It adds the annotation on the annotation layers
+    *   of both the anno (to scale) and the view Konva stages (using ratio)
+    *
+    * NB :
+    * It doesn't store the new annotation in the db !
+    * It doesn't refresh the layers
+    *
+    * @param {object} new_anno - the newly added annotation
+    *
+    */
+    function addAnno(new_anno){
+        console.log("================================");
+        // the new anno is appended in the anno list :
+        $("#annotations-list")
+            .append("<li name='"+new_anno.name+"'><span>" + new_anno.annotation + "</span><button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button></li>");
+        // TODO : do not use the annotation code
+        // the action button events are bind automatically,
+        // but ensure the click-to-edit functionality is working
+        // on newly appended list items even before a page refresh :
+        bindAllTabs("#annotations-list li[name="+new_anno.name+"]");
+
+        // add the annotation as a rect on the anno layer of the anno stage
+        console.log(new_anno) ;
+        var rect = new Konva.Rect({
+          x: new_anno.x,
+          y: new_anno.y,
+          width: new_anno.width,
+          height: new_anno.height,
+          fill : null,
+          stroke: new_anno.stroke,
+          strokeWidth:  new_anno.strokeWidth,
+          name: new_anno.name
+        });
+        anno_stage_anno_layer.add(rect);
+
+        // compute the ration annotation :
+        ratio_new_anno = {
+            x: new_anno.x * ratio,
+            y: new_anno.y * ratio,
+            width: new_anno.width * ratio,
+            height: new_anno.height * ratio,
+            stroke: new_anno.stroke,
+            strokeWidth: new_anno.strokeWidth * ratio,
+            name: new_anno.name
+        };
+
+        // add the ration annotation as a rect on the anno layer of the view stage
+        console.log(ratio_new_anno) ;
+        var ratio_rect = new Konva.Rect({
+          x: ratio_new_anno.x,
+          y: ratio_new_anno.y,
+          width: ratio_new_anno.width,
+          height: ratio_new_anno.height,
+          fill : null,
+          stroke: ratio_new_anno.stroke,
+          strokeWidth:  ratio_new_anno.strokeWidth,
+          name: ratio_new_anno.name
+        });
+        view_stage_anno_layer.add(ratio_rect);
+
+        // bind the new ratio rect to mouse events :
+
+        ratio_rect.on('mouseover', function(evt) {
+            var annotation = evt.target;
+            if (annotation) {
+                console.log('mouseover');
+                console.log(annotation, true);
+                handleHoverAnno(true, this.name(), view_stage);
+                view_stage_anno_layer.draw();
+            }
+        });
+
+        ratio_rect.on('mouseout', function(evt) {
+            var annotation = evt.target;
+            if (annotation) {
+                console.log('mouseover');
+                console.log(annotation, false);
+                handleHoverAnno(false, this.name(), view_stage);
+                view_stage_anno_layer.draw();
+            }
+        });
+
+        ratio_rect.on('mousedown', function(evt) {
+            var annotation = evt.target;
+            if (annotation) {
+                console.log('mousedown');
+                console.log(annotation);
+            }
+        });
+
+
+    }
+
     /*
     * This function handles the event 'hover annotations'.
     * If the mouse is on a rect or on an annotation item in the anotation list,
@@ -146,6 +243,32 @@ $(document).ready(function(){
       // add the shape to the layer
       view_stage_img_layer.add(view_stage_image);
       anno_stage_img_layer.add(anno_stage_image);
+
+
+
+      // Set the cropper :
+      $('#anno-konvajs .konvajs-content canvas').cropper({
+          viewMode :1, //   0: the crop box is just within the container  ;     1: the crop box should be within the canvas -> zoom / dezoom as you want but do not select out the image ;     2: the canvas should not be within the container ;    3: the container should be within the canvas
+          dragMode : 'crop', // 'crop': create a new crop box ; 'move': move the canvas  ;  'none': do nothing
+          autoCrop : true, //enable / disable the default image crop when initialize.
+          autoCropArea : 0.1,
+          crop: function(e) {
+              // Output the result data for cropping image.
+              console.log(e.x);
+              $('#add-sel-x').val( e.x)
+              console.log(e.y);
+              $('#add-sel-y').val(e.y)
+              console.log(e.width);
+              $('#add-sel-width').val(e.width)
+              console.log(e.height);
+              $('#add-sel-height').val(e.height)
+              //console.log(e.detail.rotate);
+              //console.log(e.detail.scaleX);
+              //console.log(e.detail.scaleY);
+          }
+      });
+      Flash.success('The cropper was setted successfully', 3000);
+
 
       image_loaded =true ;
       init_anno() ;
@@ -267,31 +390,6 @@ $(document).ready(function(){
         }
     }
 
-
-
-
-    // Set the cropper :
-    $('#anno-konvajs .konvajs-content canvas').cropper({
-        viewMode :1, //   0: the crop box is just within the container  ;     1: the crop box should be within the canvas -> zoom / dezoom as you want but do not select out the image ;     2: the canvas should not be within the container ;    3: the container should be within the canvas
-        dragMode : 'crop', // 'crop': create a new crop box ; 'move': move the canvas  ;  'none': do nothing
-        autoCrop : true, //enable / disable the default image crop when initialize.
-        autoCropArea : 0.1,
-        crop: function(e) {
-            // Output the result data for cropping image.
-            console.log(e.x);
-            $('#add-sel-x').val( e.x)
-            console.log(e.y);
-            $('#add-sel-y').val(e.y)
-            console.log(e.width);
-            $('#add-sel-width').val(e.width)
-            console.log(e.height);
-            $('#add-sel-height').val(e.height)
-            //console.log(e.detail.rotate);
-            //console.log(e.detail.scaleX);
-            //console.log(e.detail.scaleY);
-        }
-    });
-    Flash.success('The cropper was setted successfully', 3000);
 
 
 
