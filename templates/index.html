@@ -4,7 +4,7 @@
 
 {% block content %}
     <div class="text-center">
-        <h1>Smear Blood Project</h1>
+        <h1>Malaria Smear Search</h1>
         <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
             tempor incididunt ut labore et dolore magna aliqua.
@@ -27,7 +27,7 @@
 
         </div>
         <div class="col-sm-3">
-              <a href="" target="_self" class="thumbnail">
+              <a href="{{url_for('annotate_chunk', chunk_filename='1_0_0.jpg') }}" target="_self" class="thumbnail">
                 <img src="static/img/logo-add-annotation.svg" alt="add annotations icon" style="width:100%">
                 <div class="caption">
                   Add annotations
@@ -36,7 +36,7 @@
 
         </div>
         <div class="col-sm-3">
-              <a href="" target="_self" class="thumbnail">
+              <a href="{{url_for('browse')}}" target="_self" class="thumbnail">
                 <img src="static/img/logo-browse.svg" alt="browse images icon" style="width:100%">
                 <div class="caption">
                   Browse images

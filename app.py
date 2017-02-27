@@ -23,6 +23,7 @@ app.config.from_object('config.DevelopmentConfig')
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
+login_manager.login_message_category = "error"
 
 # Configure the image uploading via Flask-Uploads
 photos = UploadSet('photos', IMAGES)

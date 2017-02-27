@@ -15,6 +15,31 @@
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
         <style type="text/css">
+
+            /*** Sticky footer : ***/
+            /*https://www.codementor.io/tips/4292721368/twitter-bootstrap-3-sticky-footer*/
+
+            html {
+              position: relative;
+              min-height: 100%;
+              /* The html and body elements cannot have any padding or margin. */
+            }
+            body {
+              /* Margin bottom by footer height */
+              margin-bottom: 60px;
+            }
+            footer {
+              position: absolute;
+              bottom: 0;
+              width: 100%;
+              /* Set the fixed height of the footer here */
+              height: 60px;
+              background-color: #222222; /*same as navbar*/
+            }
+
+
+            /******************************************************************/
+
             #flashes{
                 border: 1px solid black;
             }
@@ -52,16 +77,8 @@
                     <div class="collapse navbar-collapse" id="myNavbar">
                         <ul class="nav navbar-nav">
                             <li ><a href="{{url_for('index')}}">Home</a></li>
-                            <li class="dropdown">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">Page 1-1</a></li>
-                                        <li><a href="#">Page 1-2</a></li>
-                                        <li><a href="#">Page 1-3</a></li>
-                                    </ul>
-                            </li>
-                            <li><a href="#">Page 2</a></li>
-                            <li><a href="#">Page 3</a></li>
+                            <li ><a href="{{url_for('annotate_chunk', chunk_filename='1_0_0.jpg') }}">Image annotation</a></li>
+                            <li ><a href="{{url_for('browse')}}">Browse sample</a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right"> <!-- {{current_user.username}} -->
                             {% if current_user.is_authenticated %}
@@ -99,9 +116,11 @@
                 {% endblock %}
             </div>
             <footer>
-                {% block footer %}
-                Footer
-                {% endblock %}
+                <div class="container">
+                    {% block footer %}
+                    sticky footer content
+                    {% endblock %}
+                </div>
             </footer>
 
             {% block imports %}
