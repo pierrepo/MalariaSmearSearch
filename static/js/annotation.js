@@ -7,6 +7,11 @@ $(document).ready(function(){
     /**************************************************************************/
     // util functions :
 
+    /* This function draw a rectangle corresponding to the given objet, on the given layer
+    *
+    * @param {objet} obj - the object representing an annotation
+    * @param {Konvajs.layer} - the layer on which you want the rect to be drawn
+    */
     function drawAnno(obj, layer) {
         console.log(obj) ;
         var rect = new Konva.Rect({
