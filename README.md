@@ -55,7 +55,7 @@
 
 8. Kill web app
 
-	???
+	ctrl-c
 
 9. Quit virtualenv
 
