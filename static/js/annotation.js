@@ -38,7 +38,7 @@ $(document).ready(function(){
     * (with transparency of 0.5).
     * Else nothing happens.
     * Nota Bene :
-    * after using this function, you have to redray the layer containing the rect annotations
+    * after using this function, you have to refreash the layer containing the rect annotations
     * using the draw() function.
     *
     * @param {bool} activate - tells if the mouse is on a annotation (True) or not (False).
