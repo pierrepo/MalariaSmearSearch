@@ -195,31 +195,7 @@ $(document).ready(function(){
         }
     );
 
-
-
-    // Set the cropper :
-    $('#anno-konvajs .konvajs-content canvas').cropper({
-        viewMode :1, //   0: the crop box is just within the container  ;     1: the crop box should be within the canvas -> zoom / dezoom as you want but do not select out the image ;     2: the canvas should not be within the container ;    3: the container should be within the canvas
-        dragMode : 'crop', // 'crop': create a new crop box ; 'move': move the canvas  ;  'none': do nothing
-        autoCrop : true, //enable / disable the default image crop when initialize.
-        autoCropArea : 0.1,
-        crop: function(e) {
-            // Output the result data for cropping image.
-            console.log(e.x);
-            $('#add-sel-x').val( e.x)
-            console.log(e.y);
-            $('#add-sel-y').val(e.y)
-            console.log(e.width);
-            $('#add-sel-width').val(e.width)
-            console.log(e.height);
-            $('#add-sel-height').val(e.height)
-            //console.log(e.detail.rotate);
-            //console.log(e.detail.scaleX);
-            //console.log(e.detail.scaleY);
-        }
-    });
-    Flash.success('The cropper was setted successfully', 3000);
-
+    /* Render the loaded annotations on the loaded chunk */
 
     function init_anno(data = []){
         console.log("data_loaded", data_loaded, "image_loaded", image_loaded);
@@ -290,6 +266,33 @@ $(document).ready(function(){
             Flash.success('The annotations were added on both the view and the annotation canvas. Everything is ready.', 3000);
         }
     }
+
+
+
+
+    // Set the cropper :
+    $('#anno-konvajs .konvajs-content canvas').cropper({
+        viewMode :1, //   0: the crop box is just within the container  ;     1: the crop box should be within the canvas -> zoom / dezoom as you want but do not select out the image ;     2: the canvas should not be within the container ;    3: the container should be within the canvas
+        dragMode : 'crop', // 'crop': create a new crop box ; 'move': move the canvas  ;  'none': do nothing
+        autoCrop : true, //enable / disable the default image crop when initialize.
+        autoCropArea : 0.1,
+        crop: function(e) {
+            // Output the result data for cropping image.
+            console.log(e.x);
+            $('#add-sel-x').val( e.x)
+            console.log(e.y);
+            $('#add-sel-y').val(e.y)
+            console.log(e.width);
+            $('#add-sel-width').val(e.width)
+            console.log(e.height);
+            $('#add-sel-height').val(e.height)
+            //console.log(e.detail.rotate);
+            //console.log(e.detail.scaleX);
+            //console.log(e.detail.scaleY);
+        }
+    });
+    Flash.success('The cropper was setted successfully', 3000);
+
 
 
     $( "#toggle-mode" ).click(function() {
