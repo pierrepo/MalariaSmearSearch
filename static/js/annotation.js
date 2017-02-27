@@ -86,6 +86,27 @@ $(document).ready(function(){
     /* Set the crop tool */
     /*********************/
 
+    /* create Konva instances */
+    // Konva stages
+    var anno_stage = new Konva.Stage({
+      container: 'anno-konvajs',  // id of container <div>
+      width : 1,
+      height : 1
+    });
+    var view_stage = new Konva.Stage({
+      container: 'view-konvajs',   // id of container <div>
+      width: $('#view-konvajs').width()
+    });
+    // and layers :
+    // - one for the image :
+    var view_stage_img_layer = new Konva.Layer();
+    var anno_stage_img_layer = new Konva.Layer();
+    // - the other for the annotations :
+    var view_stage_anno_layer = new Konva.Layer();
+    var anno_stage_anno_layer = anno_stage_img_layer; // for anno stage : image and anno on the same layer because each layer has a canvas and Cropper can handle only one canvas at a time
+
+
+
     /* Fetch data */
 
     // fetch image :
@@ -139,23 +160,6 @@ $(document).ready(function(){
 
 
 
-    // create Konva stages
-    var anno_stage = new Konva.Stage({
-      container: 'anno-konvajs',  // id of container <div>
-      width : 1,
-      height : 1
-    });
-    var view_stage = new Konva.Stage({
-      container: 'view-konvajs',   // id of container <div>
-      width: $('#view-konvajs').width()
-    });
-    // then, layers creation :
-    // - one for the image :
-    var view_stage_img_layer = new Konva.Layer();
-    var anno_stage_img_layer = new Konva.Layer();
-    // - the other for the annotations :
-    var view_stage_anno_layer = new Konva.Layer();
-    var anno_stage_anno_layer = anno_stage_img_layer; // for anno stage : image and anno on the same layer because each layer has a canvas and Cropper can handle only one canvas at a time
 
     // once the image is loaded :
     imageObj.onload = function() {
