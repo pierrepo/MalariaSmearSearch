@@ -4,59 +4,59 @@
 
 1. Get files
 
-	git clone https://github.com/pierrepo/MalariaSmearSearch.git
-	cd MalariaSmearSearch
+		git clone https://github.com/pierrepo/MalariaSmearSearch.git
+		cd MalariaSmearSearch
 
 1. Install virtualenv
 
-	sudo pip3 install virtualenv
+		sudo pip3 install virtualenv
 
 2. Create virtual environment
 
-	virtualenv -p /usr/bin/python3 venv
+		virtualenv -p /usr/bin/python3 venv
 
 3. Activate virtualenv
 
-	source venv/bin/activate
+		source venv/bin/activate
 
 4. Install requirements
 
-	pip install -r requirements.txt
+		pip install -r requirements.txt
 
 5. Initialize database
 
-	sqlite3 test.db
-	sqlite> .read setup-db-test.sql
+		sqlite3 test.db
+		sqlite> .read setup-db-test.sql
 
 6. Quit virtualenv
 
-	deactivate
+		deactivate
 
 
 ## Usage
 
 1. Update project repository
 
-	git pull
+		git pull
 
 2. Activate virtualenv
 
-	source venv/bin/activate
+		source venv/bin/activate
 
 3. Update requirements
 
-	pip install -r requirements.txt
+		pip install -r requirements.txt
 
 4. Run Python webserver
 
-	python __init__.py
+		python __init__.py
 
 7. Open web browser at <http://127.0.0.1:5000/>
 
 8. Kill web app
 
-	ctrl-c
+		ctrl-c
 
 9. Quit virtualenv
 
-	deactivate
+		deactivate
