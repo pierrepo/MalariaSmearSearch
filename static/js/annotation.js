@@ -97,13 +97,18 @@ $(document).ready(function(){
       container: 'view-konvajs',   // id of container <div>
       width: $('#view-konvajs').width()
     });
-    // and layers :
-    // - one for the image :
+    // and layers added to corresponding stages from the bottom to the top :
+    // - one for the image (in the bottom):
     var view_stage_img_layer = new Konva.Layer();
+    view_stage.add(view_stage_img_layer);
+    view_stage_img_layer.moveToBottom();
     var anno_stage_img_layer = new Konva.Layer();
+    anno_stage.add(anno_stage_img_layer);
+    anno_stage_img_layer.moveToBottom();
     // - the other for the annotations :
     var view_stage_anno_layer = new Konva.Layer();
     var anno_stage_anno_layer = anno_stage_img_layer; // for anno stage : image and anno on the same layer because each layer has a canvas and Cropper can handle only one canvas at a time
+
 
 
 
@@ -143,11 +148,6 @@ $(document).ready(function(){
       // add the shape to the layer
       view_stage_img_layer.add(view_stage_image);
       anno_stage_img_layer.add(anno_stage_image);
-      // add the layer to the stage
-      view_stage.add(view_stage_img_layer);
-      view_stage_img_layer.moveToBottom();
-      anno_stage.add(anno_stage_img_layer);
-      anno_stage_img_layer.moveToBottom();
 
       // Set the cropper :
       $('#anno-konvajs .konvajs-content canvas').cropper({
