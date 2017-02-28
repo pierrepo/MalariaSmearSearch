@@ -93,6 +93,8 @@ def upload():
             print('Its chunks were added to database.')
             flash('Its chunks were added to database.', category = 'succes')
 
+            return render_template('choice_after_upload.html')
+
         except Exception as e:
             # TODO : catch the different kind of exception that could occurred.
             print (e)
