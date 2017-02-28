@@ -8,13 +8,32 @@
     <div class="row">
         <ul>
             <div class="col-sm-4">
-                <li>Annotate the newly uploaded sample</li>
+                <li>
+                    <a href="{{url_for('annotate_chunk', chunk_filename='1_0_0.jpg') }}" target="_self" class="thumbnail">
+                      <div class="caption">
+                        Annotate the newly uploaded sample
+                      </div>
+                    </a>
+                </li>
+            </div>
+
+            <div class="col-sm-4">
+                <li>
+                    <a href="{{ url_for('upload') }}" target="_self" class="thumbnail">
+                        <div class="caption">
+                        Upload another sample
+                        </div>
+                    </a>
+                </li>
             </div>
             <div class="col-sm-4">
-                <li>Upload another sample</li>
-            </div>
-            <div class="col-sm-4">
-                <li>Go back home</li>
+                <li>
+                    <a href="{{ url_for('index') }}" target="_self" class="thumbnail">
+                        <div class="caption">
+                        Go back home
+                        </div>
+                    </a>
+                </li>
             </div>
         </ul>
     </div>
