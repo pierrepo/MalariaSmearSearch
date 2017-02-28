@@ -21,7 +21,7 @@ $(document).ready(function(){
     * @param {object} new_anno - the newly added annotation
     *
     */
-    function addAnno(new_anno){
+    function addAnnoView(new_anno){
         console.log("================================");
         // the new anno is appended in the anno list :
         $("#annotations-list")
@@ -298,7 +298,7 @@ $(document).ready(function(){
         // AND once data are loaded
             // render (false) annotations = add the shape to the layer // TODO : is there a for each loop in js ?
             for(var i = 0; i < data.length; i++) {
-                addAnno(data[i]);
+                addAnnoView(data[i]);
             }
 
             // add the layer to the stage
@@ -474,7 +474,7 @@ $(document).ready(function(){
                     name: theResponse
                 };
                 console.log("!!!!!!!!!!!!!!!!!!!!!!!!!");
-                addAnno(new_anno);
+                addAnnoView(new_anno);
                 anno_stage_anno_layer.draw();
 
                 //Resource the cropper to take the new annotation into account/
