@@ -21,7 +21,7 @@
                         <a href="{{ url_for('annotate_chunk', chunk_filename = chunk.filename ) }}">
                             <span>annotate</span>
                         </a>
-                        {{chunk.filename }}
+                        {{chunk.filename }} has {{ nb_annotations[photo_idx][chunk_idx]}} annotations
                     </li>
                 {% endfor %}
             </ul>

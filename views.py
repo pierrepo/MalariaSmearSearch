@@ -215,11 +215,22 @@ def browse():
     print (photos)
 
     chunks = []
-    for photo in photos :
+    nb_annotations = [ list() for _ in range (len(photos))  ]
+
+    for photo_idx, photo in enumerate(photos) :
         chunks.append ( Chunk.query.filter_by(id_photo=photo.id).all()  )
 
+        for chunk in chunks[photo_idx] :
+            count = Annotation.query.filter_by(
+                id_photo = chunk.id_photo,
+                col = chunk.col ,
+                row = chunk.row
+            ).count()
+            print (count)
+            nb_annotations[photo_idx].append(count)
+
     print(chunks)
-    return render_template('browse.html', photos = photos, chunks = chunks , app = app , enumerate=enumerate)
+    return render_template('browse.html', photos = photos, chunks = chunks , nb_annotations = nb_annotations, app = app , enumerate=enumerate)
 
 @app.route('/download/<photo_id>')
 def download(photo_id):
