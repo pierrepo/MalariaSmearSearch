@@ -8,12 +8,12 @@
         They are the photos uploaded :
     	<ul class="fichiers">
 
-    	{% for photo in photos %}
+        {% for photo_idx, photo in enumerate(photos) %}
         <li>
             <a href="{{ url_for('download', photo_id = photo.filename ) }}">
                 <span class="glyphicon glyphicon-download"></span>
             </a>
-            {{ photo.filename }}
+            {{photo_idx}} {{ photo.filename }}
         </li>
 
     	{% endfor %}
