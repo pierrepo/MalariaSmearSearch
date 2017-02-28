@@ -30,7 +30,7 @@ $(document).ready(function(){
         // the action button events are bind automatically,
         // but ensure the click-to-edit functionality is working
         // on newly appended list items even before a page refresh :
-        bindAllTabs("#annotations-list li[name="+new_anno.name+"]");
+        makeEditable("#annotations-list li[name="+new_anno.name+"]");
 
         // add the annotation as a rect on the anno layer of the anno stage
         console.log(new_anno) ;
@@ -278,7 +278,7 @@ $(document).ready(function(){
                 .append("<button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button>");
 
             // make annotation selects editable :
-            bindAllTabs("#annotations-list li span");
+            makeEditable("#annotations-list li span");
 
 
             data_loaded = true ;
@@ -355,7 +355,7 @@ $(document).ready(function(){
 
 
 
-    function bindAllTabs(editableTarget) {
+    function makeEditable(editableTarget) {
         /*
         Target an element
         and use the Jeditable plugin  editable() function on it
