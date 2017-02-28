@@ -18,6 +18,9 @@
             <ul>
                 {% for chunk_idx, chunk in enumerate( chunks[photo_idx]) %}
                     <li>
+                        <a href="{{ url_for('annotate_chunk', chunk_filename = chunk.filename ) }}">
+                            <span>annotate</span>
+                        </a>
                         {{chunk.filename }}
                     </li>
                 {% endfor %}
