@@ -464,6 +464,7 @@ $(document).ready(function(){
 
                 // draw the annotation on the konvas :
                 new_anno = {
+                    annotation :  $('#new-list-item-text').val(),
                     x: $('#add-sel-x').val(),
                     y: $('#add-sel-y').val(),
                     width: $('#add-sel-width').val(),
