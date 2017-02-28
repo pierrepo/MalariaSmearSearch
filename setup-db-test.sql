@@ -40,7 +40,8 @@ CREATE TABLE tbl_photo (
 CREATE TABLE tbl_chunk (
   'id_photo' REFERENCES tbl_photo('id'),
   'col' INTEGER  ,
-  'row' INTEGER , 
+  'row' INTEGER ,
+  'filename' VARCHAR(45),
   PRIMARY KEY ('id_photo', 'col', 'row')
 );
 
