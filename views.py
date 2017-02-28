@@ -213,7 +213,13 @@ def browse():
     # list uploaded photo in db :
     photos = Photo.query.all()
     print (photos)
-    return render_template('browse.html', photos = photos, app = app , enumerate=enumerate)
+
+    chunks = []
+    for photo in photos :
+        chunks.append ( Chunk.query.filter_by(id_photo=photo.id).all()  )
+
+    print(chunks)
+    return render_template('browse.html', photos = photos, chunks = chunks , app = app , enumerate=enumerate)
 
 @app.route('/download/<photo_id>')
 def download(photo_id):
