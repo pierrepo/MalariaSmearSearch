@@ -250,14 +250,14 @@ class Chunk(db.Model):
 
 
     @property
-    def get_filename(self) :
+    def filename(self) :
         return '{0}_{1}_{2}.{3}'.format(
             self.id_photo,
             self.col, self.row,
             Photo.query.get(self.id_photo).extension # extention
         )
 
-    def filename(self) :
+    def get_filename(self) :
         """
         Function that uses the corresponding property
         This can be used in jinja template
