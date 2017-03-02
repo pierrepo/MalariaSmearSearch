@@ -90,8 +90,8 @@ def upload():
             # TODO get its URL
             # TODO print its URL
 
-            print('Its chunks were added to database.')
-            flash('Its chunks were added to database.', category = 'succes')
+            print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(chunk_idx + 1))
+            flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(chunk_idx + 1), category = 'succes')
 
             return render_template('choice_after_upload.html')
 
