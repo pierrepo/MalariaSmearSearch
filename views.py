@@ -58,6 +58,11 @@ def upload():
         # get the photo and its database attributes !
         new_photo = Photo()
         form.populate_obj(new_photo)
+        new_photo.extension = form.photo.data.filename.split('.')[-1].lower()
+        # lowercase because the photos set is made from the IMAGE set
+        # that do use lowercase extensions.
+        # https://pythonhosted.org/Flask-Uploads/#flaskext.uploads.IMAGES
+
         print (new_photo)
         print (form)
 
@@ -68,13 +73,12 @@ def upload():
 
 
             # upload the photo
-            # its name is the photo id in the database
-            new_photo.filename = photos.save(
+            # its name is the photo 00000id in the database
+            photos.save(
                 storage = form.photo.data, # The uploaded file to save.
-                name = '{0}.'.format(new_photo.id) #The name to save the file.
-                    # as it ends with a dot, the file’s extension
-                    # will be appended automatically to the end.
+                name = new_photo.filename
             )
+
             # save its path
             new_photo.path=photos.path(new_photo.filename)
 

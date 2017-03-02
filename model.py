@@ -87,6 +87,10 @@ class Photo(db.Model):
         'autoload': True,
         'autoload_with': db.engine
     }
+    @property
+    def filename (self) :
+        return '{0:0>5d}.{1}'.format(self.id, self.extension )
+
 
     def get_chunks_infos(self, num_crop_col = 2, num_crop_row = 2) :
         """
