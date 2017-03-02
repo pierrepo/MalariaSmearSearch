@@ -261,23 +261,25 @@ def get_chunk_annotation(chunk_filename):
     return jsonify(serialized_annotations)
 
 
-@app.route('/annotate_chunk/<chunk_filename>')
-def annotate_chunk(chunk_filename):
+
+@app.route('/annotate_chunk/<int:photo_id>/<int:col>/<int:row>')
+def annotate_chunk(photo_id, col, row):
+    print(photo_id, col, row)
+    chunk = Chunk.query.get([photo_id, col, row]) # Primary Key -> image_id, col, row
 
     # check if the requested chunk is on the disk :
     try :
-        chunk_path = pathlib.Path( app.root_path + '/' +'chunks/' + chunk_filename)
-        print (chunk_path)
-        assert( chunk_path.is_file())
+        assert( os.path.exists( chunk.path ) )
     except AssertionError as e :
         print ("can't refer to the chunk on the disk")
 
-    print ( url_for('get_chunk_url', chunk_filename = chunk_filename ) )
+    print ( url_for('get_chunk_url', chunk_filename = chunk.filename ) )
+
 
     # give the URL the requested file uploaded to this set would be accessed at. It doesn’t check whether said file exists.
 
 
-    return render_template('annotate-chunk.html', img_filename =  chunk_filename    )
+    return render_template('annotate-chunk.html', photo_id=photo_id, col=col, row=row, img_filename =  chunk_filename    )
 
 @app.route('/chunks/<chunk_filename>/annotations/' , methods = ['POST'])
 @login_required
