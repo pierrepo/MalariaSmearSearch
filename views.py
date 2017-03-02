@@ -79,9 +79,6 @@ def upload():
                 name = new_photo.filename
             )
 
-            # save its path
-            new_photo.path=photos.path(new_photo.filename)
-
             print('New photo was uploded and added to database, its id is {0}'.format(new_photo.id))
             flash('New photo was uploded and added to database, its id is {0}.'.format(new_photo.id), category = 'succes')
 

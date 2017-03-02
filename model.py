@@ -91,6 +91,9 @@ class Photo(db.Model):
     def filename (self) :
         return '{0:0>5d}.{1}'.format(self.id, self.extension )
 
+    @property
+    def path(self):
+        return photos.path(self.filename)
 
     def get_chunks_infos(self, num_crop_col = 2, num_crop_row = 2) :
         """
