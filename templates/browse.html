@@ -14,7 +14,7 @@
                 <span class="glyphicon glyphicon-download"></span>
             </a>
 
-            {{photo_idx}} {{ photo.filename }}
+            {{photo_idx}} {{ photo.get_filename() }}
 
             <ul>
                 {% for chunk_idx, chunk in enumerate( chunks[photo_idx]) %}
@@ -22,7 +22,7 @@
                         <a href="{{ url_for('annotate_chunk', chunk_filename = chunk.filename ) }}">
                             <span>annotate</span>
                         </a>
-                        {{chunk.filename }} has {{ nb_annotations[photo_idx][chunk_idx]}} annotations
+                        {{chunk.get_filename() }} has {{ nb_annotations[photo_idx][chunk_idx]}} annotations
                     </li>
                 {% endfor %}
             </ul>
