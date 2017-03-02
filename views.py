@@ -241,15 +241,11 @@ def get_chunk_url(photo_id, col, row):
     resp.content_type = "image/jpeg"
     return resp
 
-@app.route('/chunks/<chunk_filename>/annotations/')
-def get_chunk_annotation(chunk_filename):
-
-    # retrive chunk identifier from the fileneame :
-    (img_id__col_id__row_id, ext) = chunk_filename.split('.')
-    (img_id, col_id, row_id) = [int (e) for e in img_id__col_id__row_id.split('_') ]
+@app.route('/chunks/<int:photo_id>/<int:col>/<int:row>/annotations/')
+def get_chunk_annotation(photo_id, col, row):
 
     # get all the annotation that are made on current chunk :
-    annotations = Annotation.query.filter_by(id_photo=img_id, col = col_id, row = row_id).all()
+    annotations = Annotation.query.filter_by(id_photo=photo_id, col = col, row = row).all()
     #query.with_entities(SomeModel.col1, SomeModel.col2) #select colum for the return
 
     # model is not JSON serializable

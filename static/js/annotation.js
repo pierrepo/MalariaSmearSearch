@@ -257,7 +257,7 @@ $(document).ready(function(){
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
     console.log(img_filename);
     $.getJSON(
-        '/chunks/'+img_filename+'/annotations/',
+        '/chunks/'+photo_id+'/'+col+'/'+row+'/annotations/',
         function(data){
             console.log(data);
 
