@@ -1,0 +1,48 @@
+{% extends "skeleton.html" %}
+
+{% block title %}Upload done{% endblock %}
+
+{% block content %}
+    What do you want to do now?
+
+    <div class="row">
+        <ul>
+            <div class="col-sm-4">
+                <li>
+                  <img src="static/img/logo-add-annotation.svg" alt="add annotations icon" style="width:100%">
+                  <div class="caption">
+                    Annotate the chunk
+                        {% for chunk in chunks_numerotation %}
+                            <a href="{{url_for('annotate_chunk', chunk_filename='1_0_0.jpg') }}" target="_self" class="thumbnail">
+                                {{chunk}}
+                            </a>
+                        {% endfor %}
+                    </select>
+                    of the newly uploaded sample
+                  </div>
+                </li>
+            </div>
+
+            <div class="col-sm-4">
+                <li>
+                    <a href="{{ url_for('upload') }}" target="_self" class="thumbnail">
+                        <img  src="static/img/logo-add-image.svg" alt="add image icon" style="width:100%">
+                        <div class="caption">
+                        Upload another sample
+                        </div>
+                    </a>
+                </li>
+            </div>
+            <div class="col-sm-4">
+                <li>
+                    <a href="{{ url_for('index') }}" target="_self" class="thumbnail">
+                        <img  src="static/img/logo-home.svg" alt="home icon" style="width:100%">
+                        <div class="caption">
+                        Go back home
+                        </div>
+                    </a>
+                </li>
+            </div>
+        </ul>
+    </div>
+{% endblock %}
