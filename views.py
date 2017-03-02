@@ -221,35 +221,31 @@ def browse():
 @app.route('/download/<photo_id>')
 def download(photo_id):
     #photo_id = secure_filename(photo_id)
-    print (app.root_path + '/' + app.config['UPLOADED_PHOTOS_DEST'] + '/' +  photo_id)
-    if os.path.isfile(app.root_path + '/' + app.config['UPLOADED_PHOTOS_DEST'] + '/' + photo_id): # if the file exists
+    photo = Photo.query.get(photo_id) # Primary Key
+    if os.path.isfile(photo.path): # if the file exists
         # send it :
-        return send_file(app.root_path + '/' + app.config['UPLOADED_PHOTOS_DEST']+ '/' +  photo_id, as_attachment=True)
+        return send_file(photo.path, as_attachment=True)
     else:
         # return to the photo list with a flash error message
         print("Photo {photo_id} doesn't exists.".format(photo_id=photo_id))
         return redirect(url_for('browse'))
 
 
-@app.route('/chunks/<chunk_filename>')
-def get_chunk_url(chunk_filename):
+@app.route('/chunks/<int:photo_id>/<int:col>/<int:row>')
+def get_chunk_url(photo_id, col, row):
     print('=====================================================')
-    print (chunk_filename)
-    chunk_path =  app.root_path + '/' +'chunks/' + chunk_filename
-    print (chunk_path)
-    resp = make_response(open(chunk_path, 'rb').read()) #open in binary mode
+    chunk = Chunk.query.get([photo_id, col, row]) # Primary Key
+    print (chunk.filename)
+    print (chunk.path)
+    resp = make_response(open(chunk.path, 'rb').read()) #open in binary mode
     resp.content_type = "image/jpeg"
     return resp
 
-@app.route('/chunks/<chunk_filename>/annotations/')
-def get_chunk_annotation(chunk_filename):
-
-    # retrive chunk identifier from the fileneame :
-    (img_id__col_id__row_id, ext) = chunk_filename.split('.')
-    (img_id, col_id, row_id) = [int (e) for e in img_id__col_id__row_id.split('_') ]
+@app.route('/chunks/<int:photo_id>/<int:col>/<int:row>/annotations/')
+def get_chunk_annotation(photo_id, col, row):
 
     # get all the annotation that are made on current chunk :
-    annotations = Annotation.query.filter_by(id_photo=img_id, col = col_id, row = row_id).all()
+    annotations = Annotation.query.filter_by(id_photo=photo_id, col = col, row = row).all()
     #query.with_entities(SomeModel.col1, SomeModel.col2) #select colum for the return
 
     # model is not JSON serializable
@@ -261,35 +257,34 @@ def get_chunk_annotation(chunk_filename):
     return jsonify(serialized_annotations)
 
 
-@app.route('/annotate_chunk/<chunk_filename>')
-def annotate_chunk(chunk_filename):
+
+@app.route('/annotate_chunk/<int:photo_id>/<int:col>/<int:row>')
+def annotate_chunk(photo_id, col, row):
+    print(photo_id, col, row)
+    chunk = Chunk.query.get([photo_id, col, row]) # Primary Key -> image_id, col, row
 
     # check if the requested chunk is on the disk :
     try :
-        chunk_path = pathlib.Path( app.root_path + '/' +'chunks/' + chunk_filename)
-        print (chunk_path)
-        assert( chunk_path.is_file())
+        assert( os.path.exists( chunk.path ) )
     except AssertionError as e :
         print ("can't refer to the chunk on the disk")
 
-    print ( url_for('get_chunk_url', chunk_filename = chunk_filename ) )
+    print ( url_for('get_chunk_url', photo_id=photo_id, col=col, row=row ) )
+
 
     # give the URL the requested file uploaded to this set would be accessed at. It doesn’t check whether said file exists.
 
+    return render_template('annotate-chunk.html', photo_id=photo_id, col=col, row=row )
 
-    return render_template('annotate-chunk.html', img_filename =  chunk_filename    )
 
-@app.route('/chunks/<chunk_filename>/annotations/' , methods = ['POST'])
+@app.route('/chunks/<int:photo_id>/<int:col>/<int:row>/annotations/' , methods = ['POST'])
 @login_required
-def add_anno(chunk_filename) :
+def add_anno(photo_id, col, row) :
 
     print (current_user)
 
-    # retrive chunk identifier from the fileneame :
-    (img_id__col_id__row_id, ext) = chunk_filename.split('.')
-    (img_id, col_id, row_id) = [int (e) for e in img_id__col_id__row_id.split('_') ]
 
-    chunk = Chunk.query.get([img_id, col_id, row_id]) # Primary Key -> image_id, col, row
+    chunk = Chunk.query.get([photo_id, col, row]) # Primary Key -> image_id, col, row
     print (chunk)
 
     x =  request.form['x']

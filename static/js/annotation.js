@@ -255,9 +255,8 @@ $(document).ready(function(){
     data_loaded = false ;
 
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
-    console.log(img_filename);
     $.getJSON(
-        '/chunks/'+img_filename+'/annotations/',
+        '/chunks/'+photo_id+'/'+col+'/'+row+'/annotations/',
         function(data){
             console.log(data);
 
@@ -453,7 +452,7 @@ $(document).ready(function(){
 
         $.ajax({
 
-            url : '/chunks/'+img_filename+'/annotations/',
+            url : '/chunks/'+photo_id+'/'+col+'/'+row+'/annotations/',
             type: "POST",
             data : $('#add-new').serialize(),
 

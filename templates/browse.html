@@ -10,7 +10,7 @@
 
     	{% for photo in photos %}
         <li>
-            <a href="{{ url_for('download', photo_id = photo.filename ) }}">
+            <a href="{{ url_for('download', photo_id = photo.id ) }}">
                 <span class="glyphicon glyphicon-download"></span>
             </a>
             {{ photo.get_filename() }}

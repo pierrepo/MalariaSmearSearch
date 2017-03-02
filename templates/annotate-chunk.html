@@ -109,8 +109,11 @@
     <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
 
     <script>
-        var img_filename = "{{img_filename}}";
-        var img_source = " {{url_for('get_chunk_url', chunk_filename = img_filename )}} " ;
+        var photo_id = {{photo_id}}
+        var col = {{col}}
+        var row ={{row}}
+
+        var img_source = " {{url_for('get_chunk_url', photo_id=photo_id, col=col, row=row )}} " ;
     </script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}"></script>
 

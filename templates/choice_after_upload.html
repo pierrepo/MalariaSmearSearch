@@ -13,7 +13,7 @@
                   <div class="caption">
                     Annotate the chunk
                         {% for chunk in chunks_numerotation %}
-                            <a href="{{url_for('annotate_chunk', chunk_filename='1_0_0.jpg') }}" target="_self" class="thumbnail">
+                            <a href="{{url_for('annotate_chunk',photo_id=1, col=0, row=0) }}" target="_self" class="thumbnail">
                                 {{chunk}}
                             </a>
                         {% endfor %}
