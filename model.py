@@ -221,8 +221,11 @@ class Chunk(db.Model):
         (self.col, self.row) = chunk_numerotation
         print ('dooo')
         print( self.filename )
-        self.path = './chunks/{0}'.format(self.filename)
         self.make_chunk(photo, chunk_coords)
+
+    @property
+    def path(self) :
+        return './chunks/{0}'.format(self.filename)
 
     @property
     def filename(self) :
