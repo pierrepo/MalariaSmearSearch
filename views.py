@@ -93,7 +93,7 @@ def upload():
             print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(chunk_idx + 1))
             flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(chunk_idx + 1), category = 'succes')
 
-            return render_template('choice_after_upload.html')
+            return render_template('choice_after_upload.html', chunks_numerotation = chunks_numerotation )
 
         except Exception as e:
             # TODO : catch the different kind of exception that could occurred.
