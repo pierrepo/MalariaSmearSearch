@@ -277,17 +277,14 @@ def annotate_chunk(photo_id, col, row):
 
     return render_template('annotate-chunk.html', photo_id=photo_id, col=col, row=row, img_filename =  chunk_filename    )
 
-@app.route('/chunks/<chunk_filename>/annotations/' , methods = ['POST'])
+@app.route('/chunks/<int:photo_id>/<int:col>/<int:row>/annotations/' , methods = ['POST'])
 @login_required
-def add_anno(chunk_filename) :
+def add_anno(photo_id, col, row) :
 
     print (current_user)
 
-    # retrive chunk identifier from the fileneame :
-    (img_id__col_id__row_id, ext) = chunk_filename.split('.')
-    (img_id, col_id, row_id) = [int (e) for e in img_id__col_id__row_id.split('_') ]
 
-    chunk = Chunk.query.get([img_id, col_id, row_id]) # Primary Key -> image_id, col, row
+    chunk = Chunk.query.get([photo_id, col, row]) # Primary Key -> image_id, col, row
     print (chunk)
 
     x =  request.form['x']

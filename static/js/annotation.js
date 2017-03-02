@@ -453,7 +453,7 @@ $(document).ready(function(){
 
         $.ajax({
 
-            url : '/chunks/'+img_filename+'/annotations/',
+            url : '/chunks/'+photo_id+'/'+col+'/'+row+'/annotations/',
             type: "POST",
             data : $('#add-new').serialize(),
 
