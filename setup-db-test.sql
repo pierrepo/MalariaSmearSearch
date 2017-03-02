@@ -27,7 +27,7 @@ INSERT INTO tbl_user VALUES  ( 'azertyuiop','bim@bim.bim', 'ioioioioio', 'superv
 
 CREATE TABLE tbl_photo (
   'id' INTEGER PRIMARY KEY AUTOINCREMENT ,
-  'filename' VARCHAR(45), 
+  'extension' VARCHAR(45), 
   'username' REFERENCES tbl_user(username),
   preparation_type VARCHAR(5) CHECK (preparation_type IN ('thick' , 'thin') ),
   'comment' VARCHAR(256) NULL,
