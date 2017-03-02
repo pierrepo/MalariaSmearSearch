@@ -89,7 +89,7 @@ class Photo(db.Model):
     }
     @property
     def filename (self) :
-        return '{0:0>5d}.{1}'.format(self.id, self.extension )
+        return '{0}.{1}'.format(self.id, self.extension )
 
     @property
     def path(self):
