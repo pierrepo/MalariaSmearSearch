@@ -221,10 +221,10 @@ def browse():
 @app.route('/download/<photo_id>')
 def download(photo_id):
     #photo_id = secure_filename(photo_id)
-    print (app.root_path + '/' + app.config['UPLOADED_PHOTOS_DEST'] + '/' +  photo_id)
-    if os.path.isfile(app.root_path + '/' + app.config['UPLOADED_PHOTOS_DEST'] + '/' + photo_id): # if the file exists
+    photo = Photo.query.get(photo_id) # Primary Key
+    if os.path.isfile(photo.path): # if the file exists
         # send it :
-        return send_file(app.root_path + '/' + app.config['UPLOADED_PHOTOS_DEST']+ '/' +  photo_id, as_attachment=True)
+        return send_file(photo.path, as_attachment=True)
     else:
         # return to the photo list with a flash error message
         print("Photo {photo_id} doesn't exists.".format(photo_id=photo_id))
