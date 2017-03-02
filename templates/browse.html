@@ -14,7 +14,7 @@
                 <span class="glyphicon glyphicon-download"></span>
             </a>
 
-            {{photo_idx}} {{ photo.get_filename() }}
+            {{ photo.get_filename() }}
 
             <ul>
                 {% for chunk_idx, chunk in enumerate( chunks[photo_idx]) %}
