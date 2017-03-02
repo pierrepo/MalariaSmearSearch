@@ -234,6 +234,7 @@ class Chunk(db.Model):
         self.id_photo = photo.id
         (self.col, self.row) = chunk_numerotation
         print ('dooo')
+
         print( self.filename )
         self.make_chunk(photo, chunk_coords)
 

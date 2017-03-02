@@ -8,12 +8,26 @@
         They are the photos uploaded :
     	<ul class="fichiers">
 
-    	{% for photo in photos %}
+        {% for photo_idx, photo in enumerate(photos) %}
         <li>
             <a href="{{ url_for('download', photo_id = photo.id ) }}">
                 <span class="glyphicon glyphicon-download"></span>
             </a>
+
             {{ photo.get_filename() }}
+
+            <ul>
+                {% for chunk_idx, chunk in enumerate( chunks[photo_idx]) %}
+                    <li>
+                        <a href="{{ url_for('annotate_chunk', chunk_filename = chunk.filename ) }}">
+                            <span>annotate</span>
+                        </a>
+                        {{chunk.get_filename() }} has {{ nb_annotations[photo_idx][chunk_idx]}} annotations
+                    </li>
+                {% endfor %}
+            </ul>
+
+
         </li>
 
     	{% endfor %}
