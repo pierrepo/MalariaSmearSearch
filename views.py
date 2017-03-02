@@ -231,13 +231,13 @@ def download(photo_id):
         return redirect(url_for('browse'))
 
 
-@app.route('/chunks/<chunk_filename>')
-def get_chunk_url(chunk_filename):
+@app.route('/chunks/<int:photo_id>/<int:col>/<int:row>')
+def get_chunk_url(photo_id, col, row):
     print('=====================================================')
-    print (chunk_filename)
-    chunk_path =  app.root_path + '/' +'chunks/' + chunk_filename
-    print (chunk_path)
-    resp = make_response(open(chunk_path, 'rb').read()) #open in binary mode
+    chunk = Chunk.query.get([photo_id, col, row]) # Primary Key
+    print (chunk.filename)
+    print (chunk.path)
+    resp = make_response(open(chunk.path, 'rb').read()) #open in binary mode
     resp.content_type = "image/jpeg"
     return resp
 
@@ -273,7 +273,7 @@ def annotate_chunk(photo_id, col, row):
     except AssertionError as e :
         print ("can't refer to the chunk on the disk")
 
-    print ( url_for('get_chunk_url', chunk_filename = chunk.filename ) )
+    print ( url_for('get_chunk_url', photo_id=photo_id, col=col, row=row ) )
 
 
     # give the URL the requested file uploaded to this set would be accessed at. It doesn’t check whether said file exists.
