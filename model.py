@@ -212,10 +212,8 @@ class Chunk(db.Model):
     Interact with the database.
     """
     __tablename__ = 'tbl_chunk'
-    __table_args__ = {
-        'autoload': True,
-        'autoload_with': db.engine
-    }
+    col = db.Column(db.Integer, primary_key=True)
+    row  = db.Column(db.Integer, primary_key=True)
 
     def __init__(self, photo, chunk_numerotation, chunk_coords):
         """
