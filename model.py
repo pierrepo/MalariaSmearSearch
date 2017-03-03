@@ -22,14 +22,12 @@ They inherite attribute of flask_sqlalchemy.SQLAlchemy.Model
 http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
 
 """
-from app import app, photos
-from flask_sqlalchemy import SQLAlchemy
+from app import db, photos
 from flask_login import UserMixin
 from PIL import Image
 import itertools
 import datetime
 
-db = SQLAlchemy(app)
 
 # Whan table already exist, we do not need to redefine them
 # we can just load them from the database using the "autoload" feature.
