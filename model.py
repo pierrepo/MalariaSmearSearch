@@ -219,6 +219,17 @@ class Photo(db.Model):
                 self.path.split('.')[-1]) # extention
             )
 
+class Patient(db.Model):
+    """
+    Patient Model
+
+    Interact with the database.
+    """
+    __tablename__ = 'tbl_patient'
+    id = db.Column(db.Integer, primary_key=True)
+    age = db.Column(db.Integer)
+    gender  = db.Column(db.String(1))
+
 class Chunk(db.Model):
     """
     Chunk Model
