@@ -92,6 +92,7 @@ class Photo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     extension = db.Column(db.String(5))
     preparation_type = db.Column(db.String(5))
+    # CHECK (preparation_type IN ('thick' , 'thin') )
     comment  = db.Column(db.Text)
     magnification  = db.Column(db.Integer)
     microscope_model  = db.Column(db.String(20))
@@ -312,6 +313,8 @@ class Annotation(db.Model) :
     width = db.Column(db.Integer)
     height = db.Column(db.Integer)
     annotation = db.Column(db.String(3))
+    # CHECK (annotation IN (...) ), /* parasite, red cell, white cell, other  */
+    # see table of annotations
 
     #Defining the Foreign Key on the Child Table
     chunk_id = db.Column(db.Integer, db.ForeignKey('chunk.id'))
