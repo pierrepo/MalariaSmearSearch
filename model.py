@@ -47,6 +47,12 @@ class User(db.Model, UserMixin):
     level = db.Column(db.String(10))
     institution = db.Column(db.String(50))
 
+    #Defining One to Many relationships with the relationship function on the Parent Table
+    photos = db.relationship('Photos', backref="user", lazy='dynamic')
+    # backref="user" : This argument adds a user attribute on the Photo table, so you can access a User via the Photos Class as Photo.user.
+    # omit the cascade argument : keep the children when you delete the parent
+    # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
+
     def __repr__(self):
         """
         Build a printable representation of a user.
@@ -89,6 +95,9 @@ class Photo(db.Model):
     comment  = db.Column(db.Text)
     magnification  = db.Column(db.Integer)
     microscope_model  = db.Column(db.String(20))
+
+    #Defining the Foreign Key on the Child Table :
+    username = db.Column(db.String(30), db.ForeignKey('User.username'))
 
 
     @property
