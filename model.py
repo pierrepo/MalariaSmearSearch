@@ -41,11 +41,11 @@ class User(db.Model, UserMixin):
     Interact with the database and with the Flask-login module.
     """
     __tablename__ = 'tbl_user'
-    __table_args__ = {
-        'autoload': True,
-        #'schema': 'test.db',
-        'autoload_with': db.engine
-    }
+    username = db.Column(db.String(30), primary_key=True)
+    email = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(20))
+    level = db.Column(db.String(10))
+    institution = db.Column(db.String(50))
 
     def __repr__(self):
         """
