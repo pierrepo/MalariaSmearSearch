@@ -83,10 +83,14 @@ class Photo(db.Model):
     Interact with the database.
     """
     __tablename__ = 'tbl_photo'
-    __table_args__ = {
-        'autoload': True,
-        'autoload_with': db.engine
-    }
+    id = db.Column(db.Integer, primary_key=True)
+    extension = db.Column(db.String(5))
+    preparation_type = db.Column(db.String(5))
+    comment  = db.Column(db.Text)
+    magnification  = db.Column(db.Integer)
+    microscope_model  = db.Column(db.String(20))
+
+
     @property
     def filename (self) :
         return '{0}.{1}'.format(self.id, self.extension )
