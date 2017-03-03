@@ -281,10 +281,15 @@ class Annotation(db.Model) :
     Interact with the database.
     """
     __tablename__ = 'tbl_annotation'
-    __table_args__ = {
-        'autoload': True,
-        'autoload_with': db.engine
-    }
+
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime)
+    x = db.Column(db.Integer)
+    y = db.Column(db.Integer)
+    width = db.Column(db.Integer)
+    height = db.Column(db.Integer)
+    annotation = db.Column(db.String(3))
+
 
     def __init__(self, user, chunk, x, y, width, height, annotation):
         """
