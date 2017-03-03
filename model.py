@@ -231,7 +231,13 @@ class Chunk(db.Model):
     row  = db.Column(db.Integer, primary_key=True)
     #Defining the Foreign Key on the Child Table
     photo_id = db.Column(db.Integer, db.ForeignKey('photo.id'))
-    
+
+    #Defining One to Many relationships with the relationship function on the Parent Table
+    annotations = db.relationship('Anotation', backref="chunk", cascade="all, delete-orphan" , lazy='dynamic')
+    # backref="chunk" : This argument adds a photo attribute on the ANnotation table, so you can access a Chunk via the Annotation Class as Annotation.chunk.
+    # cascade ="all, delete-orphan”: This will delete all annotations of a chunk when the referenced chunk is deleted.
+    # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
+
     def __init__(self, photo, chunk_numerotation, chunk_coords):
         """
         Constructor of an instance of the Chunk class
@@ -306,6 +312,11 @@ class Annotation(db.Model) :
     width = db.Column(db.Integer)
     height = db.Column(db.Integer)
     annotation = db.Column(db.String(3))
+
+    #Defining the Foreign Key on the Child Table
+    chunk_id = db.Column(db.Integer, db.ForeignKey('chunk.id'))
+    chunk_col = db.Column(db.Integer, db.ForeignKey('chunk.col'))
+    chunk_row = db.Column(db.Integer, db.ForeignKey('chunk.row'))
 
 
     def __init__(self, user, chunk, x, y, width, height, annotation):
