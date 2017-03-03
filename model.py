@@ -97,6 +97,7 @@ class Photo(db.Model):
 
     #Defining the Foreign Key on the Child Table :
     username = db.Column(db.String(30), db.ForeignKey('User.username'))
+    patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'))
 
     #Defining One to Many relationships with the relationship function on the Parent Table
     chunks = db.relationship('Chunks', backref="photo", cascade="all, delete-orphan" , lazy='dynamic')
@@ -229,6 +230,12 @@ class Patient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     age = db.Column(db.Integer)
     gender  = db.Column(db.String(1))
+    #Defining One to Many relationships with the relationship function on the Parent Table
+    photos = db.relationship('Photo', backref="patient", lazy='dynamic')
+    # backref="chunk" : This argument adds a photo attribute on the ANnotation table, so you can access a Chunk via the Annotation Class as Annotation.chunk.
+    # Omit the cascade argument -> keep the children around when the parent is deleted.
+    # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
+
 
 class Chunk(db.Model):
     """
