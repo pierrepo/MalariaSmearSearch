@@ -99,6 +99,12 @@ class Photo(db.Model):
     #Defining the Foreign Key on the Child Table :
     username = db.Column(db.String(30), db.ForeignKey('User.username'))
 
+    #Defining One to Many relationships with the relationship function on the Parent Table
+    chunks = db.relationship('Chunks', backref="photo", cascade="all, delete-orphan" , lazy='dynamic')
+    # backref="photo" : This argument adds a photo attribute on the Chunk table, so you can access a Photo via the Chunk Class as Chunk.photo.
+    # cascade ="all, delete-orphan”: This will delete all chunks of a photo when the referenced photo is deleted.
+    # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
+
 
     @property
     def filename (self) :
@@ -223,7 +229,9 @@ class Chunk(db.Model):
     __tablename__ = 'tbl_chunk'
     col = db.Column(db.Integer, primary_key=True)
     row  = db.Column(db.Integer, primary_key=True)
-
+    #Defining the Foreign Key on the Child Table
+    photo_id = db.Column(db.Integer, db.ForeignKey('photo.id'))
+    
     def __init__(self, photo, chunk_numerotation, chunk_coords):
         """
         Constructor of an instance of the Chunk class
