@@ -233,7 +233,7 @@ class Chunk(db.Model):
     photo_id = db.Column(db.Integer, db.ForeignKey('photo.id'))
 
     #Defining One to Many relationships with the relationship function on the Parent Table
-    annotations = db.relationship('Anotation', backref="chunk", cascade="all, delete-orphan" , lazy='dynamic')
+    annotations = db.relationship('Annotation', backref="chunk", cascade="all, delete-orphan" , lazy='dynamic')
     # backref="chunk" : This argument adds a photo attribute on the ANnotation table, so you can access a Chunk via the Annotation Class as Annotation.chunk.
     # cascade ="all, delete-orphan”: This will delete all annotations of a chunk when the referenced chunk is deleted.
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
