@@ -22,14 +22,12 @@ They inherite attribute of flask_sqlalchemy.SQLAlchemy.Model
 http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
 
 """
-from app import app, photos
-from flask_sqlalchemy import SQLAlchemy
+from app import db, photos
 from flask_login import UserMixin
 from PIL import Image
 import itertools
 import datetime
 
-db = SQLAlchemy(app)
 
 # Whan table already exist, we do not need to redefine them
 # we can just load them from the database using the "autoload" feature.
@@ -41,11 +39,17 @@ class User(db.Model, UserMixin):
     Interact with the database and with the Flask-login module.
     """
     __tablename__ = 'tbl_user'
-    __table_args__ = {
-        'autoload': True,
-        #'schema': 'test.db',
-        'autoload_with': db.engine
-    }
+    username = db.Column(db.String(30), primary_key=True)
+    email = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(20))
+    level = db.Column(db.String(10))
+    institution = db.Column(db.String(50))
+
+    #Defining One to Many relationships with the relationship function on the Parent Table
+    photos = db.relationship('Photos', backref="user", lazy='dynamic')
+    # backref="user" : This argument adds a user attribute on the Photo table, so you can access a User via the Photos Class as Photo.user.
+    # omit the cascade argument : keep the children when you delete the parent
+    # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
     def __repr__(self):
         """
@@ -83,10 +87,24 @@ class Photo(db.Model):
     Interact with the database.
     """
     __tablename__ = 'tbl_photo'
-    __table_args__ = {
-        'autoload': True,
-        'autoload_with': db.engine
-    }
+    id = db.Column(db.Integer, primary_key=True)
+    extension = db.Column(db.String(5))
+    preparation_type = db.Column(db.String(5))
+    # CHECK (preparation_type IN ('thick' , 'thin') )
+    comment  = db.Column(db.Text)
+    magnification  = db.Column(db.Integer)
+    microscope_model  = db.Column(db.String(20))
+
+    #Defining the Foreign Key on the Child Table :
+    username = db.Column(db.String(30), db.ForeignKey('User.username'))
+
+    #Defining One to Many relationships with the relationship function on the Parent Table
+    chunks = db.relationship('Chunks', backref="photo", cascade="all, delete-orphan" , lazy='dynamic')
+    # backref="photo" : This argument adds a photo attribute on the Chunk table, so you can access a Photo via the Chunk Class as Chunk.photo.
+    # cascade ="all, delete-orphan”: This will delete all chunks of a photo when the referenced photo is deleted.
+    # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
+
+
     @property
     def filename (self) :
         return '{0}.{1}'.format(self.id, self.extension )
@@ -208,10 +226,16 @@ class Chunk(db.Model):
     Interact with the database.
     """
     __tablename__ = 'tbl_chunk'
-    __table_args__ = {
-        'autoload': True,
-        'autoload_with': db.engine
-    }
+    col = db.Column(db.Integer, primary_key=True)
+    row  = db.Column(db.Integer, primary_key=True)
+    #Defining the Foreign Key on the Child Table
+    photo_id = db.Column(db.Integer, db.ForeignKey('photo.id'))
+
+    #Defining One to Many relationships with the relationship function on the Parent Table
+    annotations = db.relationship('Annotation', backref="chunk", cascade="all, delete-orphan" , lazy='dynamic')
+    # backref="chunk" : This argument adds a photo attribute on the ANnotation table, so you can access a Chunk via the Annotation Class as Annotation.chunk.
+    # cascade ="all, delete-orphan”: This will delete all annotations of a chunk when the referenced chunk is deleted.
+    # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
     def __init__(self, photo, chunk_numerotation, chunk_coords):
         """
@@ -279,10 +303,22 @@ class Annotation(db.Model) :
     Interact with the database.
     """
     __tablename__ = 'tbl_annotation'
-    __table_args__ = {
-        'autoload': True,
-        'autoload_with': db.engine
-    }
+
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime)
+    x = db.Column(db.Integer)
+    y = db.Column(db.Integer)
+    width = db.Column(db.Integer)
+    height = db.Column(db.Integer)
+    annotation = db.Column(db.String(3))
+    # CHECK (annotation IN (...) ), /* parasite, red cell, white cell, other  */
+    # see table of annotations
+
+    #Defining the Foreign Key on the Child Table
+    chunk_id = db.Column(db.Integer, db.ForeignKey('chunk.id'))
+    chunk_col = db.Column(db.Integer, db.ForeignKey('chunk.col'))
+    chunk_row = db.Column(db.Integer, db.ForeignKey('chunk.row'))
+
 
     def __init__(self, user, chunk, x, y, width, height, annotation):
         """

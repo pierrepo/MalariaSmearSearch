@@ -11,6 +11,7 @@ photos : instance of the UploadSet class
     define photo / image collection.
 """
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_uploads import configure_uploads, UploadSet, IMAGES
 
@@ -18,6 +19,9 @@ import config
 
 app = Flask(__name__)
 app.config.from_object('config.DevelopmentConfig')
+
+# Link the db :
+db = SQLAlchemy(app)
 
 # configure user log via Flask-login
 login_manager = LoginManager()

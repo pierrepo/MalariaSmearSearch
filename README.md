@@ -25,7 +25,7 @@
 
 5. Initialize database
 
-		sqlite3 test.db '.read setup-db-test.sql'
+		python setup-db.py
 
 6. Quit virtualenv
 
