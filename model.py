@@ -216,6 +216,13 @@ class Photo(db.Model):
     def get_chunk_path(self, chunk_col, chunk_row) :
         return './chunks/{0}'.format(self.get_chunk_filename(chunk_col, chunk_row))
 
+    def get_chunks_paths(self) :
+        paths_array = []
+        for col in range (self.num_col) :
+            for row in range (self.num.row) :
+                path_cur_chunk = './chunks/{0}'.format(self.get_chunk_filename(col, row))
+                paths_array.append(path_cur_chunk)
+        return paths_array
 
 class Patient(db.Model):
     """
