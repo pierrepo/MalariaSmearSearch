@@ -83,14 +83,8 @@ def upload():
             flash('New photo was uploded and added to database, its id is {0}.'.format(new_photo.id), category = 'succes')
 
             # cut the photo into chunks :
-            chunks_numerotation, chunks_coords = new_photo.get_chunks_infos()
-            for chunk_idx, chunk_coords in enumerate(chunks_coords) :
-                new_chunk = Chunk(new_photo, chunks_numerotation[chunk_idx], chunk_coords)
-                db.session.add(new_chunk)
-            db.session.commit()
-            # TODO get its URL
-            # TODO print its URL
-
+            new_photo.make_chunks()
+            
             print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(chunk_idx + 1))
             flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(chunk_idx + 1), category = 'succes')
 
