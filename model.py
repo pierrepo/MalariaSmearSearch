@@ -223,6 +223,15 @@ class Photo(db.Model):
                 self.path.split('.')[-1]) # extention
             )
 
+    def get_chunk_filename(self, chunk_col, chunk_row) :
+        #TODO : check the given row and col are okay
+        return '{0}_{1}_{2}.{3}'.format(
+            self.id,
+            chunk_col, chunk_row,
+            self.extension # extension
+        )
+
+
 class Patient(db.Model):
     """
     Patient Model
