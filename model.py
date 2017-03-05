@@ -105,6 +105,9 @@ class Photo(db.Model):
     # cascade ="all, delete-orphan”: This will delete all chunks of a photo when the referenced photo is deleted.
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
+    def __init__(self, num_col = 2, num_row = 2):
+        self.num_col = num_col
+        self.num_row = num_row
 
     @property
     def filename (self) :
