@@ -244,6 +244,8 @@ class Annotation(db.Model) :
     __tablename__ = 'tbl_annotation'
 
     id = db.Column(db.Integer, primary_key=True)
+    col = db.Column(db.Integer)
+    row = db.Column(db.Integer)
     date = db.Column(db.DateTime)
     x = db.Column(db.Integer)
     y = db.Column(db.Integer)
@@ -258,7 +260,7 @@ class Annotation(db.Model) :
 
 
 
-    def __init__(self, user, , x, y, width, height, annotation):
+    def __init__(self, user, chunk_numerotation, x, y, width, height, annotation):
         """
         Constructor of an instance of the Annotation class
 
@@ -266,7 +268,9 @@ class Annotation(db.Model) :
         -----------
         user : instance of user
             user that added the annotation
-
+        chunk_numerotation : tuple of 2 int
+            the chunk localisation on the image as
+            (col, row)
         x : int
             col coord of the rectangle area
         y : int
@@ -280,7 +284,7 @@ class Annotation(db.Model) :
         """
 
         self.username = user.username
-
+        self.col, self.row = chunk_numerotation
         self.date = datetime.datetime.utcnow().isoformat()
         self.x = x
         self.y = y
