@@ -260,7 +260,7 @@ class Annotation(db.Model) :
 
 
 
-    def __init__(self, user, chunk_numerotation, x, y, width, height, annotation):
+    def __init__(self, user, photo, chunk_numerotation, x, y, width, height, annotation):
         """
         Constructor of an instance of the Annotation class
 
@@ -284,6 +284,7 @@ class Annotation(db.Model) :
         """
 
         self.username = user.username
+        self.photo_id = photo.id
         self.col, self.row = chunk_numerotation
         self.date = datetime.datetime.utcnow().isoformat()
         self.x = x
