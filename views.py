@@ -84,9 +84,9 @@ def upload():
 
             # cut the photo into chunks :
             new_photo.make_chunks()
-            
-            print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(chunk_idx + 1))
-            flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(chunk_idx + 1), category = 'succes')
+
+            print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_photo.num_col * new_photo.num_row))
+            flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_photo.num_col * new_photo.num_row), category = 'succes')
 
             return render_template('choice_after_upload.html', chunks_numerotation = chunks_numerotation )
 
