@@ -195,51 +195,14 @@ class Photo(db.Model):
         new_chunk = img.crop(box)
         new_chunk.save (chunk_path)
 
-    def make_chunks(self, num_crop_col = 2, num_crop_row = 2):
+    def make_chunks(self):
         """
         Slice an image into (default : 4) equal parts.
-
-        Arguments :
-        -----------
-        num_crop_col : int (default 2)
-            The number of horizontal chunks we will end up with.
-        num_crop_row : int (default 2)
-            The number of vertical chunks we will end up with.
         """
-
-        img = Image.open(self.path)
-        width, height = img.size
-
-        # compute crop properties using image measure
-        # and the wanted number of pieces
-        width_crop_col = width / num_crop_col
-        width_crop_row = height / num_crop_row
-
-        chunks_numerotation = [(col,row) for col in  range(num_crop_col) for row in range(num_crop_row)  ]
-
-        # values in cut_col and cut_row represent Cartesian pixel coordinates.
-        # 0,0 is up left
-        # the norm between 2 ticks on horizontal x axis is width_crop_col
-        # the norm between 2 ticks on vertical y axis is width_crop_row
-        cut_col = [width_crop_col * e for e in range (num_crop_col +1)]
-        cut_row = [width_crop_row * e for e in range (num_crop_row +1)]
-        # +1 in order to have coord of rigth limit of the image
-
-        chunks_starting_coords = itertools.product(cut_col[:-1], cut_row[:-1])
-        chunks_ending_coords = itertools.product(cut_col[1:], cut_row[1:])
-
-        chunks_coords = zip (chunks_starting_coords, chunks_ending_coords)
+        chunks_coords = self.get_chunks_infos()
         for chunk_idx, chunk_coords in enumerate(chunks_coords) :
-            box = list(itertools.chain.from_iterable(chunk_coords)) #(left , upper , right , lower) # pixel coords of the chunk
-            print (chunk_idx, box)
-            new_chunk = img.crop(box)
-            print (self.path.split('.')[-1])
-            print ("=========== ici")
-            new_chunk.save ('./chunks/{0}_{1}_{2}.{3}'.format(
-                self.id,
-                *chunks_numerotation[chunk_idx],
-                self.path.split('.')[-1]) # extention
-            )
+            self.crop (chunks_numerotation[chunk_idx], chunk_coords)
+
 
     def get_chunk_filename(self, chunk_col, chunk_row) :
         #TODO : check the given row and col are okay
