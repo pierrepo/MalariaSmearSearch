@@ -99,11 +99,6 @@ class Photo(db.Model):
     username = db.Column(db.String(30), db.ForeignKey('User.username'))
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'))
 
-    #Defining One to Many relationships with the relationship function on the Parent Table
-    chunks = db.relationship('Chunks', backref="photo", cascade="all, delete-orphan" , lazy='dynamic')
-    # backref="photo" : This argument adds a photo attribute on the Chunk table, so you can access a Photo via the Chunk Class as Chunk.photo.
-    # cascade ="all, delete-orphan”: This will delete all chunks of a photo when the referenced photo is deleted.
-    # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
     def __init__(self, num_col = 2, num_row = 2):
         """
@@ -233,82 +228,6 @@ class Patient(db.Model):
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
 
-class Chunk(db.Model):
-    """
-    Chunk Model
-
-    Interact with the database.
-    """
-    __tablename__ = 'tbl_chunk'
-    col = db.Column(db.Integer, primary_key=True)
-    row  = db.Column(db.Integer, primary_key=True)
-    #Defining the Foreign Key on the Child Table
-    photo_id = db.Column(db.Integer, db.ForeignKey('photo.id'))
-
-    #Defining One to Many relationships with the relationship function on the Parent Table
-    annotations = db.relationship('Annotation', backref="chunk", cascade="all, delete-orphan" , lazy='dynamic')
-    # backref="chunk" : This argument adds a photo attribute on the ANnotation table, so you can access a Chunk via the Annotation Class as Annotation.chunk.
-    # cascade ="all, delete-orphan”: This will delete all annotations of a chunk when the referenced chunk is deleted.
-    # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
-
-    def __init__(self, photo, chunk_numerotation, chunk_coords):
-        """
-        Constructor of an instance of the Chunk class
-
-        Arguments :
-        -----------
-        photo : instance of Image
-            photo of which the chunk is derived
-        chunk_numerotation : tuple of 2 int
-            (col, row) coordinates of the chunk
-        chunks_coords : tuple of 2 tuples of 2 int / float
-            pixel coordinates of the chunk :
-            ((left , upper) , (right , lower))
-        """
-        print ('laa')
-        # TODO : use :
-        #super().__init__()#photo.id, *chunk_numerotation)
-        # ?
-        self.id_photo = photo.id
-        (self.col, self.row) = chunk_numerotation
-        print ('dooo')
-
-        print( self.filename )
-        self.make_chunk(photo, chunk_coords)
-
-    @property
-    def path(self) :
-        return './chunks/{0}'.format(self.filename)
-
-    def get_path(self) :
-        """
-        Function that uses the corresponding property
-        This can be used in jinja template
-        """
-        return self.path
-
-
-    @property
-    def filename(self) :
-        return '{0}_{1}_{2}.{3}'.format(
-            self.id_photo,
-            self.col, self.row,
-            Photo.query.get(self.id_photo).extension # extention
-        )
-
-    def get_filename(self) :
-        """
-        Function that uses the corresponding property
-        This can be used in jinja template
-        """
-        return self.filename
-
-    def make_chunk(self, photo, chunk_coords):
-        img = Image.open(photo.path)
-        box = list(itertools.chain.from_iterable(chunk_coords)) #(left , upper , right , lower) # pixel coords of the chunk
-        print (self.col, self.row, box)
-        new_chunk = img.crop(box)
-        new_chunk.save (self.path)
 
 class Annotation(db.Model) :
     """
@@ -329,12 +248,9 @@ class Annotation(db.Model) :
     # see table of annotations
 
     #Defining the Foreign Key on the Child Table
-    chunk_id = db.Column(db.Integer, db.ForeignKey('chunk.id'))
-    chunk_col = db.Column(db.Integer, db.ForeignKey('chunk.col'))
-    chunk_row = db.Column(db.Integer, db.ForeignKey('chunk.row'))
 
 
-    def __init__(self, user, chunk, x, y, width, height, annotation):
+    def __init__(self, user, , x, y, width, height, annotation):
         """
         Constructor of an instance of the Annotation class
 
@@ -342,8 +258,7 @@ class Annotation(db.Model) :
         -----------
         user : instance of user
             user that added the annotation
-        chunk : instance of Chunk
-            chunk on which the annotation is made
+
         x : int
             col coord of the rectangle area
         y : int
@@ -357,9 +272,7 @@ class Annotation(db.Model) :
         """
 
         self.username = user.username
-        self.id_photo = chunk.id_photo
-        self.col = chunk.col
-        self.row = chunk.row
+
         self.date = datetime.datetime.utcnow().isoformat()
         self.x = x
         self.y = y
