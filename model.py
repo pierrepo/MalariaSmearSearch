@@ -139,22 +139,12 @@ class Photo(db.Model):
         """
         return self.path
 
-    def get_chunks_infos(self, num_crop_col = 2, num_crop_row = 2) :
+    def get_chunks_infos(self) :
         """
         Get infos (numerotation and coordinates) of desired chunks
 
-        Arguments :
-        -----------
-        num_crop_col : int (default 2)
-            The number of horizontal chunks we will end up with.
-        num_crop_row : int (default 2)
-            The number of vertical chunks we will end up with.
-
-        Returns :
+        Return :
         ---------
-        chunks_numerotation : list of tuples of 2 int
-            (col, row) coordinates of the chunk
-            for each chunk
         chunks_coords : iterator
             for each chunk :
             ((left , upper) , (right , lower))
@@ -165,17 +155,15 @@ class Photo(db.Model):
 
         # compute crop properties using image measure
         # and the wanted number of pieces
-        width_crop_col = width / num_crop_col
-        width_crop_row = height / num_crop_row
-
-        chunks_numerotation = [(col,row) for col in  range(num_crop_col) for row in range(num_crop_row)  ]
+        width_crop_col = width / num_col
+        width_crop_row = height / num_row
 
         # values in cut_col and cut_row represent Cartesian pixel coordinates.
         # 0,0 is up left
         # the norm between 2 ticks on horizontal x axis is width_crop_col
         # the norm between 2 ticks on vertical y axis is width_crop_row
-        cut_col = [width_crop_col * e for e in range (num_crop_col +1)]
-        cut_row = [width_crop_row * e for e in range (num_crop_row +1)]
+        cut_col = [width_crop_col * e for e in range (num_col +1)]
+        cut_row = [width_crop_row * e for e in range (num_row +1)]
         # +1 in order to have coord of rigth limit of the image
 
         chunks_starting_coords = itertools.product(cut_col[:-1], cut_row[:-1])
@@ -183,7 +171,7 @@ class Photo(db.Model):
 
         chunks_coords = zip (chunks_starting_coords, chunks_ending_coords)
 
-        return chunks_numerotation, chunks_coords
+        return chunks_coords
 
     def make_chunks(self, num_crop_col = 2, num_crop_row = 2):
         """
