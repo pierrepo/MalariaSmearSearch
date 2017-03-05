@@ -99,6 +99,12 @@ class Photo(db.Model):
     username = db.Column(db.String(30), db.ForeignKey('User.username'))
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'))
 
+    #Defining One to Many relationships with the relationship function on the Parent Table
+    annotations = db.relationship('Annotation', backref="photo", cascade="all, delete-orphan" , lazy='dynamic')
+    # backref="photo" : This argument adds a photo attribute on the Annotation table, so you can access a Photo via the Annotation Class as Annotation.photo.
+    # cascade ="all, delete-orphan”: This will delete all chunks of a photo when the referenced photo is deleted.
+    # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
+
 
     def __init__(self, num_col = 2, num_row = 2):
         """
@@ -247,7 +253,9 @@ class Annotation(db.Model) :
     # CHECK (annotation IN (...) ), /* parasite, red cell, white cell, other  */
     # see table of annotations
 
-    #Defining the Foreign Key on the Child Table
+    #Defining the Foreign Key on the Child Table :
+    photo_id = db.Column(db.Integer, db.ForeignKey('Photo.id'))
+
 
 
     def __init__(self, user, , x, y, width, height, annotation):
