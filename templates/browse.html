@@ -17,12 +17,12 @@
             {{ photo.get_filename() }}
 
             <ul>
-                {% for chunk_idx, chunk in enumerate( chunks[photo_idx]) %}
+                {% for chunk_idx, (chunk_col, chunk_row) in enumerate( photo.chunk_numerotation) %}
                     <li>
-                        <a href="{{ url_for('annotate_chunk', chunk_filename = chunk.filename ) }}">
+                        <a href="{{ url_for('annotate_chunk', photo_id = photo.id, col = chunk_col, row = chunk_row ) }}">
                             <span>annotate</span>
                         </a>
-                        {{chunk.get_filename() }} has {{ nb_annotations[photo_idx][chunk_idx]}} annotations
+                        {{ photo.get_chunk_filename(chunk_col, chunk_row) }} has {{ nb_annotations[photo_idx][chunk_idx]}} annotations
                     </li>
                 {% endfor %}
             </ul>
