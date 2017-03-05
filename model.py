@@ -173,6 +173,28 @@ class Photo(db.Model):
 
         return chunks_coords
 
+
+    def crop(self, chunk_numerotation, coords):
+        """ Crop the photo to the given coord
+
+        Arguments :
+        -----------
+        chunk_numerotation : tuple of 2 inserting-records
+            (col, row)
+
+        coords : tuple of 2 tuple of 2 ints
+            coordinates of the crop :
+            ( (left, upper), (right , lower) )
+        """
+
+        chunk_col, chunk_row = chunk_numerotation
+        chunk_path = self.get_chunk_path (chunk_col, chunk_row )
+
+        img = Image.open(chunk_path)
+        box = list(itertools.chain.from_iterable(chunk_coords)) #(left , upper , right , lower) # pixel coords of the chunk
+        new_chunk = img.crop(box)
+        new_chunk.save (chunk_path)
+
     def make_chunks(self, num_crop_col = 2, num_crop_row = 2):
         """
         Slice an image into (default : 4) equal parts.
