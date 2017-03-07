@@ -95,6 +95,9 @@ class Photo(db.Model):
     magnification  = db.Column(db.Integer)
     microscope_model  = db.Column(db.String(20))
 
+    num_col = db.Column(db.Integer)
+    num_row = db.Column(db.Integer)
+
     #Defining the Foreign Key on the Child Table :
     username = db.Column(db.String(30), db.ForeignKey('tbl_user.username'))
     patient_id = db.Column(db.Integer, db.ForeignKey('tbl_patient.id'))
