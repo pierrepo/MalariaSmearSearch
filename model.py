@@ -195,7 +195,7 @@ class Photo(db.Model):
         chunk_path = self.get_chunk_path (chunk_col, chunk_row )
 
         img = Image.open(chunk_path)
-        box = list(itertools.chain.from_iterable(chunk_coords)) #(left , upper , right , lower) # pixel coords of the chunk
+        box = list(itertools.chain.from_iterable(coords)) #(left , upper , right , lower) # pixel coords of the chunk
         new_chunk = img.crop(box)
         new_chunk.save (chunk_path)
 
