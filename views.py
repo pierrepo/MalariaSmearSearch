@@ -268,11 +268,12 @@ def get_chunk_annotation(photo_id, col, row):
 @app.route('/annotate_chunk/<int:photo_id>/<int:col>/<int:row>')
 def annotate_chunk(photo_id, col, row):
     print(photo_id, col, row)
-    chunk = Chunk.query.get([photo_id, col, row]) # Primary Key -> image_id, col, row
+    photo = Photo.query.get(photo_id)
+    chunk_path = photo.get_chunk_path(col, row)
 
     # check if the requested chunk is on the disk :
     try :
-        assert( os.path.exists( chunk.path ) )
+        assert( os.path.exists( chunk_path ) )
     except AssertionError as e :
         print ("can't refer to the chunk on the disk")
 
