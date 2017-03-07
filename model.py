@@ -106,8 +106,16 @@ class Photo(db.Model):
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
     def __init__(self, num_col = 2, num_row = 2):
+        """
+
+        self.chunks_numerotation : list of tuples of 2 int
+            (col, row) coordinates of the chunk
+            for each chunk
+        """
         self.num_col = num_col
         self.num_row = num_row
+
+        self.chunks_numerotation = [(col,row) for col in  range(num_col) for row in range(num_row)]
 
     @property
     def filename (self) :
