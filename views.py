@@ -384,3 +384,7 @@ def del_anno() :
         print('An error occurred accessing the database.')
         redirect('/')
         return '', 500
+
+@app.route('/e-learning')
+def choice_e_leaning_activity() :
+    return render_template('choice-e-learning.html')
