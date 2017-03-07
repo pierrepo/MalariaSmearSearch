@@ -231,6 +231,9 @@ class Photo(db.Model):
             self.extension # extension
         )
 
+    def get_chunk_path(self, chunk_col, chunk_row) :
+        return './chunks/{0}'.format(self.get_chunk_filename(chunk_col, chunk_row))
+
 
 class Patient(db.Model):
     """
