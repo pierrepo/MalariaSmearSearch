@@ -96,8 +96,8 @@ class Photo(db.Model):
     microscope_model  = db.Column(db.String(20))
 
     #Defining the Foreign Key on the Child Table :
-    username = db.Column(db.String(30), db.ForeignKey('User.username'))
-    patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'))
+    username = db.Column(db.String(30), db.ForeignKey('tbl_user.username'))
+    patient_id = db.Column(db.Integer, db.ForeignKey('tbl_patient.id'))
 
     #Defining One to Many relationships with the relationship function on the Parent Table
     annotations = db.relationship('Annotation', backref="photo", cascade="all, delete-orphan" , lazy='dynamic')
