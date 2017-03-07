@@ -242,7 +242,7 @@ def download(photo_id):
 
 @app.route('/chunks/<int:photo_id>/<int:col>/<int:row>')
 def get_chunk_url(photo_id, col, row):
-    photo = Chunk.query.get(photo_id) # Primary Key
+    photo = Photo.query.get(photo_id) # Primary Key
     chunk_path = photo.get_chunk_path(col, row)
     resp = make_response(open(chunk_path, 'rb').read()) #open in binary mode
     resp.content_type = "image/jpeg"
