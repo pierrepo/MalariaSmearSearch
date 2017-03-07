@@ -263,7 +263,7 @@ class Annotation(db.Model) :
     # see table of annotations
 
     #Defining the Foreign Key on the Child Table :
-    photo_id = db.Column(db.Integer, db.ForeignKey('Photo.id'))
+    photo_id = db.Column(db.Integer, db.ForeignKey('tbl_photo.id'))
 
 
 
