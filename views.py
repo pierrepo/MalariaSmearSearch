@@ -217,7 +217,7 @@ def browse():
 
         for (chunk_col, chunk_row) in photo.chunk_numerotation :
             count = Annotation.query.filter_by(
-                id_photo = photo.id,
+                photo_id = photo.id,
                 col = chunk_col,
                 row = chunk_row
             ).count()
@@ -252,12 +252,12 @@ def get_chunk_url(photo_id, col, row):
 def get_chunk_annotation(photo_id, col, row):
 
     # get all the annotation that are made on current chunk :
-    annotations = Annotation.query.filter_by(id_photo=photo_id, col = col, row = row).all()
+    annotations = Annotation.query.filter_by(photo_id=photo_id, col = col, row = row).all()
     #query.with_entities(SomeModel.col1, SomeModel.col2) #select colum for the return
 
     # model is not JSON serializable
     # so we do it by the hand : #TODO : better way ?
-    serialized_annotations = [ {key : e.__dict__[key] for key in ['id_photo', 'col', 'row', 'id', 'username','x','y','width','height', 'annotation'] } for e in annotations ]
+    serialized_annotations = [ {key : e.__dict__[key] for key in ['photo_id', 'col', 'row', 'id', 'username','x','y','width','height', 'annotation'] } for e in annotations ]
     for e in serialized_annotations : print (e)
 
 
@@ -311,7 +311,7 @@ def add_anno(photo_id, col, row) :
     print (new_anno)
 
     print (new_anno.username)
-    print (new_anno.id_photo )
+    print (new_anno.photo_id )
     print (new_anno.col)
     print (new_anno.row)
     print (new_anno.date )
