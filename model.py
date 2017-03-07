@@ -47,6 +47,8 @@ class User(db.Model, UserMixin):
 
     #Defining One to Many relationships with the relationship function on the Parent Table
     photos = db.relationship('Photo', backref="user", lazy='dynamic')
+    annotations = db.relationship('Annotation', backref="user", lazy='dynamic')
+
     # backref="user" : This argument adds a user attribute on the Photo table, so you can access a User via the Photos Class as Photo.user.
     # omit the cascade argument : keep the children when you delete the parent
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
@@ -266,6 +268,7 @@ class Annotation(db.Model) :
     # see table of annotations
 
     #Defining the Foreign Key on the Child Table :
+    username = db.Column(db.String(30), db.ForeignKey('tbl_user.username'))
     photo_id = db.Column(db.Integer, db.ForeignKey('tbl_photo.id'))
 
 
