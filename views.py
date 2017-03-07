@@ -260,6 +260,9 @@ def get_chunk_annotation(chunk_filename):
 
     return jsonify(serialized_annotations)
 
+@app.route('/about')
+def about() :
+    return render_template ('about.html')
 
 @app.route('/annotate_chunk/<chunk_filename>')
 def annotate_chunk(chunk_filename):
