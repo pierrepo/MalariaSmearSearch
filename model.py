@@ -298,7 +298,7 @@ class Annotation(db.Model) :
         self.username = user.username
         self.photo_id = photo.id
         self.col, self.row = chunk_numerotation
-        self.date = datetime.datetime.utcnow().isoformat()
+        self.date = datetime.datetime.utcnow()
         self.x = x
         self.y = y
         self.width = width
