@@ -205,7 +205,7 @@ class Photo(db.Model):
         """
         chunks_coords = self.get_chunks_infos()
         for chunk_idx, chunk_coords in enumerate(chunks_coords) :
-            self.crop (chunks_numerotation[chunk_idx], chunk_coords)
+            self.crop (self.chunks_numerotation[chunk_idx], chunk_coords)
 
 
     def get_chunk_filename(self, chunk_col, chunk_row) :
