@@ -46,7 +46,7 @@ class User(db.Model, UserMixin):
     institution = db.Column(db.String(50))
 
     #Defining One to Many relationships with the relationship function on the Parent Table
-    photos = db.relationship('Photos', backref="user", lazy='dynamic')
+    photos = db.relationship('Photo', backref="user", lazy='dynamic')
     # backref="user" : This argument adds a user attribute on the Photo table, so you can access a User via the Photos Class as Photo.user.
     # omit the cascade argument : keep the children when you delete the parent
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
