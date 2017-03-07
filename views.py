@@ -292,8 +292,7 @@ def add_anno(photo_id, col, row) :
     print (current_user)
 
 
-    chunk = Chunk.query.get([photo_id, col, row]) # Primary Key -> image_id, col, row
-    print (chunk)
+    photo = Photo.query.get(photo_id)
 
     x =  request.form['x']
     y =  request.form['y']
@@ -303,7 +302,8 @@ def add_anno(photo_id, col, row) :
 
     new_anno = Annotation(
         current_user,
-        chunk,
+        photo,
+        (col, row),
         x, y, width, height,
         annotation
     )
