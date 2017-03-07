@@ -278,6 +278,8 @@ class Annotation(db.Model) :
         -----------
         user : instance of user
             user that added the annotation
+        photo : instance of Photo
+            the photo on which the annotation is made
         chunk_numerotation : tuple of 2 int
             the chunk localisation on the image as
             (col, row)
