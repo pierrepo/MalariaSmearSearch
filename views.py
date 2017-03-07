@@ -273,6 +273,9 @@ def get_chunk_annotation(photo_id, col, row):
 
     return jsonify(serialized_annotations)
 
+@app.route('/about')
+def about() :
+    return render_template ('about.html')
 
 
 @app.route('/annotate_chunk/<int:photo_id>/<int:col>/<int:row>')
