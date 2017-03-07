@@ -100,11 +100,23 @@ class Photo(db.Model):
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'))
 
     #Defining One to Many relationships with the relationship function on the Parent Table
-    chunks = db.relationship('Chunks', backref="photo", cascade="all, delete-orphan" , lazy='dynamic')
-    # backref="photo" : This argument adds a photo attribute on the Chunk table, so you can access a Photo via the Chunk Class as Chunk.photo.
+    annotations = db.relationship('Annotation', backref="photo", cascade="all, delete-orphan" , lazy='dynamic')
+    # backref="photo" : This argument adds a photo attribute on the Annotation table, so you can access a Photo via the Annotation Class as Annotation.photo.
     # cascade ="all, delete-orphan”: This will delete all chunks of a photo when the referenced photo is deleted.
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
+
+    def __init__(self, num_col = 2, num_row = 2):
+        """
+
+        self.chunks_numerotation : list of tuples of 2 int
+            (col, row) coordinates of the chunk
+            for each chunk
+        """
+        self.num_col = num_col
+        self.num_row = num_row
+
+        self.chunks_numerotation = [(col,row) for col in  range(num_col) for row in range(num_row)]
 
     @property
     def filename (self) :
@@ -128,22 +140,12 @@ class Photo(db.Model):
         """
         return self.path
 
-    def get_chunks_infos(self, num_crop_col = 2, num_crop_row = 2) :
+    def get_chunks_infos(self) :
         """
         Get infos (numerotation and coordinates) of desired chunks
 
-        Arguments :
-        -----------
-        num_crop_col : int (default 2)
-            The number of horizontal chunks we will end up with.
-        num_crop_row : int (default 2)
-            The number of vertical chunks we will end up with.
-
-        Returns :
+        Return :
         ---------
-        chunks_numerotation : list of tuples of 2 int
-            (col, row) coordinates of the chunk
-            for each chunk
         chunks_coords : iterator
             for each chunk :
             ((left , upper) , (right , lower))
@@ -154,17 +156,15 @@ class Photo(db.Model):
 
         # compute crop properties using image measure
         # and the wanted number of pieces
-        width_crop_col = width / num_crop_col
-        width_crop_row = height / num_crop_row
-
-        chunks_numerotation = [(col,row) for col in  range(num_crop_col) for row in range(num_crop_row)  ]
+        width_crop_col = width / num_col
+        width_crop_row = height / num_row
 
         # values in cut_col and cut_row represent Cartesian pixel coordinates.
         # 0,0 is up left
         # the norm between 2 ticks on horizontal x axis is width_crop_col
         # the norm between 2 ticks on vertical y axis is width_crop_row
-        cut_col = [width_crop_col * e for e in range (num_crop_col +1)]
-        cut_row = [width_crop_row * e for e in range (num_crop_row +1)]
+        cut_col = [width_crop_col * e for e in range (num_col +1)]
+        cut_row = [width_crop_row * e for e in range (num_row +1)]
         # +1 in order to have coord of rigth limit of the image
 
         chunks_starting_coords = itertools.product(cut_col[:-1], cut_row[:-1])
@@ -172,53 +172,57 @@ class Photo(db.Model):
 
         chunks_coords = zip (chunks_starting_coords, chunks_ending_coords)
 
-        return chunks_numerotation, chunks_coords
+        return chunks_coords
 
-    def make_chunks(self, num_crop_col = 2, num_crop_row = 2):
-        """
-        Slice an image into (default : 4) equal parts.
+
+    def crop(self, chunk_numerotation, coords):
+        """ Crop the photo to the given coord
 
         Arguments :
         -----------
-        num_crop_col : int (default 2)
-            The number of horizontal chunks we will end up with.
-        num_crop_row : int (default 2)
-            The number of vertical chunks we will end up with.
+        chunk_numerotation : tuple of 2 inserting-records
+            (col, row)
+
+        coords : tuple of 2 tuple of 2 ints
+            coordinates of the crop :
+            ( (left, upper), (right , lower) )
         """
 
-        img = Image.open(self.path)
-        width, height = img.size
+        chunk_col, chunk_row = chunk_numerotation
+        chunk_path = self.get_chunk_path (chunk_col, chunk_row )
 
-        # compute crop properties using image measure
-        # and the wanted number of pieces
-        width_crop_col = width / num_crop_col
-        width_crop_row = height / num_crop_row
+        img = Image.open(chunk_path)
+        box = list(itertools.chain.from_iterable(chunk_coords)) #(left , upper , right , lower) # pixel coords of the chunk
+        new_chunk = img.crop(box)
+        new_chunk.save (chunk_path)
 
-        chunks_numerotation = [(col,row) for col in  range(num_crop_col) for row in range(num_crop_row)  ]
-
-        # values in cut_col and cut_row represent Cartesian pixel coordinates.
-        # 0,0 is up left
-        # the norm between 2 ticks on horizontal x axis is width_crop_col
-        # the norm between 2 ticks on vertical y axis is width_crop_row
-        cut_col = [width_crop_col * e for e in range (num_crop_col +1)]
-        cut_row = [width_crop_row * e for e in range (num_crop_row +1)]
-        # +1 in order to have coord of rigth limit of the image
-
-        chunks_starting_coords = itertools.product(cut_col[:-1], cut_row[:-1])
-        chunks_ending_coords = itertools.product(cut_col[1:], cut_row[1:])
-
-        chunks_coords = zip (chunks_starting_coords, chunks_ending_coords)
+    def make_chunks(self):
+        """
+        Slice an image into (default : 4) equal parts.
+        """
+        chunks_coords = self.get_chunks_infos()
         for chunk_idx, chunk_coords in enumerate(chunks_coords) :
-            box = list(itertools.chain.from_iterable(chunk_coords)) #(left , upper , right , lower) # pixel coords of the chunk
-            print (chunk_idx, box)
-            new_chunk = img.crop(box)
-            print (self.path.split('.')[-1])
-            print ("=========== ici")
-            new_chunk.save ('./chunks/{0}_{1}_{2}.{3}'.format(
-                self.id,
-                *chunks_numerotation[chunk_idx],
-                self.path.split('.')[-1]) # extention
-            )
+            self.crop (chunks_numerotation[chunk_idx], chunk_coords)
+
+
+    def get_chunk_filename(self, chunk_col, chunk_row) :
+        #TODO : check the given row and col are okay
+        return '{0}_{1}_{2}.{3}'.format(
+            self.id,
+            chunk_col, chunk_row,
+            self.extension # extension
+        )
+
+    def get_chunk_path(self, chunk_col, chunk_row) :
+        return './chunks/{0}'.format(self.get_chunk_filename(chunk_col, chunk_row))
+
+    def get_chunks_paths(self) :
+        paths_array = []
+        for col in range (self.num_col) :
+            for row in range (self.num.row) :
+                path_cur_chunk = './chunks/{0}'.format(self.get_chunk_filename(col, row))
+                paths_array.append(path_cur_chunk)
+        return paths_array
 
 class Patient(db.Model):
     """
@@ -237,82 +241,6 @@ class Patient(db.Model):
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
 
-class Chunk(db.Model):
-    """
-    Chunk Model
-
-    Interact with the database.
-    """
-    __tablename__ = 'tbl_chunk'
-    col = db.Column(db.Integer, primary_key=True)
-    row  = db.Column(db.Integer, primary_key=True)
-    #Defining the Foreign Key on the Child Table
-    photo_id = db.Column(db.Integer, db.ForeignKey('photo.id'))
-
-    #Defining One to Many relationships with the relationship function on the Parent Table
-    annotations = db.relationship('Annotation', backref="chunk", cascade="all, delete-orphan" , lazy='dynamic')
-    # backref="chunk" : This argument adds a photo attribute on the ANnotation table, so you can access a Chunk via the Annotation Class as Annotation.chunk.
-    # cascade ="all, delete-orphan”: This will delete all annotations of a chunk when the referenced chunk is deleted.
-    # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
-
-    def __init__(self, photo, chunk_numerotation, chunk_coords):
-        """
-        Constructor of an instance of the Chunk class
-
-        Arguments :
-        -----------
-        photo : instance of Image
-            photo of which the chunk is derived
-        chunk_numerotation : tuple of 2 int
-            (col, row) coordinates of the chunk
-        chunks_coords : tuple of 2 tuples of 2 int / float
-            pixel coordinates of the chunk :
-            ((left , upper) , (right , lower))
-        """
-        print ('laa')
-        # TODO : use :
-        #super().__init__()#photo.id, *chunk_numerotation)
-        # ?
-        self.id_photo = photo.id
-        (self.col, self.row) = chunk_numerotation
-        print ('dooo')
-
-        print( self.filename )
-        self.make_chunk(photo, chunk_coords)
-
-    @property
-    def path(self) :
-        return './chunks/{0}'.format(self.filename)
-
-    def get_path(self) :
-        """
-        Function that uses the corresponding property
-        This can be used in jinja template
-        """
-        return self.path
-
-
-    @property
-    def filename(self) :
-        return '{0}_{1}_{2}.{3}'.format(
-            self.id_photo,
-            self.col, self.row,
-            Photo.query.get(self.id_photo).extension # extention
-        )
-
-    def get_filename(self) :
-        """
-        Function that uses the corresponding property
-        This can be used in jinja template
-        """
-        return self.filename
-
-    def make_chunk(self, photo, chunk_coords):
-        img = Image.open(photo.path)
-        box = list(itertools.chain.from_iterable(chunk_coords)) #(left , upper , right , lower) # pixel coords of the chunk
-        print (self.col, self.row, box)
-        new_chunk = img.crop(box)
-        new_chunk.save (self.path)
 
 class Annotation(db.Model) :
     """
@@ -323,6 +251,8 @@ class Annotation(db.Model) :
     __tablename__ = 'tbl_annotation'
 
     id = db.Column(db.Integer, primary_key=True)
+    col = db.Column(db.Integer)
+    row = db.Column(db.Integer)
     date = db.Column(db.DateTime)
     x = db.Column(db.Integer)
     y = db.Column(db.Integer)
@@ -332,13 +262,12 @@ class Annotation(db.Model) :
     # CHECK (annotation IN (...) ), /* parasite, red cell, white cell, other  */
     # see table of annotations
 
-    #Defining the Foreign Key on the Child Table
-    chunk_id = db.Column(db.Integer, db.ForeignKey('chunk.id'))
-    chunk_col = db.Column(db.Integer, db.ForeignKey('chunk.col'))
-    chunk_row = db.Column(db.Integer, db.ForeignKey('chunk.row'))
+    #Defining the Foreign Key on the Child Table :
+    photo_id = db.Column(db.Integer, db.ForeignKey('Photo.id'))
 
 
-    def __init__(self, user, chunk, x, y, width, height, annotation):
+
+    def __init__(self, user, photo, chunk_numerotation, x, y, width, height, annotation):
         """
         Constructor of an instance of the Annotation class
 
@@ -346,8 +275,9 @@ class Annotation(db.Model) :
         -----------
         user : instance of user
             user that added the annotation
-        chunk : instance of Chunk
-            chunk on which the annotation is made
+        chunk_numerotation : tuple of 2 int
+            the chunk localisation on the image as
+            (col, row)
         x : int
             col coord of the rectangle area
         y : int
@@ -361,9 +291,8 @@ class Annotation(db.Model) :
         """
 
         self.username = user.username
-        self.id_photo = chunk.id_photo
-        self.col = chunk.col
-        self.row = chunk.row
+        self.photo_id = photo.id
+        self.col, self.row = chunk_numerotation
         self.date = datetime.datetime.utcnow().isoformat()
         self.x = x
         self.y = y

@@ -83,18 +83,12 @@ def upload():
             flash('New photo was uploded and added to database, its id is {0}.'.format(new_photo.id), category = 'succes')
 
             # cut the photo into chunks :
-            chunks_numerotation, chunks_coords = new_photo.get_chunks_infos()
-            for chunk_idx, chunk_coords in enumerate(chunks_coords) :
-                new_chunk = Chunk(new_photo, chunks_numerotation[chunk_idx], chunk_coords)
-                db.session.add(new_chunk)
-            db.session.commit()
-            # TODO get its URL
-            # TODO print its URL
+            new_photo.make_chunks()
 
-            print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(chunk_idx + 1))
-            flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(chunk_idx + 1), category = 'succes')
+            print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_photo.num_col * new_photo.num_row))
+            flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_photo.num_col * new_photo.num_row), category = 'succes')
 
-            return render_template('choice_after_upload.html', chunks_numerotation = chunks_numerotation )
+            return render_template('choice_after_upload.html', photo = new_photo )
 
         except Exception as e:
             # TODO : catch the different kind of exception that could occurred.
@@ -217,23 +211,21 @@ def browse():
     photos = Photo.query.all()
     print (photos)
 
-    chunks = []
     nb_annotations = [ list() for _ in range (len(photos))  ]
 
     for photo_idx, photo in enumerate(photos) :
-        chunks.append ( Chunk.query.filter_by(id_photo=photo.id).all()  )
 
-        for chunk in chunks[photo_idx] :
+        for (chunk_col, chunk_row) in photo.chunk_numerotation :
             count = Annotation.query.filter_by(
-                id_photo = chunk.id_photo,
-                col = chunk.col ,
-                row = chunk.row
+                id_photo = photo.id,
+                col = chunk_col,
+                row = chunk_row
             ).count()
             print (count)
             nb_annotations[photo_idx].append(count)
 
     print(chunks)
-    return render_template('browse.html', photos = photos, chunks = chunks , nb_annotations = nb_annotations, app = app , enumerate=enumerate)
+    return render_template('browse.html', photos = photos, nb_annotations = nb_annotations, enumerate=enumerate)
 
 @app.route('/download/<photo_id>')
 def download(photo_id):
@@ -250,11 +242,9 @@ def download(photo_id):
 
 @app.route('/chunks/<int:photo_id>/<int:col>/<int:row>')
 def get_chunk_url(photo_id, col, row):
-    print('=====================================================')
-    chunk = Chunk.query.get([photo_id, col, row]) # Primary Key
-    print (chunk.filename)
-    print (chunk.path)
-    resp = make_response(open(chunk.path, 'rb').read()) #open in binary mode
+    photo = Chunk.query.get(photo_id) # Primary Key
+    chunk_path = photo.get_chunk_path(col, row)
+    resp = make_response(open(chunk_path, 'rb').read()) #open in binary mode
     resp.content_type = "image/jpeg"
     return resp
 
