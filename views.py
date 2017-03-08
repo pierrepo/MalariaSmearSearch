@@ -211,6 +211,7 @@ def account():
 def browse():
     # list uploaded photo in db :
     photos = Photo.query.all()
+    [photo.init_on_load() for photo in photos]
     print (photos)
 
     nb_annotations = [ list() for _ in range (len(photos))  ]
@@ -231,6 +232,7 @@ def browse():
 def download(photo_id):
     #photo_id = secure_filename(photo_id)
     photo = Photo.query.get(photo_id) # Primary Key
+    photo.init_on_load()
     if os.path.isfile(photo.path): # if the file exists
         # send it :
         return send_file(photo.path, as_attachment=True)
@@ -243,6 +245,7 @@ def download(photo_id):
 @app.route('/chunks/<int:photo_id>/<int:col>/<int:row>')
 def get_chunk_url(photo_id, col, row):
     photo = Photo.query.get(photo_id) # Primary Key
+    photo.init_on_load()
     chunk_path = photo.get_chunk_path(col, row)
     resp = make_response(open(chunk_path, 'rb').read()) #open in binary mode
     resp.content_type = "image/jpeg"
@@ -269,6 +272,7 @@ def get_chunk_annotation(photo_id, col, row):
 def annotate_chunk(photo_id, col, row):
     print(photo_id, col, row)
     photo = Photo.query.get(photo_id)
+    photo.init_on_load()
     chunk_path = photo.get_chunk_path(col, row)
 
     # check if the requested chunk is on the disk :
@@ -293,6 +297,7 @@ def add_anno(photo_id, col, row) :
 
 
     photo = Photo.query.get(photo_id)
+    photo.init_on_load()
 
     x =  request.form['x']
     y =  request.form['y']
