@@ -1,0 +1,12 @@
+#flashes{
+    border: 1px solid black;
+}
+#flashes li {
+    padding: 0.5em;
+}
+#flashes li.succes {
+    color: green;
+}
+#flashes li.error {
+    color: red;
+}
