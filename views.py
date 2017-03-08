@@ -70,7 +70,9 @@ def upload():
             # add the photo in the database :
             db.session.add(new_photo)
             db.session.commit()
-
+            # call the reconstructor
+            # and thus update the fields that need photo.id
+            new_photo.init_on_load()
 
             # upload the photo
             # its name is the photo 00000id in the database
