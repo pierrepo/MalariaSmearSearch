@@ -85,10 +85,45 @@
           <input type="number" name = 'height' id = 'add-sel-height' readonly>
           <select  id="new-list-item-text" name="new-list-item-text">
               <option selected="selected" disabled="disabled">Select an annotation</option>
-              <option value="P">parasite</option>
-              <option value="RC">red cell</option>
-              <option value="WC">white cell</option>
-              <option value="O">other</option>
+              <optgroup label="Parasite - Unknown species ">
+                  <option value="PUR">Ring</option>
+                  <option value="PUT">Trophzoide</option>
+                  <option value="PUS">Schizont</option>
+                  <option value="PUG">Gametocyte</option>
+                  <option value="PUU">Unknown</option>
+              </optgroup>
+              <optgroup label="Parasite P. Falciparum">
+                  <option value="PFR">Ring</option>
+                  <option value="PFT">Trophzoide</option>
+                  <option value="PFS">Schizont</option>
+                  <option value="PFG">Gametocyte</option>
+                  <option value="PFU">Unknown</option>
+              </optgroup>
+              <optgroup label="Parasite P. Malariae">
+                  <option value="PMR">Ring</option>
+                  <option value="PMT">Trophzoide</option>
+                  <option value="PMS">Schizont</option>
+                  <option value="PMG">Gametocyte</option>
+                  <option value="PMU">Unknown</option>
+              </optgroup>
+              <optgroup label="Parasite P. Ovale">
+                  <option value="POR">Ring</option>
+                  <option value="POT">Trophzoide</option>
+                  <option value="POS">Schizont</option>
+                  <option value="POG">Gametocyte</option>
+                  <option value="POU">Unknown</option>
+              </optgroup>
+              <optgroup label="Parasite P. Vivax">
+                  <option value="PVR">Ring</option>
+                  <option value="PVT">Trophzoide</option>
+                  <option value="PVS">Schizont</option>
+                  <option value="PVG">Gametocyte</option>
+                  <option value="PVU">Unknowns</option>
+              </optgroup>
+              <option value="RBC">Red Blood Cell</option>
+              <option value="WBC">White Blood Cell</option>
+              <option value="THR">Platelet</option>
+              <option value="ART">Artefact</option>
           </select>
           <input type="submit" id="add-new-submit" value="Add" class="button" />
       </form>
