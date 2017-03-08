@@ -1,0 +1,21 @@
+/*** Sticky footer : ***/
+/*https://www.codementor.io/tips/4292721368/twitter-bootstrap-3-sticky-footer*/
+
+html {
+  position: relative;
+  min-height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the (fixed) height of the footer here */
+  height: auto; /*60px ;*/
+  background-color: #222222; /*same as navbar*/
+  color: #9d9d9d; /*same as unhovered navbar*/
+}
