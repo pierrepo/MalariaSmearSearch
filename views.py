@@ -70,7 +70,9 @@ def upload():
             # add the photo in the database :
             db.session.add(new_photo)
             db.session.commit()
-
+            # call the reconstructor
+            # and thus update the fields that need photo.id
+            new_photo.init_on_load()
 
             # upload the photo
             # its name is the photo 00000id in the database
@@ -83,18 +85,12 @@ def upload():
             flash('New photo was uploded and added to database, its id is {0}.'.format(new_photo.id), category = 'succes')
 
             # cut the photo into chunks :
-            chunks_numerotation, chunks_coords = new_photo.get_chunks_infos()
-            for chunk_idx, chunk_coords in enumerate(chunks_coords) :
-                new_chunk = Chunk(new_photo, chunks_numerotation[chunk_idx], chunk_coords)
-                db.session.add(new_chunk)
-            db.session.commit()
-            # TODO get its URL
-            # TODO print its URL
+            new_photo.make_chunks()
 
-            print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(chunk_idx + 1))
-            flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(chunk_idx + 1), category = 'succes')
+            print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_photo.num_col * new_photo.num_row))
+            flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_photo.num_col * new_photo.num_row), category = 'succes')
 
-            return render_template('choice_after_upload.html', chunks_numerotation = chunks_numerotation )
+            return render_template('choice_after_upload.html', photo = new_photo )
 
         except Exception as e:
             # TODO : catch the different kind of exception that could occurred.
@@ -215,30 +211,28 @@ def account():
 def browse():
     # list uploaded photo in db :
     photos = Photo.query.all()
+    [photo.init_on_load() for photo in photos]
     print (photos)
 
-    chunks = []
     nb_annotations = [ list() for _ in range (len(photos))  ]
 
     for photo_idx, photo in enumerate(photos) :
-        chunks.append ( Chunk.query.filter_by(id_photo=photo.id).all()  )
-
-        for chunk in chunks[photo_idx] :
+        for (chunk_col, chunk_row) in photo.chunks_numerotation :
             count = Annotation.query.filter_by(
-                id_photo = chunk.id_photo,
-                col = chunk.col ,
-                row = chunk.row
+                photo_id = photo.id,
+                col = chunk_col,
+                row = chunk_row
             ).count()
             print (count)
             nb_annotations[photo_idx].append(count)
 
-    print(chunks)
-    return render_template('browse.html', photos = photos, chunks = chunks , nb_annotations = nb_annotations, app = app , enumerate=enumerate)
+    return render_template('browse.html', photos = photos, nb_annotations = nb_annotations, enumerate=enumerate)
 
 @app.route('/download/<photo_id>')
 def download(photo_id):
     #photo_id = secure_filename(photo_id)
     photo = Photo.query.get(photo_id) # Primary Key
+    photo.init_on_load()
     if os.path.isfile(photo.path): # if the file exists
         # send it :
         return send_file(photo.path, as_attachment=True)
@@ -250,11 +244,10 @@ def download(photo_id):
 
 @app.route('/chunks/<int:photo_id>/<int:col>/<int:row>')
 def get_chunk_url(photo_id, col, row):
-    print('=====================================================')
-    chunk = Chunk.query.get([photo_id, col, row]) # Primary Key
-    print (chunk.filename)
-    print (chunk.path)
-    resp = make_response(open(chunk.path, 'rb').read()) #open in binary mode
+    photo = Photo.query.get(photo_id) # Primary Key
+    photo.init_on_load()
+    chunk_path = photo.get_chunk_path(col, row)
+    resp = make_response(open(chunk_path, 'rb').read()) #open in binary mode
     resp.content_type = "image/jpeg"
     return resp
 
@@ -262,12 +255,12 @@ def get_chunk_url(photo_id, col, row):
 def get_chunk_annotation(photo_id, col, row):
 
     # get all the annotation that are made on current chunk :
-    annotations = Annotation.query.filter_by(id_photo=photo_id, col = col, row = row).all()
+    annotations = Annotation.query.filter_by(photo_id=photo_id, col = col, row = row).all()
     #query.with_entities(SomeModel.col1, SomeModel.col2) #select colum for the return
 
     # model is not JSON serializable
     # so we do it by the hand : #TODO : better way ?
-    serialized_annotations = [ {key : e.__dict__[key] for key in ['id_photo', 'col', 'row', 'id', 'username','x','y','width','height', 'annotation'] } for e in annotations ]
+    serialized_annotations = [ {key : e.__dict__[key] for key in ['photo_id', 'col', 'row', 'id', 'username','x','y','width','height', 'annotation'] } for e in annotations ]
     for e in serialized_annotations : print (e)
 
 
@@ -281,11 +274,13 @@ def about() :
 @app.route('/annotate_chunk/<int:photo_id>/<int:col>/<int:row>')
 def annotate_chunk(photo_id, col, row):
     print(photo_id, col, row)
-    chunk = Chunk.query.get([photo_id, col, row]) # Primary Key -> image_id, col, row
+    photo = Photo.query.get(photo_id)
+    photo.init_on_load()
+    chunk_path = photo.get_chunk_path(col, row)
 
     # check if the requested chunk is on the disk :
     try :
-        assert( os.path.exists( chunk.path ) )
+        assert( os.path.exists( chunk_path ) )
     except AssertionError as e :
         print ("can't refer to the chunk on the disk")
 
@@ -304,8 +299,8 @@ def add_anno(photo_id, col, row) :
     print (current_user)
 
 
-    chunk = Chunk.query.get([photo_id, col, row]) # Primary Key -> image_id, col, row
-    print (chunk)
+    photo = Photo.query.get(photo_id)
+    photo.init_on_load()
 
     x =  request.form['x']
     y =  request.form['y']
@@ -315,7 +310,8 @@ def add_anno(photo_id, col, row) :
 
     new_anno = Annotation(
         current_user,
-        chunk,
+        photo,
+        (col, row),
         x, y, width, height,
         annotation
     )
@@ -323,7 +319,7 @@ def add_anno(photo_id, col, row) :
     print (new_anno)
 
     print (new_anno.username)
-    print (new_anno.id_photo )
+    print (new_anno.photo_id )
     print (new_anno.col)
     print (new_anno.row)
     print (new_anno.date )
