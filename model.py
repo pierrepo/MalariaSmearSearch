@@ -24,6 +24,7 @@ http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
 """
 from app import db, photos
 from flask_login import UserMixin
+from flask_sqlalchemy import sqlalchemy
 from PIL import Image
 import itertools
 import datetime
@@ -122,6 +123,13 @@ class Photo(db.Model):
         self.num_row = num_row
 
         self.chunks_numerotation = [(col,row) for col in  range(num_col) for row in range(num_row)]
+
+    @sqlalchemy.orm.reconstructor
+    def init_on_load(self):
+        """
+        http://docs.sqlalchemy.org/en/latest/orm/constructors.html
+        """
+        self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
 
     @property
     def filename (self) :
