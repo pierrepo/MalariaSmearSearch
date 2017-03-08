@@ -122,7 +122,7 @@ class Photo(db.Model):
         self.num_col = num_col
         self.num_row = num_row
 
-    @sqlalchemy.orm.reconstructor
+    #@sqlalchemy.orm.reconstructor # do not seems to work TODO : find why 
     def init_on_load(self):
         """
         http://docs.sqlalchemy.org/en/latest/orm/constructors.html
