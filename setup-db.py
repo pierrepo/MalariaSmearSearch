@@ -1,9 +1,10 @@
 from app import db
-from model import User
+import model
 
 db.create_all()
+db.session.commit() # create all the tables that are in model
 
-admin = User()
+admin = model.User()
 admin.username = 'admin'
 admin.password = 'admin123'
 admin.level = 'admin'
