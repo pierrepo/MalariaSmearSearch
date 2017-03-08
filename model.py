@@ -39,7 +39,7 @@ class User(db.Model, UserMixin):
 
     Interact with the database and with the Flask-login module.
     """
-    __tablename__ = 'User' # tablename
+    __tablename__ = 'Users' # tablename
     username = db.Column(db.String(30), primary_key=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(20))
@@ -89,7 +89,7 @@ class Photo(db.Model):
 
     Interact with the database.
     """
-    __tablename__ = 'Photo' # tablename
+    __tablename__ = 'Photos' # tablename
     id = db.Column(db.Integer, primary_key=True)
     extension = db.Column(db.String(5))
     preparation_type = db.Column(db.String(5))
@@ -102,8 +102,8 @@ class Photo(db.Model):
     num_row = db.Column(db.Integer)
 
     #Defining the Foreign Key on the Child Table :
-    username = db.Column(db.String(30), db.ForeignKey('User.username')) # tablename
-    patient_id = db.Column(db.Integer, db.ForeignKey('Patient.id')) # tablename
+    username = db.Column(db.String(30), db.ForeignKey('Users.username')) # tablename
+    patient_id = db.Column(db.Integer, db.ForeignKey('Patients.id')) # tablename
 
     #Defining One to Many relationships with the relationship function on the Parent Table
     annotations = db.relationship('Annotation', backref="photo", cascade="all, delete-orphan" , lazy='dynamic')
@@ -222,7 +222,7 @@ class Patient(db.Model):
 
     Interact with the database.
     """
-    __tablename__ = 'Patient' # tablename
+    __tablename__ = 'Patients' # tablename
     id = db.Column(db.Integer, primary_key=True)
     age = db.Column(db.Integer)
     gender  = db.Column(db.String(1))
@@ -240,7 +240,7 @@ class Annotation(db.Model) :
 
     Interact with the database.
     """
-    __tablename__ = 'Annotation' # tablename
+    __tablename__ = 'Annotations' # tablename
 
     id = db.Column(db.Integer, primary_key=True)
     col = db.Column(db.Integer)
@@ -255,8 +255,8 @@ class Annotation(db.Model) :
     # see table of annotations
 
     #Defining the Foreign Key on the Child Table :
-    username = db.Column(db.String(30), db.ForeignKey('User.username')) # tablename
-    photo_id = db.Column(db.Integer, db.ForeignKey('Photo.id')) # tablename
+    username = db.Column(db.String(30), db.ForeignKey('Users.username')) # tablename
+    photo_id = db.Column(db.Integer, db.ForeignKey('Photos.id')) # tablename
 
 
 
