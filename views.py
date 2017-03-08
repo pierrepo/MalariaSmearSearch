@@ -223,7 +223,6 @@ def browse():
             print (count)
             nb_annotations[photo_idx].append(count)
 
-    print(chunks)
     return render_template('browse.html', photos = photos, nb_annotations = nb_annotations, enumerate=enumerate)
 
 @app.route('/download/<photo_id>')
