@@ -214,8 +214,7 @@ def browse():
     nb_annotations = [ list() for _ in range (len(photos))  ]
 
     for photo_idx, photo in enumerate(photos) :
-
-        for (chunk_col, chunk_row) in photo.chunk_numerotation :
+        for (chunk_col, chunk_row) in photo.chunks_numerotation :
             count = Annotation.query.filter_by(
                 photo_id = photo.id,
                 col = chunk_col,
