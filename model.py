@@ -122,36 +122,15 @@ class Photo(db.Model):
         self.num_col = num_col
         self.num_row = num_row
 
-        self.chunks_numerotation = [(col,row) for col in  range(num_col) for row in range(num_row)]
-
     @sqlalchemy.orm.reconstructor
     def init_on_load(self):
         """
         http://docs.sqlalchemy.org/en/latest/orm/constructors.html
         """
         self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
+        self.filename = '{0}.{1}'.format(self.id, self.extension )
+        self.path = photos.path(self.filename)
 
-    @property
-    def filename (self) :
-        return '{0}.{1}'.format(self.id, self.extension )
-
-    def get_filename(self) :
-        """
-        Function that uses the corresponding property
-        This can be used in jinja template
-        """
-        return self.filename
-
-    @property
-    def path(self):
-        return photos.path(self.filename)
-
-    def get_path(self) :
-        """
-        Function that uses the corresponding property
-        This can be used in jinja template
-        """
-        return self.path
 
     def get_chunks_infos(self) :
         """
