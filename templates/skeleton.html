@@ -16,6 +16,7 @@
         <![endif]-->
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/sticky-footer.css')}}" />
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/js-flashed-messages.css')}}" />
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/footer.css')}}" />
 
         {% endblock %}
     </head>
@@ -83,10 +84,11 @@
             <footer>
                 <div class="container">
                     {% block footer %}
-                        <ul>
-                            <li> Université Paris Diderot </li>
-                            <li> CNRS </li>
-                            <li> FCRM </li>
+                        <a href="{{url_for('index')}}" id= 'project-name'>Malaria Smear Search</a>
+                        <ul class="list-inline">
+                            <li><a href="http://www.univ-paris-diderot.fr/">Université Paris Diderot</a></li>
+                            <li><a href="http://www.cnrs.fr/">CNRS</a></li>
+                            <li><a href="http://www.fcrm-congo.com/">FCRM</a></li>
                         </ul>
                     {% endblock %}
                 </div>
