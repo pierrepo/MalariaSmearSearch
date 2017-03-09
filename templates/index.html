@@ -3,33 +3,21 @@
 {% block title %}Index{% endblock %}
 
 {% block content %}
-    <div class="text-center">
-        <h1>Malaria Smear Search</h1>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-            ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-            qui officia deserunt mollit anim id est laborum
-        </p>
-    </div>
     <!-- Action grid 3 * 4 = 12-->
     <div class="row">
         <div class="col-sm-4">
             <a href="{{ url_for('upload') }}" target="_self" class="thumbnail">
-            <img  src="static/img/logo-add-image.svg" alt="add image icon" style="width:100%">
-            <div class="caption">
-            Add image
-            </div>
+                <img  src="static/img/logo-MSS-upload.png" alt="add image icon" style="width:90%">
+                <div class="caption text-center landing">
+                Add blood smear
+                </div>
             </a>
 
         </div>
         <div class="col-sm-4">
               <a href="{{url_for('browse')}}" target="_self" class="thumbnail">
-                <img src="static/img/logo-browse.svg" alt="browse images icon" style="width:100%">
-                <div class="caption">
+                <img src="static/img/logo-MSS-browse.png" alt="browse images icon" style="width:90%">
+                <div class="caption text-center landing">
                   Browse images
                 </div>
               </a>
@@ -37,13 +25,24 @@
         </div>
         <div class="col-sm-4">
             <a href="" target="_self" class="thumbnail">
-                <img src="static/img/logo-train-yourself.svg" alt="Train yourself" style="width:100%">
-                <div class="caption">
+                <img src="static/img/logo-MSS-train.png" alt="Train yourself" style="width:90%">
+                <div class="caption text-center landing">
                   Train yourself
                 </div>
             </a>
 
         </div>
+    </div>
+    <div>
+        <p>
+            <b>Malaria Smear Search</b> is a web application designed to upload and annotate thick and thin blood smears used for Malaria diagnosis. 
+        </p>
+        <p>
+            <b>Malaria Smear Search</b> also proposes a training module for students, technicians and physicians involved in Malaria diagnosis.
+        </p>
+        <p>
+            This application is open source and all source code is available on <a href="https://github.com/pierrepo/MalariaSmearSearch">GitHub</a>. All data are under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International</a> (CC BY 4.0) license.
+        </p>
     </div>
 
 {% endblock %}
