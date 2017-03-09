@@ -10,7 +10,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 import pathlib
 import os
 
-from app import app, login_manager, photos
+from app import app, login_manager, samples_set
 from forms import RegisterForm, LoginForm, UploadForm
 from model import *
 
@@ -49,48 +49,48 @@ def test():
 @login_required
 def upload():
     """
-    View of the page where logged in users can access the form to upload photos.
+    View of the page where logged in users can access the form to upload samples.
     """
     form = UploadForm()
 
     if form.validate_on_submit() : # -> it is a POST request and it is valid
 
-        # get the photo and its database attributes !
-        new_photo = Photo()
-        form.populate_obj(new_photo)
-        new_photo.extension = form.photo.data.filename.split('.')[-1].lower()
-        # lowercase because the photos set is made from the IMAGE set
+        # get the sample and its database attributes !
+        new_sample = Sample()
+        form.populate_obj(new_sample)
+        new_sample.extension = form.sample.data.filename.split('.')[-1].lower()
+        # lowercase because the samples set is made from the IMAGE set
         # that do use lowercase extensions.
         # https://pythonhosted.org/Flask-Uploads/#flaskext.uploads.IMAGES
 
-        print (new_photo)
+        print (new_sample)
         print (form)
 
         try :
-            # add the photo in the database :
-            db.session.add(new_photo)
+            # add the sample in the database :
+            db.session.add(new_sample)
             db.session.commit()
             # call the reconstructor
-            # and thus update the fields that need photo.id
-            new_photo.init_on_load()
+            # and thus update the fields that need sample.id
+            new_sample.init_on_load()
 
-            # upload the photo
-            # its name is the photo 00000id in the database
-            photos.save(
-                storage = form.photo.data, # The uploaded file to save.
-                name = new_photo.filename
+            # upload the sample
+            # its name is the sample 00000id in the database
+            samples_set.save(
+                storage = form.sample.data, # The uploaded file to save.
+                name = new_sample.filename
             )
 
-            print('New photo was uploded and added to database, its id is {0}'.format(new_photo.id))
-            flash('New photo was uploded and added to database, its id is {0}.'.format(new_photo.id), category = 'succes')
+            print('New sample was uploded and added to database, its id is {0}'.format(new_sample.id))
+            flash('New sample was uploded and added to database, its id is {0}.'.format(new_sample.id), category = 'succes')
 
-            # cut the photo into chunks :
-            new_photo.make_chunks()
+            # cut the sample into chunks :
+            new_sample.make_chunks()
 
-            print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_photo.num_col * new_photo.num_row))
-            flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_photo.num_col * new_photo.num_row), category = 'succes')
+            print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_sample.num_col * new_sample.num_row))
+            flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_sample.num_col * new_sample.num_row), category = 'succes')
 
-            return render_template('choice_after_upload.html', photo = new_photo )
+            return render_template('choice_after_upload.html', sample = new_sample )
 
         except Exception as e:
             # TODO : catch the different kind of exception that could occurred.
@@ -209,58 +209,58 @@ def account():
 
 @app.route('/browse')
 def browse():
-    # list uploaded photo in db :
-    photos = Photo.query.all()
-    [photo.init_on_load() for photo in photos]
-    print (photos)
+    # list uploaded sample in db :
+    samples = Sample.query.all()
+    [sample.init_on_load() for sample in samples]
+    print (samples)
 
-    nb_annotations = [ list() for _ in range (len(photos))  ]
+    nb_annotations = [ list() for _ in range (len(samples))  ]
 
-    for photo_idx, photo in enumerate(photos) :
-        for (chunk_col, chunk_row) in photo.chunks_numerotation :
+    for sample_idx, sample in enumerate(samples) :
+        for (chunk_col, chunk_row) in sample.chunks_numerotation :
             count = Annotation.query.filter_by(
-                photo_id = photo.id,
+                sample_id = sample.id,
                 col = chunk_col,
                 row = chunk_row
             ).count()
             print (count)
-            nb_annotations[photo_idx].append(count)
+            nb_annotations[sample_idx].append(count)
 
-    return render_template('browse.html', photos = photos, nb_annotations = nb_annotations, enumerate=enumerate)
+    return render_template('browse.html', samples = samples, nb_annotations = nb_annotations, enumerate=enumerate)
 
-@app.route('/download/<photo_id>')
-def download(photo_id):
-    #photo_id = secure_filename(photo_id)
-    photo = Photo.query.get(photo_id) # Primary Key
-    photo.init_on_load()
-    if os.path.isfile(photo.path): # if the file exists
+@app.route('/download/<sample_id>')
+def download(sample_id):
+    #sample_id = secure_filename(sample_id)
+    sample = Sample.query.get(sample_id) # Primary Key
+    sample.init_on_load()
+    if os.path.isfile(sample.path): # if the file exists
         # send it :
-        return send_file(photo.path, as_attachment=True)
+        return send_file(sample.path, as_attachment=True)
     else:
-        # return to the photo list with a flash error message
-        print("Photo {photo_id} doesn't exists.".format(photo_id=photo_id))
+        # return to the sample list with a flash error message
+        print("Sample {sample_id} doesn't exists.".format(sample_id=sample_id))
         return redirect(url_for('browse'))
 
 
-@app.route('/chunks/<int:photo_id>/<int:col>/<int:row>')
-def get_chunk_url(photo_id, col, row):
-    photo = Photo.query.get(photo_id) # Primary Key
-    photo.init_on_load()
-    chunk_path = photo.get_chunk_path(col, row)
+@app.route('/chunks/<int:sample_id>/<int:col>/<int:row>')
+def get_chunk_url(sample_id, col, row):
+    sample = Sample.query.get(sample_id) # Primary Key
+    sample.init_on_load()
+    chunk_path = sample.get_chunk_path(col, row)
     resp = make_response(open(chunk_path, 'rb').read()) #open in binary mode
     resp.content_type = "image/jpeg"
     return resp
 
-@app.route('/chunks/<int:photo_id>/<int:col>/<int:row>/annotations/')
-def get_chunk_annotation(photo_id, col, row):
+@app.route('/chunks/<int:sample_id>/<int:col>/<int:row>/annotations/')
+def get_chunk_annotation(sample_id, col, row):
 
     # get all the annotation that are made on current chunk :
-    annotations = Annotation.query.filter_by(photo_id=photo_id, col = col, row = row).all()
+    annotations = Annotation.query.filter_by(sample_id=sample_id, col = col, row = row).all()
     #query.with_entities(SomeModel.col1, SomeModel.col2) #select colum for the return
 
     # model is not JSON serializable
     # so we do it by the hand : #TODO : better way ?
-    serialized_annotations = [ {key : e.__dict__[key] for key in ['photo_id', 'col', 'row', 'id', 'username','x','y','width','height', 'annotation'] } for e in annotations ]
+    serialized_annotations = [ {key : e.__dict__[key] for key in ['sample_id', 'col', 'row', 'id', 'username','x','y','width','height', 'annotation'] } for e in annotations ]
     for e in serialized_annotations : print (e)
 
 
@@ -271,12 +271,12 @@ def about() :
     return render_template ('about.html')
 
 
-@app.route('/annotate_chunk/<int:photo_id>/<int:col>/<int:row>')
-def annotate_chunk(photo_id, col, row):
-    print(photo_id, col, row)
-    photo = Photo.query.get(photo_id)
-    photo.init_on_load()
-    chunk_path = photo.get_chunk_path(col, row)
+@app.route('/annotate_chunk/<int:sample_id>/<int:col>/<int:row>')
+def annotate_chunk(sample_id, col, row):
+    print(sample_id, col, row)
+    sample = Sample.query.get(sample_id)
+    sample.init_on_load()
+    chunk_path = sample.get_chunk_path(col, row)
 
     # check if the requested chunk is on the disk :
     try :
@@ -284,23 +284,23 @@ def annotate_chunk(photo_id, col, row):
     except AssertionError as e :
         print ("can't refer to the chunk on the disk")
 
-    print ( url_for('get_chunk_url', photo_id=photo_id, col=col, row=row ) )
+    print ( url_for('get_chunk_url', sample_id=sample_id, col=col, row=row ) )
 
 
     # give the URL the requested file uploaded to this set would be accessed at. It doesn’t check whether said file exists.
 
-    return render_template('annotate-chunk.html', photo_id=photo_id, col=col, row=row )
+    return render_template('annotate-chunk.html', sample_id=sample_id, col=col, row=row )
 
 
-@app.route('/chunks/<int:photo_id>/<int:col>/<int:row>/annotations/' , methods = ['POST'])
+@app.route('/chunks/<int:sample_id>/<int:col>/<int:row>/annotations/' , methods = ['POST'])
 @login_required
-def add_anno(photo_id, col, row) :
+def add_anno(sample_id, col, row) :
 
     print (current_user)
 
 
-    photo = Photo.query.get(photo_id)
-    photo.init_on_load()
+    sample = Sample.query.get(sample_id)
+    sample.init_on_load()
 
     x =  request.form['x']
     y =  request.form['y']
@@ -310,7 +310,7 @@ def add_anno(photo_id, col, row) :
 
     new_anno = Annotation(
         current_user,
-        photo,
+        sample,
         (col, row),
         x, y, width, height,
         annotation
@@ -319,7 +319,7 @@ def add_anno(photo_id, col, row) :
     print (new_anno)
 
     print (new_anno.username)
-    print (new_anno.photo_id )
+    print (new_anno.sample_id )
     print (new_anno.col)
     print (new_anno.row)
     print (new_anno.date )

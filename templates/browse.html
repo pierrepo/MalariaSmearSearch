@@ -4,25 +4,25 @@
 
 {% block content %}
 
-    {% if photos %}
-        They are the photos uploaded :
+    {% if samples %}
+        They are the samples uploaded :
     	<ul class="fichiers">
 
-        {% for photo_idx, photo in enumerate(photos) %}
+        {% for sample_idx, sample in enumerate(samples) %}
         <li>
-            <a href="{{ url_for('download', photo_id = photo.id ) }}">
+            <a href="{{ url_for('download', sample_id = sample.id ) }}">
                 <span class="glyphicon glyphicon-download"></span>
             </a>
 
-            {{ photo.filename }}
+            {{ sample.filename }}
 
             <ul>
-                {% for chunk_idx, (chunk_col, chunk_row) in enumerate( photo.chunks_numerotation) %}
+                {% for chunk_idx, (chunk_col, chunk_row) in enumerate( sample.chunks_numerotation) %}
                     <li>
-                        <a href="{{ url_for('annotate_chunk', photo_id = photo.id, col = chunk_col, row = chunk_row ) }}">
+                        <a href="{{ url_for('annotate_chunk', sample_id = sample.id, col = chunk_col, row = chunk_row ) }}">
                             <span>annotate</span>
                         </a>
-                        {{ photo.get_chunk_filename(chunk_col, chunk_row) }} has {{ nb_annotations[photo_idx][chunk_idx]}} annotations
+                        {{ sample.get_chunk_filename(chunk_col, chunk_row) }} has {{ nb_annotations[sample_idx][chunk_idx]}} annotations
                     </li>
                 {% endfor %}
             </ul>
@@ -33,6 +33,6 @@
     	{% endfor %}
     	</ul>
     {% else %}
-        No photo was uploaded, yet.
+        No sample was uploaded, yet.
     {% endif %}
 {% endblock %}

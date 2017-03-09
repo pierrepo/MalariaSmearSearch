@@ -22,7 +22,7 @@ They inherite attribute of flask_sqlalchemy.SQLAlchemy.Model
 http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
 
 """
-from app import app, db, photos
+from app import app, db, samples_set
 from flask_login import UserMixin
 from flask_sqlalchemy import sqlalchemy
 from PIL import Image
@@ -47,10 +47,10 @@ class User(db.Model, UserMixin):
     institution = db.Column(db.String(50))
 
     #Defining One to Many relationships with the relationship function on the Parent Table
-    photos = db.relationship('Photo', backref="user", lazy='dynamic')
+    samples = db.relationship('Sample', backref="user", lazy='dynamic')
     annotations = db.relationship('Annotation', backref="user", lazy='dynamic')
 
-    # backref="user" : This argument adds a user attribute on the Photo table, so you can access a User via the Photos Class as Photo.user.
+    # backref="user" : This argument adds a user attribute on the Sample table, so you can access a User via the Samples Class as Sample.user.
     # omit the cascade argument : keep the children when you delete the parent
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
@@ -83,13 +83,13 @@ class User(db.Model, UserMixin):
     def id (self) :
         return self.username
 
-class Photo(db.Model):
+class Sample(db.Model):
     """
-    Photo Model
+    Sample Model
 
     Interact with the database.
     """
-    __tablename__ = 'Photos' # tablename
+    __tablename__ = 'Samples' # tablename
     id = db.Column(db.Integer, primary_key=True)
     extension = db.Column(db.String(5))
     preparation_type = db.Column(db.String(5))
@@ -106,9 +106,9 @@ class Photo(db.Model):
     patient_id = db.Column(db.Integer, db.ForeignKey('Patients.id')) # tablename
 
     #Defining One to Many relationships with the relationship function on the Parent Table
-    annotations = db.relationship('Annotation', backref="photo", cascade="all, delete-orphan" , lazy='dynamic')
-    # backref="photo" : This argument adds a photo attribute on the Annotation table, so you can access a Photo via the Annotation Class as Annotation.photo.
-    # cascade ="all, delete-orphan”: This will delete all chunks of a photo when the referenced photo is deleted.
+    annotations = db.relationship('Annotation', backref="sample", cascade="all, delete-orphan" , lazy='dynamic')
+    # backref="sample" : This argument adds a sample attribute on the Annotation table, so you can access a Sample via the Annotation Class as Annotation.sample.
+    # cascade ="all, delete-orphan”: This will delete all chunks of a sample when the referenced sample is deleted.
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
 
@@ -129,7 +129,7 @@ class Photo(db.Model):
         """
         self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
         self.filename = '{0}.{1}'.format(self.id, self.extension )
-        self.path = photos.path(self.filename)
+        self.path = samples_set.path(self.filename)
 
 
     def get_chunks_infos(self) :
@@ -168,7 +168,7 @@ class Photo(db.Model):
 
 
     def crop(self, chunk_numerotation, coords):
-        """ Crop the photo to the given coord
+        """ Crop the sample to the given coord
 
         Arguments :
         -----------
@@ -227,8 +227,8 @@ class Patient(db.Model):
     age = db.Column(db.Integer)
     gender  = db.Column(db.String(1))
     #Defining One to Many relationships with the relationship function on the Parent Table
-    photos = db.relationship('Photo', backref="patient", lazy='dynamic')
-    # backref="chunk" : This argument adds a photo attribute on the ANnotation table, so you can access a Chunk via the Annotation Class as Annotation.chunk.
+    samples = db.relationship('Sample', backref="patient", lazy='dynamic')
+    # backref="chunk" : This argument adds a sample attribute on the ANnotation table, so you can access a Chunk via the Annotation Class as Annotation.chunk.
     # Omit the cascade argument -> keep the children around when the parent is deleted.
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
@@ -256,11 +256,11 @@ class Annotation(db.Model) :
 
     #Defining the Foreign Key on the Child Table :
     username = db.Column(db.String(30), db.ForeignKey('Users.username')) # tablename
-    photo_id = db.Column(db.Integer, db.ForeignKey('Photos.id')) # tablename
+    sample_id = db.Column(db.Integer, db.ForeignKey('Samples.id')) # tablename
 
 
 
-    def __init__(self, user, photo, chunk_numerotation, x, y, width, height, annotation):
+    def __init__(self, user, sample, chunk_numerotation, x, y, width, height, annotation):
         """
         Constructor of an instance of the Annotation class
 
@@ -268,8 +268,8 @@ class Annotation(db.Model) :
         -----------
         user : instance of user
             user that added the annotation
-        photo : instance of Photo
-            the photo on which the annotation is made
+        sample : instance of Sample
+            the sample on which the annotation is made
         chunk_numerotation : tuple of 2 int
             the chunk localisation on the image as
             (col, row)
@@ -286,7 +286,7 @@ class Annotation(db.Model) :
         """
 
         self.username = user.username
-        self.photo_id = photo.id
+        self.sample_id = sample.id
         self.col, self.row = chunk_numerotation
         self.date = datetime.datetime.utcnow()
         self.x = x

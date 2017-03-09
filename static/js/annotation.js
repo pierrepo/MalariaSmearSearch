@@ -256,7 +256,7 @@ $(document).ready(function(){
 
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
     $.getJSON(
-        '/chunks/'+photo_id+'/'+col+'/'+row+'/annotations/',
+        '/chunks/'+sample_id+'/'+col+'/'+row+'/annotations/',
         function(data){
             console.log(data);
 
@@ -452,7 +452,7 @@ $(document).ready(function(){
 
         $.ajax({
 
-            url : '/chunks/'+photo_id+'/'+col+'/'+row+'/annotations/',
+            url : '/chunks/'+sample_id+'/'+col+'/'+row+'/annotations/',
             type: "POST",
             data : $('#add-new').serialize(),
 
