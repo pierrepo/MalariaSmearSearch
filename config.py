@@ -13,9 +13,12 @@ class Config(object):
     #engine://user:password@host:port/database
 
     #-----
-    # configuration of Flask-Uploads
+    # paths config :
     TOP_LEVEL_DIR = '.'
-    
+
+    #-----
+    # configuration of Flask-Uploads
+
     UPLOADS_DEFAULT_DEST = TOP_LEVEL_DIR + '/default_up'
     UPLOADED_PHOTOS_DEST = TOP_LEVEL_DIR + '/up'
 
