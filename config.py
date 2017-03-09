@@ -16,6 +16,8 @@ class Config(object):
     # paths config :
     TOP_LEVEL_DIR = '.'
 
+    CHUNKS_DEST = TOP_LEVEL_DIR + '/chunks'
+
     #-----
     # configuration of Flask-Uploads
 
