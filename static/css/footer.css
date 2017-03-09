@@ -1,3 +1,7 @@
+footer #project-name{
+    font-size: large;
+}
+
 footer .list-inline li {
     text-align: center;
     padding: 3px 16px;
