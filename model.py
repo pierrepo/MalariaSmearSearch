@@ -22,7 +22,7 @@ They inherite attribute of flask_sqlalchemy.SQLAlchemy.Model
 http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
 
 """
-from app import db, photos
+from app import app, db, photos
 from flask_login import UserMixin
 from flask_sqlalchemy import sqlalchemy
 from PIL import Image
@@ -206,13 +206,13 @@ class Photo(db.Model):
         )
 
     def get_chunk_path(self, chunk_col, chunk_row) :
-        return './chunks/{0}'.format(self.get_chunk_filename(chunk_col, chunk_row))
+        return '{0}/{1}'.format(app.config['CHUNKS_DEST'], self.get_chunk_filename(chunk_col, chunk_row))
 
     def get_chunks_paths(self) :
         paths_array = []
         for col in range (self.num_col) :
             for row in range (self.num.row) :
-                path_cur_chunk = './chunks/{0}'.format(self.get_chunk_filename(col, row))
+                path_cur_chunk = self.get_chunk_path(col, row)
                 paths_array.append(path_cur_chunk)
         return paths_array
 
