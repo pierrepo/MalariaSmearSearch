@@ -2,6 +2,11 @@
 
 {% block title %}Blood smear upload{% endblock %}
 
+{% block head %}
+{{super()}}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/form.css')}}" />
+{% endblock %}
+
 {% block content %}
 
         {% if form.errors %}
