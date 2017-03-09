@@ -10,7 +10,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 import pathlib
 import os
 
-from app import app, login_manager, samples
+from app import app, login_manager, samples_set
 from forms import RegisterForm, LoginForm, UploadForm
 from model import *
 
@@ -76,7 +76,7 @@ def upload():
 
             # upload the sample
             # its name is the sample 00000id in the database
-            samples.save(
+            samples_set.save(
                 storage = form.sample.data, # The uploaded file to save.
                 name = new_sample.filename
             )

@@ -19,7 +19,7 @@ class UploadForm(FlaskForm):
     """
     sample = FileField('sample', validators=[
         FileRequired(),
-        FileAllowed( app.samples, 'Images only!')
+        FileAllowed( app.samples_set, 'Images only!')
     ])
 
     preparation_type = RadioField('Type of preparation', choices=[

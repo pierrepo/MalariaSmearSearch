@@ -22,7 +22,7 @@ They inherite attribute of flask_sqlalchemy.SQLAlchemy.Model
 http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
 
 """
-from app import app, db, samples
+from app import app, db, samples_set
 from flask_login import UserMixin
 from flask_sqlalchemy import sqlalchemy
 from PIL import Image
@@ -129,7 +129,7 @@ class Sample(db.Model):
         """
         self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
         self.filename = '{0}.{1}'.format(self.id, self.extension )
-        self.path = samples.path(self.filename)
+        self.path = samples_set.path(self.filename)
 
 
     def get_chunks_infos(self) :
