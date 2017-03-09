@@ -1,3 +1,11 @@
-div.caption.landing {
+.thumbnail .caption {
 	font-size: 2rem;
+}
+
+img {
+	width:50%;
+}
+
+p {
+	color:red;
 }
