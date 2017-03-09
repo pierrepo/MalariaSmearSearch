@@ -22,12 +22,12 @@ class UploadForm(FlaskForm):
         FileAllowed( app.photos, 'Images only!')
     ])
 
-    preparation_type = RadioField('Type of preparation', choices=[
-            ('thick',  'Goutte Epaisse '),
-            ('thin',  'Frotti'),
+    preparation_type = RadioField('Blood smear type', choices=[
+            ('thick',  'Thick'),
+            ('thin',  'Thin'),
             ], validators=[Required()] )
     comment = TextField('Comment', validators=[ Length( max=256)])
-    magnification =IntegerField ('Magnification', validators=[Required()])
+    magnification =IntegerField ('Magnification', validators=[Required()], render_kw={"placeholder": "e.g. 100"})
     microscope_model = TextField ('Microscope model',  validators=[Required()])
 
     submit = SubmitField('Upload image')
