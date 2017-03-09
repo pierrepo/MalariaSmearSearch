@@ -22,7 +22,7 @@ class Config(object):
     # configuration of Flask-Uploads
 
     UPLOADS_DEFAULT_DEST = TOP_LEVEL_DIR + '/default_up'
-    UPLOADED_PHOTOS_DEST = TOP_LEVEL_DIR + '/samples'
+    UPLOADED_SAMPLES_DEST = TOP_LEVEL_DIR + '/samples'
 
 class ProductionConfig(Config):
     pass

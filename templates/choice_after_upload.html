@@ -12,9 +12,9 @@
                   <img src="static/img/logo-add-annotation.svg" alt="add annotations icon" style="width:100%">
                   <div class="caption">
                     Annotate the chunk
-                        {% for (chunk_col, chunk_row) in photo.chunks_numerotation %}
-                            <a href="{{url_for('annotate_chunk',photo_id=photo.id, col=chunk_col, row=chunk_row) }}" target="_self" class="thumbnail">
-                                {{photo.get_chunk_filename ( chunk_col, chunk_row ) }}
+                        {% for (chunk_col, chunk_row) in sample.chunks_numerotation %}
+                            <a href="{{url_for('annotate_chunk',sample_id=sample.id, col=chunk_col, row=chunk_row) }}" target="_self" class="thumbnail">
+                                {{sample.get_chunk_filename ( chunk_col, chunk_row ) }}
                             </a>
                         {% endfor %}
                     </select>

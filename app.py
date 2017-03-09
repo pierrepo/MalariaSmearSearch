@@ -7,7 +7,7 @@ Attributes
 app : instance of the flask.Flask class
     a WSGI application
 
-photos : instance of the UploadSet class
+samples : instance of the UploadSet class
     define photo / image collection.
 """
 from flask import Flask
@@ -30,5 +30,5 @@ login_manager.login_view = "login"
 login_manager.login_message_category = "error"
 
 # Configure the image uploading via Flask-Uploads
-photos = UploadSet('photos', IMAGES)
-configure_uploads(app, photos)
+samples = UploadSet('samples', IMAGES)
+configure_uploads(app, samples)
