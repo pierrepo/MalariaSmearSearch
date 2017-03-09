@@ -2,6 +2,11 @@ footer #project-name{
     font-size: large;
 }
 
+footer ul {
+    display : inline-block;
+    float : right ;
+}
+
 footer .list-inline li {
     text-align: center;
     padding: 3px 16px;
