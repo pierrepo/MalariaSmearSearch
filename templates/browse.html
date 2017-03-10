@@ -5,36 +5,6 @@
 {% block content %}
 
     {% if samples %}
-        They are the samples uploaded :
-    	<ul class="fichiers">
-
-        {% for sample_idx, sample in enumerate(samples) %}
-        <li>
-            <a href="{{ url_for('download', sample_id = sample.id ) }}">
-                <span class="glyphicon glyphicon-download"></span>
-            </a>
-
-            {{ sample.filename }}
-
-            <ul>
-                {% for chunk_idx, (chunk_col, chunk_row) in enumerate( sample.chunks_numerotation) %}
-                    <li>
-                        <a href="{{ url_for('annotate_chunk', sample_id = sample.id, col = chunk_col, row = chunk_row ) }}">
-                            <span>annotate</span>
-                        </a>
-                        {{ sample.get_chunk_filename(chunk_col, chunk_row) }} has {{ nb_annotations[sample_idx][chunk_idx]}} annotations
-                    </li>
-                {% endfor %}
-            </ul>
-
-
-        </li>
-
-    	{% endfor %}
-    	</ul>
-
-
-
 
         <table id = "browseTable" class = "display" >
             <!-- class = "display" -> row color alternate, increasing lisibility -->
