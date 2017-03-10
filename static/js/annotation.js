@@ -30,7 +30,7 @@ $(document).ready(function(){
         // the action button events are bind automatically,
         // but ensure the click-to-edit functionality is working
         // on newly appended list items even before a page refresh :
-        makeEditable("#annotations-list li[name="+new_anno.name+"]");
+        makeEditable("#annotations-list li[name="+new_anno.name+"] span");
 
         // add the annotation as a rect on the anno layer of the anno stage
         console.log(new_anno) ;
@@ -273,20 +273,8 @@ $(document).ready(function(){
                 console.log(obj);
             }
 
-            // wrap list item text in a span, and appply functionality buttons
-            $("#annotations-list li")
-                .wrapInner("<span>")
-                .append("<button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button>");
-
-            // make annotation selects editable :
-            makeEditable("#annotations-list li span");
-
-
             data_loaded = true ;
             init_anno(data) ;
-
-            // TODO : put data as li in annotation list. NB : name will begin with 1 because sqlite autoincrement begin from 1.
-            // make li name derived from annotation item name / id
         }
     );
 

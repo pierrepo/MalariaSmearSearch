@@ -357,7 +357,7 @@ def add_anno(sample_id, col, row) :
     return jsonify(new_anno.id)
 
 
-@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotations/<int:anno_id>' , methods = ['PUT'])
+@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotations/<int:anno_id>' , methods = ['POST'])
 def update_anno_text(sample_id, col, row, anno_id) :
     print(anno_id)
     print(request.form['new_value'])
