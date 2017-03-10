@@ -188,7 +188,7 @@ $(document).ready(function(){
     //***  fetch image :
     image_loaded = false ;
     var imageObj = new Image();
-    imageObj.src = img_source;
+    imageObj.src = Flask.url_for("get_chunk_url", {"sample_id": sample_id, "col":col, "row":row});
 
     // once the image is loaded :
     imageObj.onload = function() {
