@@ -243,7 +243,7 @@ def browse():
 
     return render_template('browse.html', samples = samples, nb_annotations = nb_annotations, enumerate=enumerate)
 
-@app.route('/samples/<sample_id>')
+@app.route('/samples/<int:sample_id>')
 def download(sample_id):
     #sample_id = secure_filename(sample_id)
     sample = Sample.query.get(sample_id) # Primary Key
@@ -257,7 +257,7 @@ def download(sample_id):
         return redirect(url_for('browse'))
 
 
-@app.route('/chunks/<int:sample_id>/<int:col>/<int:row>')
+@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>')
 def get_chunk_url(sample_id, col, row):
     sample = Sample.query.get(sample_id) # Primary Key
     sample.init_on_load()
@@ -266,7 +266,7 @@ def get_chunk_url(sample_id, col, row):
     resp.content_type = "image/jpeg"
     return resp
 
-@app.route('/chunks/<int:sample_id>/<int:col>/<int:row>/annotations/')
+@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotations/')
 def get_chunk_annotation(sample_id, col, row):
 
     # get all the annotation that are made on current chunk :
@@ -286,7 +286,7 @@ def about() :
     return render_template ('about.html')
 
 
-@app.route('/annotate_chunk/<int:sample_id>/<int:col>/<int:row>')
+@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotate_chunk/')
 def annotate_chunk(sample_id, col, row):
     print(sample_id, col, row)
     sample = Sample.query.get(sample_id)
@@ -307,7 +307,7 @@ def annotate_chunk(sample_id, col, row):
     return render_template('annotate-chunk.html', sample_id=sample_id, col=col, row=row )
 
 
-@app.route('/chunks/<int:sample_id>/<int:col>/<int:row>/annotations/' , methods = ['POST'])
+@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotations/' , methods = ['POST'])
 @login_required
 def add_anno(sample_id, col, row) :
 
