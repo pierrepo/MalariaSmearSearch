@@ -256,7 +256,9 @@ $(document).ready(function(){
 
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
     $.getJSON(
-        '/chunks/'+sample_id+'/'+col+'/'+row+'/annotations/',
+
+        Flask.url_for("get_chunk_annotation", {"sample_id":sample_id , "col":col, "row":row}),
+
         function(data){
             console.log(data);
 
@@ -364,7 +366,7 @@ $(document).ready(function(){
             tooltip message
             text in the saving button
         */
-        $(editableTarget).editable("/update_anno_text", {
+        $(editableTarget).editable(Flask.url_for("update_anno_text", {"sample_id":sample_id , "col":col, "row":row, "anno_id":$(editableTarget).closest("li").attr("name")}), {
             event     : 'dblclick', /*event triggering the edition*/
             tooltip   : 'Double-click to edit...', /*tooltip msg*/
             submit    : 'Save', /*message on the submit button*/
@@ -414,7 +416,7 @@ $(document).ready(function(){
             console.log("deleeeete");
             $.ajax({
 
-                url : '/del_anno',
+                url : Flask.url_for("del_anno", {"sample_id":sample_id , "col":col, "row":row}),
                 type: "DELETE", /*TODO : REST - the DELETE method requests thant the origin server delete the resource identified by the request URI*/
                 data : {'id': $(this).closest("li").attr("name")},
 
@@ -452,7 +454,7 @@ $(document).ready(function(){
 
         $.ajax({
 
-            url : '/chunks/'+sample_id+'/'+col+'/'+row+'/annotations/',
+            url :  Flask.url_for("add_anno", {"sample_id":sample_id , "col":col, "row":row}),
             type: "POST",
             data : $('#add-new').serialize(),
 
