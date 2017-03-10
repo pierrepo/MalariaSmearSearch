@@ -58,7 +58,7 @@ def upload():
 @login_required
 def add_sample():
     form = UploadForm()
-    
+
     if form.validate_on_submit() : # -> it is a POST request and it is valid
 
         # get the sample and its database attributes !
@@ -222,7 +222,7 @@ def account():
     #TODO
     return render_template('account-page.html')
 
-@app.route('/browse')
+@app.route('/samples/')
 def browse():
     # list uploaded sample in db :
     samples = Sample.query.all()
