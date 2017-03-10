@@ -95,6 +95,7 @@ class Sample(db.Model):
     preparation_type = db.Column(db.String(5))
     # CHECK (preparation_type IN ('thick' , 'thin') )
     comment  = db.Column(db.Text)
+    source  = db.Column(db.String(250))
     magnification  = db.Column(db.Integer)
     microscope_model  = db.Column(db.String(20))
 
