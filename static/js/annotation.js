@@ -428,7 +428,7 @@ $(document).ready(function(){
             });
         }
         else {
-            thiscache.text(" sure ?")
+            thiscache.text("Click again to confirm deletion")
             .data("readyToDelete", "go for it");
         }
     });
