@@ -64,6 +64,11 @@
                         {%for col in row%}
                             <td>{{col}}</td>
                         {%endfor%}
+                        <td>
+                            <a href="{{ url_for('annotate_chunk', sample_id = row[0], col = row[4], row = row[3] ) }}">
+                            annotate this chunk
+                            </a>
+                        </td>
                     </tr>
                 {%endfor%}
             </tbody>
