@@ -1,6 +1,13 @@
-
-#Autosaves
+# Autosaves
 *~
 
-#Python virtual environnement
+# Python virtual environnement
 venv/
+# Python compiled files
+*.pyc
+
+# uploaded photos
+samples/*.jpg
+
+# chunks
+chunks/*.jpg
