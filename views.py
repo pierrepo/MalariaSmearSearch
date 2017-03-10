@@ -81,14 +81,14 @@ def upload():
                 name = new_sample.filename
             )
 
-            print('New sample was uploded and added to database, its id is {0}'.format(new_sample.id))
-            flash('New sample was uploded and added to database, its id is {0}.'.format(new_sample.id), category = 'succes')
+            print('The new sample (with id {0}) has been uploaded and added to the database'.format(new_sample.id))
+            flash('The new sample (with id {0}) has been uploaded and added to the database.'.format(new_sample.id), category = 'succes')
 
             # cut the sample into chunks :
             new_sample.make_chunks()
 
-            print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_sample.num_col * new_sample.num_row))
-            flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_sample.num_col * new_sample.num_row), category = 'succes')
+            print('To make the annotation easier, the image has been split into {0} chunks.'.format(new_sample.num_col * new_sample.num_row))
+            flash('To make the annotation easier, the image has been split into {0} chunks.'.format(new_sample.num_col * new_sample.num_row), category = 'succes')
 
             return render_template('choice_after_upload.html', sample = new_sample )
 
