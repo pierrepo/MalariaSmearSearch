@@ -382,11 +382,11 @@ def update_anno_text(sample_id, col, row, anno_id) :
 
 
 @app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotations/<int:anno_id>' , methods = ['DELETE'])
-def del_anno() :
-    print(request.form['id'])
+def del_anno(sample_id, col, row, anno_id) :
+    print(anno_id)
 
     try :
-        Annotation.query.filter_by(id= request.form['id'] ).delete()
+        Annotation.query.filter_by(id=anno_id).delete()
         db.session.commit()
         print('anno was deleted drom the database')
         return '', 200

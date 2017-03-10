@@ -415,10 +415,8 @@ $(document).ready(function(){
             console.log("deleeeete");
             $.ajax({
 
-                url : Flask.url_for("del_anno", {"sample_id":sample_id , "col":col, "row":row}),
+                url : Flask.url_for("del_anno", {"sample_id":sample_id , "col":col, "row":row, "id": $(this).closest("li").attr("name")}),
                 type: "DELETE", /*TODO : REST - the DELETE method requests thant the origin server delete the resource identified by the request URI*/
-                data : {'id': $(this).closest("li").attr("name")},
-
 
                 success: function(r){
                     thiscache
