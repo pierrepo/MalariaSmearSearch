@@ -98,7 +98,7 @@ def add_sample():
             db.session.rollback()
             print('An error occurred accessing the database.')
             flash('An error occurred accessing the database.', category = 'error')
-            redirect('/')
+            return redirect('/')
 
 
 @app.route('/samples/<int:sample_id>/uploaded', methods=['GET'])
