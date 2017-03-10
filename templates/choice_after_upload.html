@@ -9,7 +9,7 @@
         <ul>
             <div class="col-sm-4">
                 <li>
-                  <img src="static/img/logo-add-annotation.svg" alt="add annotations icon" style="width:100%">
+                  <img src="{{ url_for('static', filename='img/logo-add-annotation.svg') }}" alt="add annotations icon" style="width:100%">
                   <div class="caption">
                     Annotate the chunk
                         {% for (chunk_col, chunk_row) in sample.chunks_numerotation %}
@@ -26,7 +26,7 @@
             <div class="col-sm-4">
                 <li>
                     <a href="{{ url_for('upload') }}" target="_self" class="thumbnail">
-                        <img  src="static/img/logo-add-image.svg" alt="add image icon" style="width:100%">
+                        <img  src="{{ url_for('static', filename='img/logo-add-image.svg') }}" alt="add image icon" style="width:100%">
                         <div class="caption">
                         Upload another sample
                         </div>
@@ -36,7 +36,7 @@
             <div class="col-sm-4">
                 <li>
                     <a href="{{ url_for('index') }}" target="_self" class="thumbnail">
-                        <img  src="static/img/logo-home.svg" alt="home icon" style="width:100%">
+                        <img  src="{{ url_for('static', filename='img/logo-home.svg') }}" alt="home icon" style="width:100%">
                         <div class="caption">
                         Go back home
                         </div>
