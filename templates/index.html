@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-sm-4">
             <a href="{{ url_for('upload') }}" target="_self" class="thumbnail">
-            <img  src="static/img/logo-add-image.svg" alt="add image icon" style="width:100%">
+            <img  src="{{ url_for('static', filename='img/logo-add-image.svg')}}" alt="add image icon" style="width:100%">
             <div class="caption">
             Add image
             </div>
@@ -28,7 +28,7 @@
         </div>
         <div class="col-sm-4">
               <a href="{{url_for('browse')}}" target="_self" class="thumbnail">
-                <img src="static/img/logo-browse.svg" alt="browse images icon" style="width:100%">
+                <img src="{{ url_for('static', filename='img/logo-browse.svg')}}" alt="browse images icon" style="width:100%">
                 <div class="caption">
                   Browse images
                 </div>
@@ -37,7 +37,7 @@
         </div>
         <div class="col-sm-4">
             <a href="" target="_self" class="thumbnail">
-                <img src="static/img/logo-train-yourself.svg" alt="Train yourself" style="width:100%">
+                <img src="{{ url_for('static', filename='img/logo-train-yourself.svg')}}" alt="Train yourself" style="width:100%">
                 <div class="caption">
                   Train yourself
                 </div>
