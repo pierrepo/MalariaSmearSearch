@@ -87,16 +87,10 @@ def add_sample():
                 name = new_sample.filename
             )
 
-            print('New sample was uploded and added to database, its id is {0}'.format(new_sample.id))
-            flash('New sample was uploded and added to database, its id is {0}.'.format(new_sample.id), category = 'succes')
-
             # cut the sample into chunks :
             new_sample.make_chunks()
 
-            print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_sample.num_col * new_sample.num_row))
-            flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_sample.num_col * new_sample.num_row), category = 'succes')
-
-            return render_template('choice_after_upload.html', sample = new_sample )
+            return redirect( url_for('uploaded', sample_id = new_sample.id) )
 
         except Exception as e:
             # TODO : catch the different kind of exception that could occurred.
@@ -105,6 +99,23 @@ def add_sample():
             print('An error occurred accessing the database.')
             flash('An error occurred accessing the database.', category = 'error')
             redirect('/')
+
+
+@app.route('/samples/<int:sample_id>/uploaded', methods=['GET'])
+@login_required
+def uploaded(sample_id):
+
+    new_sample = Sample.query.get(sample_id)
+    new_sample.init_on_load()
+
+    print('New sample was uploded and added to database, its id is {0}'.format(new_sample.id))
+    flash('New sample was uploded and added to database, its id is {0}.'.format(new_sample.id), category = 'succes')
+
+    print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_sample.num_col * new_sample.num_row))
+    flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_sample.num_col * new_sample.num_row), category = 'succes')
+
+    return render_template('choice_after_upload.html', sample = new_sample )
+
 
 @app.route("/")
 def index():
