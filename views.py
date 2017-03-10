@@ -243,7 +243,7 @@ def browse():
 
     return render_template('browse.html', samples = samples, nb_annotations = nb_annotations, enumerate=enumerate)
 
-@app.route('/download/<sample_id>')
+@app.route('/samples/<sample_id>')
 def download(sample_id):
     #sample_id = secure_filename(sample_id)
     sample = Sample.query.get(sample_id) # Primary Key
