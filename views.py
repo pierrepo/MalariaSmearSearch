@@ -286,7 +286,7 @@ def about() :
     return render_template ('about.html')
 
 
-@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotate_chunk/')
+@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotate/')
 def annotate_chunk(sample_id, col, row):
     print(sample_id, col, row)
     sample = Sample.query.get(sample_id)
