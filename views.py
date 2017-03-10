@@ -45,14 +45,20 @@ def test():
     """
     return "here you are ! in a restricted area, oh my gosh"
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/samples/upload', methods=['GET'])
 @login_required
 def upload():
     """
     View of the page where logged in users can access the form to upload samples.
     """
     form = UploadForm()
+    return render_template('upload.html', form = form)
 
+@app.route('/samples/', methods=['POST'])
+@login_required
+def add_sample():
+    form = UploadForm()
+    
     if form.validate_on_submit() : # -> it is a POST request and it is valid
 
         # get the sample and its database attributes !
@@ -99,8 +105,6 @@ def upload():
             print('An error occurred accessing the database.')
             flash('An error occurred accessing the database.', category = 'error')
             redirect('/')
-
-    return render_template('upload.html', form = form)
 
 @app.route("/")
 def index():
