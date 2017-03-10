@@ -380,8 +380,7 @@ $(document).ready(function(){
 
             /*NB for server side : */
             method    : 'POST', /*the default = POST TODO : think about PUT*/
-            name      : 'value', /*change default name of parameter 'name' to 'value'*/
-            submitdata: { id : $(editableTarget).closest("li").attr("name") } /*return li parent attr. use closest function because it is more foolproof than parent*/
+            name      : 'new_value', /*change default name of parameter 'name' to 'value'*/
         });
     }
 

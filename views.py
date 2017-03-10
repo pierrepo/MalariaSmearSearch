@@ -358,12 +358,12 @@ def add_anno(sample_id, col, row) :
 
 
 @app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotations/<int:anno_id>' , methods = ['PUT'])
-def update_anno_text() :
-    print(request.form['id'])
-    print(request.form['value'])
+def update_anno_text(sample_id, col, row, anno_id) :
+    print(anno_id)
+    print(request.form['new_value'])
 
-    anno = Annotation.query.get( request.form['id'] )
-    anno.annotation = request.form['value']
+    anno = Annotation.query.get(anno_id)
+    anno.annotation = request.form['new_value']
     print (anno.annotation)
     anno.date = datetime.datetime.utcnow().isoformat()
     #TODO : make the date update automatically when setting a field -> use setter decorator
