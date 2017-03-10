@@ -32,6 +32,34 @@
 
     	{% endfor %}
     	</ul>
+
+
+
+
+        <table>
+
+            <!-- Col names -->
+            <!-- use col names to set table header : -->
+            <thead>
+                <tr>
+                    {%for e in colnames%}
+                        <th>{{e}}</th>
+                    {%endfor%}
+                </tr>
+            </thead>
+            <!-- Do the same to set the table footer : -->
+            <tfoot>
+                <tr>
+                    {%for e in colnames%}
+                        <th>{{e}}</th>
+                    {%endfor%}
+                </tr>
+            </tfoot>
+
+        </table>
+
+
+
     {% else %}
         No sample was uploaded, yet.
     {% endif %}

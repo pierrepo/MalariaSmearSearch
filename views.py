@@ -226,7 +226,9 @@ def browse():
             print (count)
             nb_annotations[sample_idx].append(count)
 
-    return render_template('browse.html', samples = samples, nb_annotations = nb_annotations, enumerate=enumerate)
+    colnames=['sample id', 'date upload', 'user', 'row idx', 'col idx', 'total number of annnotations', 'number of annotated parasites', 'date of the first annotation', 'date of the last annotation']
+
+    return render_template('browse.html', samples = samples, nb_annotations = nb_annotations, colnames = colnames, enumerate=enumerate)
 
 @app.route('/download/<sample_id>')
 def download(sample_id):
