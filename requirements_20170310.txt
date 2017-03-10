@@ -1,6 +1,7 @@
 appdirs==1.4.0
 click==6.7
 Flask==0.12
+Flask-JSGlue==0.3.1
 Flask-Login==0.4.0
 Flask-SQLAlchemy==2.1
 Flask-Uploads==0.2.1

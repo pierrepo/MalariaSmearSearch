@@ -45,12 +45,18 @@ def test():
     """
     return "here you are ! in a restricted area, oh my gosh"
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/samples/upload', methods=['GET'])
 @login_required
 def upload():
     """
     View of the page where logged in users can access the form to upload samples.
     """
+    form = UploadForm()
+    return render_template('upload.html', form = form)
+
+@app.route('/samples/', methods=['POST'])
+@login_required
+def add_sample():
     form = UploadForm()
 
     if form.validate_on_submit() : # -> it is a POST request and it is valid
@@ -81,16 +87,11 @@ def upload():
                 name = new_sample.filename
             )
 
-            print('The new sample (with id {0}) has been uploaded and added to the database'.format(new_sample.id))
-            flash('The new sample (with id {0}) has been uploaded and added to the database.'.format(new_sample.id), category = 'succes')
-
             # cut the sample into chunks :
             new_sample.make_chunks()
 
-            print('To make the annotation easier, the image has been split into {0} chunks.'.format(new_sample.num_col * new_sample.num_row))
-            flash('To make the annotation easier, the image has been split into {0} chunks.'.format(new_sample.num_col * new_sample.num_row), category = 'succes')
+            return redirect( url_for('uploaded', sample_id = new_sample.id) )
 
-            return render_template('choice_after_upload.html', sample = new_sample )
 
         except Exception as e:
             # TODO : catch the different kind of exception that could occurred.
@@ -98,9 +99,24 @@ def upload():
             db.session.rollback()
             print('An error occurred accessing the database.')
             flash('An error occurred accessing the database.', category = 'error')
-            redirect('/')
+            return redirect( url_for('index') )
 
-    return render_template('upload.html', form = form)
+
+@app.route('/samples/<int:sample_id>/uploaded', methods=['GET'])
+@login_required
+def uploaded(sample_id):
+
+    new_sample = Sample.query.get(sample_id)
+    new_sample.init_on_load()
+
+    print('New sample was uploded and added to database, its id is {0}'.format(new_sample.id))
+    flash('New sample was uploded and added to database, its id is {0}.'.format(new_sample.id), category = 'succes')
+
+    print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_sample.num_col * new_sample.num_row))
+    flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_sample.num_col * new_sample.num_row), category = 'succes')
+
+    return render_template('choice_after_upload.html', sample = new_sample )
+
 
 @app.route("/")
 def index():
@@ -151,7 +167,7 @@ def signup():
                 print (e)
                 db.session.rollback()
                 print('An error occurred accessing the database.')
-                redirect('/')
+                return redirect(url_for('index'))
 
     return render_template('signup.html', form=form)
 
@@ -197,7 +213,7 @@ def logout():
     # TODO : what happen if a logout user access logout page ?
     logout_user()
     flash("Logged out successfully", category='succes')
-    return redirect('/')
+    return redirect(url_for('index'))
 
 @app.route("/account")
 def account():
@@ -207,7 +223,7 @@ def account():
     #TODO
     return render_template('account-page.html')
 
-@app.route('/browse')
+@app.route('/samples/')
 def browse():
     # list uploaded sample in db :
     samples = Sample.query.all()
@@ -262,7 +278,7 @@ def browse():
 
     return render_template('browse.html', samples = samples, nb_annotations = nb_annotations, colnames = colnames, rows = rows, enumerate=enumerate)
 
-@app.route('/download/<sample_id>')
+@app.route('/samples/<int:sample_id>')
 def download(sample_id):
     #sample_id = secure_filename(sample_id)
     sample = Sample.query.get(sample_id) # Primary Key
@@ -276,7 +292,7 @@ def download(sample_id):
         return redirect(url_for('browse'))
 
 
-@app.route('/chunks/<int:sample_id>/<int:col>/<int:row>')
+@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>')
 def get_chunk_url(sample_id, col, row):
     sample = Sample.query.get(sample_id) # Primary Key
     sample.init_on_load()
@@ -285,7 +301,7 @@ def get_chunk_url(sample_id, col, row):
     resp.content_type = "image/jpeg"
     return resp
 
-@app.route('/chunks/<int:sample_id>/<int:col>/<int:row>/annotations/')
+@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotations/')
 def get_chunk_annotation(sample_id, col, row):
 
     # get all the annotation that are made on current chunk :
@@ -305,7 +321,7 @@ def about() :
     return render_template ('about.html')
 
 
-@app.route('/annotate_chunk/<int:sample_id>/<int:col>/<int:row>')
+@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotate/')
 def annotate_chunk(sample_id, col, row):
     print(sample_id, col, row)
     sample = Sample.query.get(sample_id)
@@ -326,7 +342,7 @@ def annotate_chunk(sample_id, col, row):
     return render_template('annotate-chunk.html', sample_id=sample_id, col=col, row=row )
 
 
-@app.route('/chunks/<int:sample_id>/<int:col>/<int:row>/annotations/' , methods = ['POST'])
+@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotations/' , methods = ['POST'])
 @login_required
 def add_anno(sample_id, col, row) :
 
@@ -371,18 +387,18 @@ def add_anno(sample_id, col, row) :
         print (e)
         db.session.rollback()
         print('An error occurred accessing the database.')
-        redirect('/')
+        return redirect(url_for('index'))
 
     return jsonify(new_anno.id)
 
 
-@app.route('/update_anno_text' , methods = ['POST'])
-def update_anno_text() :
-    print(request.form['id'])
-    print(request.form['value'])
+@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotations/<int:anno_id>' , methods = ['POST'])
+def update_anno_text(sample_id, col, row, anno_id) :
+    print(anno_id)
+    print(request.form['new_value'])
 
-    anno = Annotation.query.get( request.form['id'] )
-    anno.annotation = request.form['value']
+    anno = Annotation.query.get(anno_id)
+    anno.annotation = request.form['new_value']
     print (anno.annotation)
     anno.date = datetime.datetime.utcnow().isoformat()
     #TODO : make the date update automatically when setting a field -> use setter decorator
@@ -396,17 +412,16 @@ def update_anno_text() :
         print (e)
         db.session.rollback()
         print('An error occurred accessing the database.')
-        redirect('/')
         return '', 500
 
 
 
-@app.route('/del_anno' , methods = ['DELETE'])
-def del_anno() :
-    print(request.form['id'])
+@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotations/<int:anno_id>' , methods = ['DELETE'])
+def del_anno(sample_id, col, row, anno_id) :
+    print(anno_id)
 
     try :
-        Annotation.query.filter_by(id= request.form['id'] ).delete()
+        Annotation.query.filter_by(id=anno_id).delete()
         db.session.commit()
         print('anno was deleted drom the database')
         return '', 200
@@ -415,5 +430,4 @@ def del_anno() :
         print (e)
         db.session.rollback()
         print('An error occurred accessing the database.')
-        redirect('/')
         return '', 500

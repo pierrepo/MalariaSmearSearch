@@ -30,7 +30,7 @@ $(document).ready(function(){
         // the action button events are bind automatically,
         // but ensure the click-to-edit functionality is working
         // on newly appended list items even before a page refresh :
-        makeEditable("#annotations-list li[name="+new_anno.name+"]");
+        makeEditable("#annotations-list li[name="+new_anno.name+"] span");
 
         // add the annotation as a rect on the anno layer of the anno stage
         console.log(new_anno) ;
@@ -188,7 +188,7 @@ $(document).ready(function(){
     //***  fetch image :
     image_loaded = false ;
     var imageObj = new Image();
-    imageObj.src = img_source;
+    imageObj.src = Flask.url_for("get_chunk_url", {"sample_id": sample_id, "col":col, "row":row});
 
     // once the image is loaded :
     imageObj.onload = function() {
@@ -256,7 +256,9 @@ $(document).ready(function(){
 
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
     $.getJSON(
-        '/chunks/'+sample_id+'/'+col+'/'+row+'/annotations/',
+
+        Flask.url_for("get_chunk_annotation", {"sample_id":sample_id , "col":col, "row":row}),
+
         function(data){
             console.log(data);
 
@@ -271,20 +273,8 @@ $(document).ready(function(){
                 console.log(obj);
             }
 
-            // wrap list item text in a span, and appply functionality buttons
-            $("#annotations-list li")
-                .wrapInner("<span>")
-                .append("<button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button>");
-
-            // make annotation selects editable :
-            makeEditable("#annotations-list li span");
-
-
             data_loaded = true ;
             init_anno(data) ;
-
-            // TODO : put data as li in annotation list. NB : name will begin with 1 because sqlite autoincrement begin from 1.
-            // make li name derived from annotation item name / id
         }
     );
 
@@ -364,7 +354,7 @@ $(document).ready(function(){
             tooltip message
             text in the saving button
         */
-        $(editableTarget).editable("/update_anno_text", {
+        $(editableTarget).editable(Flask.url_for("update_anno_text", {"sample_id":sample_id , "col":col, "row":row, "anno_id":$(editableTarget).closest("li").attr("name")}), {
             event     : 'dblclick', /*event triggering the edition*/
             tooltip   : 'Double-click to edit...', /*tooltip msg*/
             submit    : 'Save', /*message on the submit button*/
@@ -378,8 +368,7 @@ $(document).ready(function(){
 
             /*NB for server side : */
             method    : 'POST', /*the default = POST TODO : think about PUT*/
-            name      : 'value', /*change default name of parameter 'name' to 'value'*/
-            submitdata: { id : $(editableTarget).closest("li").attr("name") } /*return li parent attr. use closest function because it is more foolproof than parent*/
+            name      : 'new_value', /*change default name of parameter 'name' to 'value'*/
         });
     }
 
@@ -414,10 +403,8 @@ $(document).ready(function(){
             console.log("deleeeete");
             $.ajax({
 
-                url : '/del_anno',
+                url : Flask.url_for("del_anno", {"sample_id":sample_id , "col":col, "row":row, "anno_id": $(this).closest("li").attr("name")}),
                 type: "DELETE", /*TODO : REST - the DELETE method requests thant the origin server delete the resource identified by the request URI*/
-                data : {'id': $(this).closest("li").attr("name")},
-
 
                 success: function(r){
                     thiscache
@@ -452,7 +439,7 @@ $(document).ready(function(){
 
         $.ajax({
 
-            url : '/chunks/'+sample_id+'/'+col+'/'+row+'/annotations/',
+            url :  Flask.url_for("add_anno", {"sample_id":sample_id , "col":col, "row":row}),
             type: "POST",
             data : $('#add-new').serialize(),
 

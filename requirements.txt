@@ -1,4 +1,5 @@
 Flask
+Flask-JSGlue
 Flask-Login
 Flask-SQLAlchemy
 Flask-Uploads
