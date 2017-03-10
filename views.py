@@ -166,7 +166,7 @@ def signup():
                 print (e)
                 db.session.rollback()
                 print('An error occurred accessing the database.')
-                redirect('/')
+                return redirect(url_for('index'))
 
     return render_template('signup.html', form=form)
 
@@ -212,7 +212,7 @@ def logout():
     # TODO : what happen if a logout user access logout page ?
     logout_user()
     flash("Logged out successfully", category='succes')
-    return redirect('/')
+    return redirect(url_for('index'))
 
 @app.route("/account")
 def account():
@@ -352,7 +352,7 @@ def add_anno(sample_id, col, row) :
         print (e)
         db.session.rollback()
         print('An error occurred accessing the database.')
-        redirect('/')
+        return redirect(url_for('index'))
 
     return jsonify(new_anno.id)
 
@@ -377,7 +377,6 @@ def update_anno_text() :
         print (e)
         db.session.rollback()
         print('An error occurred accessing the database.')
-        redirect('/')
         return '', 500
 
 
@@ -396,5 +395,4 @@ def del_anno() :
         print (e)
         db.session.rollback()
         print('An error occurred accessing the database.')
-        redirect('/')
         return '', 500
