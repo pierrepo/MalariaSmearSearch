@@ -32,7 +32,68 @@
 
     	{% endfor %}
     	</ul>
+
+
+
+
+        <table id = "browseTable" class = "display" >
+            <!-- class = "display" -> row color alternate, increasing lisibility -->
+
+            <!-- Col names -->
+            <!-- use col names to set table header : -->
+            <thead>
+                <tr>
+                    {%for e in colnames%}
+                        <th>{{e}}</th>
+                    {%endfor%}
+                </tr>
+            </thead>
+            <!-- Do the same to set the table footer : -->
+            <tfoot>
+                <tr>
+                    {%for e in colnames%}
+                        <th>{{e}}</th>
+                    {%endfor%}
+                </tr>
+            </tfoot>
+
+            <!-- Fill table body with data -->
+            <tbody>
+                {%for row in rows%}
+                    <tr>
+                        {%for col in row%}
+                            <td>{{col}}</td>
+                        {%endfor%}
+                        <td>
+                            <a href="{{ url_for('annotate_chunk', sample_id = row[0], col = row[4], row = row[3] ) }}">
+                            annotate this chunk
+                            </a>
+                        </td>
+                    </tr>
+                {%endfor%}
+            </tbody>
+
+        </table>
+
+
+
     {% else %}
         No sample was uploaded, yet.
     {% endif %}
+{% endblock %}
+
+
+
+
+{% block imports %}
+    {{super()}}
+    <link  href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        $('#browseTable').DataTable();
+    } );
+    </script>
+
 {% endblock %}

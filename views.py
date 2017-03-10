@@ -92,6 +92,7 @@ def add_sample():
 
             return redirect( url_for('uploaded', sample_id = new_sample.id) )
 
+
         except Exception as e:
             # TODO : catch the different kind of exception that could occurred.
             print (e)
@@ -241,7 +242,41 @@ def browse():
             print (count)
             nb_annotations[sample_idx].append(count)
 
-    return render_template('browse.html', samples = samples, nb_annotations = nb_annotations, enumerate=enumerate)
+    colnames=['sample id', 'date upload', 'user', 'row idx', 'col idx', 'total number of annnotations', 'number of annotated parasites', 'date of the first annotation', 'date of the last annotation']
+
+    rows = []
+    for sample_idx, sample in enumerate (samples) :
+
+        for (chunk_col, chunk_row) in sample.chunks_numerotation :
+
+            chunk_anno = sample.annotations.filter(Annotation.col==chunk_col, Annotation.row==chunk_row)
+            tot_num_anno = chunk_anno.count()
+            num_para = sum(anno.annotation.startswith("P") for anno in chunk_anno)
+            try:
+                first_anno_date = min(anno.date for anno in chunk_anno)
+                last_anno_date = max(anno.date for anno in chunk_anno)
+            except (ValueError, TypeError):
+                print('empty datetime list')
+                first_anno_date = None
+                last_anno_date = None
+
+            row = [
+                sample.id,
+                None,
+                sample.username,
+                chunk_row,
+                chunk_col,
+                tot_num_anno,
+                num_para,
+                first_anno_date,
+                last_anno_date
+            ]
+            print (row)
+            print('=============================================')
+
+            rows.append(row)
+
+    return render_template('browse.html', samples = samples, nb_annotations = nb_annotations, colnames = colnames, rows = rows, enumerate=enumerate)
 
 @app.route('/samples/<int:sample_id>')
 def download(sample_id):

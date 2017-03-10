@@ -27,6 +27,7 @@ class UploadForm(FlaskForm):
             ('thin',  'Thin'),
             ], validators=[Required()] )
     comment = TextField('Comment', validators=[ Length( max=256)])
+    source = TextField('Source', validators=[ Length( max=250)])
     magnification =IntegerField ('Magnification', validators=[Required()], render_kw={"placeholder": "e.g. 100"})
     microscope_model = TextField ('Microscope model',  validators=[Required()])
 
@@ -37,7 +38,7 @@ class LoginForm(FlaskForm):
     """
     Form for user login.
     """
-    username = TextField('Username', validators=[Required(), Length(min=8, max=80)])
+    username = TextField('Username', validators=[Required(), Length(min=5, max=80)])
     password = PasswordField('Password', validators=[Required()])
     idle_ttl = RadioField('Idle Session Timeout', default='tmp', choices=[
             ('tmp',  '20 minutes'),

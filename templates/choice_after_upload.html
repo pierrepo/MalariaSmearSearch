@@ -3,45 +3,45 @@
 {% block title %}Upload done{% endblock %}
 
 {% block content %}
-    What do you want to do now?
+    <h2>What's your next move?</h2>
 
     <div class="row">
         <ul>
             <div class="col-sm-4">
+
                 <li>
                   <img src="{{ url_for('static', filename='img/logo-add-annotation.svg') }}" alt="add annotations icon" style="width:100%">
                   <div class="caption">
                     Annotate the chunk
-                        {% for (chunk_col, chunk_row) in sample.chunks_numerotation %}
-                            <a href="{{url_for('annotate_chunk',sample_id=sample.id, col=chunk_col, row=chunk_row) }}" target="_self" class="thumbnail">
-                                {{sample.get_chunk_filename ( chunk_col, chunk_row ) }}
-                            </a>
-                        {% endfor %}
-                    </select>
-                    of the newly uploaded sample
-                  </div>
-                </li>
-            </div>
 
+                        {% for (chunk_col, chunk_row) in sample.chunks_numerotation %}
+                            <p class="thumbnail">
+                            <a href="{{url_for('annotate_chunk',sample_id=sample.id, col=chunk_col, row=chunk_row) }}" 
+                               target="_self">
+                                chunk {{chunk_col + chunk_row}}: {{ sample.get_chunk_filename ( chunk_col, chunk_row ) }}
+                            </a>
+                            </p>
+                        {% endfor %}
+            </div>
             <div class="col-sm-4">
-                <li>
+                    <h3>
                     <a href="{{ url_for('upload') }}" target="_self" class="thumbnail">
                         <img  src="{{ url_for('static', filename='img/logo-add-image.svg') }}" alt="add image icon" style="width:100%">
                         <div class="caption">
+
                         Upload another sample
-                        </div>
                     </a>
-                </li>
+                    </h3>
             </div>
             <div class="col-sm-4">
-                <li>
+                    <h3>
                     <a href="{{ url_for('index') }}" target="_self" class="thumbnail">
                         <img  src="{{ url_for('static', filename='img/logo-home.svg') }}" alt="home icon" style="width:100%">
                         <div class="caption">
+
                         Go back home
-                        </div>
                     </a>
-                </li>
+                    </h3>
             </div>
         </ul>
     </div>
