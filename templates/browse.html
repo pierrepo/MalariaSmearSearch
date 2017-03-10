@@ -56,6 +56,17 @@
                 </tr>
             </tfoot>
 
+            <!-- Fill table body with data -->
+            <tbody>
+                {%for row in rows%}
+                    <tr>
+                        {%for col in row%}
+                            <td>{{col}}</td>
+                        {%endfor%}
+                    </tr>
+                {%endfor%}
+            </tbody>
+
         </table>
 
 
