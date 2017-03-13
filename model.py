@@ -113,15 +113,19 @@ class Sample(db.Model):
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
 
-    def __init__(self, num_col = 2, num_row = 2):
+    def __init__(self):
         """
 
         self.chunks_numerotation : list of tuples of 2 int
             (col, row) coordinates of the chunk
             for each chunk
         """
-        self.num_col = num_col
-        self.num_row = num_row
+
+        # get the number of pieces using integer division :
+        with Image.open(self.path) af img :
+            width, height = img.size
+            self.num_col = width // 1000
+            self.num_row = height // 1000
 
     #@sqlalchemy.orm.reconstructor # do not seems to work TODO : find why
     def init_on_load(self):
@@ -191,7 +195,7 @@ class Sample(db.Model):
 
     def make_chunks(self):
         """
-        Slice an image into (default : 4) equal parts.
+        Slice an image into equal parts.
         """
         chunks_coords = self.get_chunks_infos()
         for chunk_idx, chunk_coords in enumerate(chunks_coords) :
