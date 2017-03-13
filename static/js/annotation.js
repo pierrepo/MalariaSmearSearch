@@ -252,6 +252,7 @@ $(document).ready(function(){
 
 
     //*** fetch corresponding annotation data :
+    var data = []; // global var
     data_loaded = false ;
 
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -259,12 +260,12 @@ $(document).ready(function(){
 
         Flask.url_for("get_chunk_annotation", {"sample_id":sample_id , "col":col, "row":row}),
 
-        function(data){
-            console.log(data);
+        function(received_data){
+            console.log(received_data);
 
             Flash.success('Annotation was retrieved from the server', 3000);
-            for(var i = 0; i < data.length; i++) {
-                var obj = data[i];
+            for(var i = 0; i < received_data.length; i++) {
+                var obj = received_data[i];
 
                 obj.stroke = 'black';
                 obj.strokeWidth = 4;
@@ -274,17 +275,20 @@ $(document).ready(function(){
             }
 
             data_loaded = true ;
-            init_anno(data) ;
+            data = received_data; // set the global var
+            init_anno() ;
         }
     );
 
     /* Render the loaded annotations on the loaded chunk */
 
-    function init_anno(data = []){
+    function init_anno(){ // use global var data
         console.log("data_loaded", data_loaded, "image_loaded", image_loaded);
         if(data_loaded && image_loaded) {
         // once image is loaded
         // AND once data are loaded
+            console.log( '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            console.log(data)
             // render (false) annotations = add the shape to the layer // TODO : is there a for each loop in js ?
             for(var i = 0; i < data.length; i++) {
                 addAnnoView(data[i]);
