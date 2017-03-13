@@ -120,20 +120,17 @@ class Sample(db.Model):
             (col, row) coordinates of the chunk
             for each chunk
         """
-
-        # get the number of pieces using integer division :
-        # chunk dimensions are always BELOW 1000 px
-        with Image.open(self.path) as img :
-            width, height = img.size
-            self.num_col = (width // 1000) + 1
-            self.num_row = (height // 1000) + 1
+        pass
 
     #@sqlalchemy.orm.reconstructor # do not seems to work TODO : find why
     def init_on_load(self):
         """
         http://docs.sqlalchemy.org/en/latest/orm/constructors.html
         """
-        self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
+        try :
+            self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
+        except :
+            print ('chunk_numerotation could not be initialize. num_col and num_row missing')
         self.filename = '{0}.{1}'.format(self.id, self.extension )
         self.path = samples_set.path(self.filename)
 

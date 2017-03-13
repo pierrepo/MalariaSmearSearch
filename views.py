@@ -87,6 +87,16 @@ def add_sample():
                 name = new_sample.filename
             )
 
+            # get the number of pieces using integer division :
+            # chunk dimensions are always BELOW 1000 px
+            with Image.open(new_sample.path) as img :
+                width, height = img.size
+                print (width, height)
+                new_sample.num_col = (width // 1000) + 1
+                new_sample.num_row = (height // 1000) + 1
+            new_sample.init_on_load()
+            db.session.commit()
+
             # cut the sample into chunks :
             new_sample.make_chunks()
 
