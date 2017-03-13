@@ -123,7 +123,7 @@ class Sample(db.Model):
 
         # get the number of pieces using integer division :
         # chunk dimensions are always BELOW 1000 px
-        with Image.open(self.path) af img :
+        with Image.open(self.path) as img :
             width, height = img.size
             self.num_col = (width // 1000) + 1
             self.num_row = (height // 1000) + 1
