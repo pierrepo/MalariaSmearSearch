@@ -133,69 +133,44 @@ class Sample(db.Model):
         self.path = samples_set.path(self.filename)
 
 
-    def get_chunks_infos(self) :
-        """
-        Get infos (numerotation and coordinates) of desired chunks
-
-        Return :
-        ---------
-        chunks_coords : iterator
-            for each chunk :
-            ((left , upper) , (right , lower))
-            pixel coordinates of the chunk
-        """
-        img = Image.open(self.path)
-        width, height = img.size
-
-        # compute crop properties using image measure
-        # and the wanted number of pieces
-        width_crop_col = width / self.num_col
-        width_crop_row = height / self.num_row
-
-        # values in cut_col and cut_row represent Cartesian pixel coordinates.
-        # 0,0 is up left
-        # the norm between 2 ticks on horizontal x axis is width_crop_col
-        # the norm between 2 ticks on vertical y axis is width_crop_row
-        cut_col = [width_crop_col * e for e in range (self.num_col +1)]
-        cut_row = [width_crop_row * e for e in range (self.num_row +1)]
-        # +1 in order to have coord of rigth limit of the image
-
-        chunks_starting_coords = itertools.product(cut_col[:-1], cut_row[:-1])
-        chunks_ending_coords = itertools.product(cut_col[1:], cut_row[1:])
-
-        chunks_coords = zip (chunks_starting_coords, chunks_ending_coords)
-
-        return chunks_coords
-
-
-    def crop(self, chunk_numerotation, coords):
-        """ Crop the sample to the given coord
-
-        Arguments :
-        -----------
-        chunk_numerotation : tuple of 2 inserting-records
-            (col, row)
-
-        coords : tuple of 2 tuple of 2 ints
-            coordinates of the crop :
-            ( (left, upper), (right , lower) )
-        """
-
-        chunk_col, chunk_row = chunk_numerotation
-        chunk_path = self.get_chunk_path (chunk_col, chunk_row )
-
-        img = Image.open(self.path)
-        box = list(itertools.chain.from_iterable(coords)) #(left , upper , right , lower) # pixel coords of the chunk
-        new_chunk = img.crop(box)
-        new_chunk.save (chunk_path)
-
     def make_chunks(self):
         """
         Slice an image into (default : 4) equal parts.
         """
-        chunks_coords = self.get_chunks_infos()
-        for chunk_idx, chunk_coords in enumerate(chunks_coords) :
-            self.crop (self.chunks_numerotation[chunk_idx], chunk_coords)
+
+        with Image.open(self.path) as img :
+            #----------
+            # get chunk infos (numerotation and coordinates) of desired chunks
+            width, height = img.size
+
+            # compute crop properties using image measure
+            # and the wanted number of pieces
+            width_crop_col = width / self.num_col
+            width_crop_row = height / self.num_row
+
+            # values in cut_col and cut_row represent Cartesian pixel coordinates.
+            # 0,0 is up left
+            # the norm between 2 ticks on horizontal x axis is width_crop_col
+            # the norm between 2 ticks on vertical y axis is width_crop_row
+            cut_col = [width_crop_col * e for e in range (self.num_col +1)]
+            cut_row = [width_crop_row * e for e in range (self.num_row +1)]
+            # +1 in order to have coord of rigth limit of the image
+
+            chunks_starting_coords = itertools.product(cut_col[:-1], cut_row[:-1])
+            chunks_ending_coords = itertools.product(cut_col[1:], cut_row[1:])
+
+            chunks_coords = zip (chunks_starting_coords, chunks_ending_coords)
+            #iterator. for each chunk :
+            #((left , upper) , (right , lower))
+            #pixel coordinates of the chunk
+
+            #----------
+            for chunk_idx, chunk_coords in enumerate(chunks_coords) :
+                chunk_col, chunk_row  = chunks_numerotation[chunk_idx]
+                chunk_path = self.get_chunk_path (chunk_col, chunk_row )
+                box = list(itertools.chain.from_iterable(coords)) #(left , upper , right , lower) # pixel coords of the chunk
+                new_chunk = img.crop(box)
+                new_chunk.save (chunk_path)
 
 
     def get_chunk_filename(self, chunk_col, chunk_row) :
