@@ -113,29 +113,31 @@ class Sample(db.Model):
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
 
-    def __init__(self, num_col = 2, num_row = 2):
+    def __init__(self):
         """
 
         self.chunks_numerotation : list of tuples of 2 int
             (col, row) coordinates of the chunk
             for each chunk
         """
-        self.num_col = num_col
-        self.num_row = num_row
+        pass
 
     #@sqlalchemy.orm.reconstructor # do not seems to work TODO : find why
     def init_on_load(self):
         """
         http://docs.sqlalchemy.org/en/latest/orm/constructors.html
         """
-        self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
+        try :
+            self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
+        except :
+            print ('chunk_numerotation could not be initialize. num_col and num_row missing')
         self.filename = '{0}.{1}'.format(self.id, self.extension )
         self.path = samples_set.path(self.filename)
 
 
     def make_chunks(self):
         """
-        Slice an image into (default : 4) equal parts.
+        Slice an image into equal parts.
         """
 
         with Image.open(self.path) as img :
