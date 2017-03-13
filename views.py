@@ -88,12 +88,12 @@ def add_sample():
             )
 
             # get the number of pieces using integer division :
-            # chunk dimensions are always BELOW 1000 px
+            # chunk dimensions are always BELOW Sample.MAX_CHUNK_SIZE px
             with Image.open(new_sample.path) as img :
                 width, height = img.size
                 print (width, height)
-                new_sample.num_col = (width // 1000) + 1
-                new_sample.num_row = (height // 1000) + 1
+                new_sample.num_col = (width // Sample.MAX_CHUNK_SIZE) + 1
+                new_sample.num_row = (height // Sample.MAX_CHUNK_SIZE) + 1
             new_sample.init_on_load()
             db.session.commit()
 
