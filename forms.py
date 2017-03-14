@@ -28,7 +28,7 @@ class UploadForm(FlaskForm):
             ], validators=[Required()] )
     comment = TextField('Comment', validators=[ Length( max=256)])
     source = TextField('Source', validators=[ Length( max=250)])
-    magnification =IntegerField ('Magnification', validators=[Required()], render_kw={"placeholder": "e.g. 100"})
+    magnification =IntegerField ('Magnification', render_kw={"placeholder": "e.g. 100"})
     microscope_model = TextField ('Microscope model',  validators=[Required()])
 
     submit = SubmitField('Upload image')
