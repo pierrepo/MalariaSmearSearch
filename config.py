@@ -9,7 +9,7 @@ class Config(object):
     # configaration of Flask-SQLAlchemy
 
     # which db :
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db' #'sqlite://:memory:'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///from-Internet.db' #'sqlite://:memory:'
     #engine://user:password@host:port/database
 
     #-----
