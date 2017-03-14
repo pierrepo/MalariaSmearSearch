@@ -97,7 +97,6 @@ class Sample(db.Model):
     comment  = db.Column(db.Text)
     source  = db.Column(db.String(250))
     magnification  = db.Column(db.Integer)
-    microscope_model  = db.Column(db.String(20))
 
     num_col = db.Column(db.Integer)
     num_row = db.Column(db.Integer)
