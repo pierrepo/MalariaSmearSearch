@@ -6,7 +6,7 @@ They have several fields defined, and a CSRF token hidden field that is created
 automatically.
 """
 from flask_wtf import FlaskForm
-from wtforms.fields import TextField, BooleanField, PasswordField, RadioField, SubmitField, TextField, IntegerField
+from wtforms.fields import TextField, BooleanField, PasswordField, RadioField, SubmitField, TextField, IntegerField, TextAreaField
 from wtforms.validators import Optional,  Required, Email, EqualTo, Length
 from flask_uploads import UploadSet, IMAGES
 from flask_wtf.file import FileField, FileAllowed, FileRequired
@@ -26,8 +26,8 @@ class UploadForm(FlaskForm):
             ('thick',  'Thick'),
             ('thin',  'Thin'),
             ], validators=[Required()] )
-    comment = TextField('Comment', validators=[ Length( max=256)])
-    source = TextField('Source', validators=[ Length( max=250)])
+    comment = TextAreaField('Comment', validators=[ Length( max=256)], render_kw={"rows": 3, "cols": 70})
+    source = TextAreaField('Source', validators=[ Length( max=250)], render_kw={"rows": 3, "cols": 70})
     magnification =IntegerField ('Magnification', validators=[Required()], render_kw={"placeholder": "e.g. 100"})
     microscope_model = TextField ('Microscope model',  validators=[Required()])
 
