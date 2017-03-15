@@ -9,6 +9,7 @@ from flask_wtf import FlaskForm
 from wtforms.fields import TextField, BooleanField, PasswordField, RadioField, SubmitField, TextField, IntegerField
 from wtforms.validators import Optional,  Required, Email, EqualTo, Length
 from flask_uploads import UploadSet, IMAGES
+from flask_wtf.html5 import NumberInput
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 import app
@@ -28,7 +29,7 @@ class UploadForm(FlaskForm):
             ], validators=[Required()] )
     comment = TextField('Comment', validators=[ Length( max=256)])
     source = TextField('Source', validators=[ Length( max=250)])
-    magnification =IntegerField ('Magnification', validators=[Required()], render_kw={"placeholder": "e.g. 100"})
+    magnification =IntegerField ('Magnification', validators=[Required()], default=1000, render_kw={"placeholder": "e.g. 100"}, widget=NumberInput())
     microscope_model = TextField ('Microscope model',  validators=[Required()])
 
     submit = SubmitField('Upload image')
