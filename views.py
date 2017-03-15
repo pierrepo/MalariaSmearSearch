@@ -245,7 +245,7 @@ def browse():
 
     for sample_idx, sample in enumerate(samples) :
         for (chunk_col, chunk_row) in sample.chunks_numerotation :
-            count = Annotation.query.filter_by(
+            count = new_model.Annotation.query.filter_by(
                 sample_id = sample.id,
                 col = chunk_col,
                 row = chunk_row
@@ -260,7 +260,7 @@ def browse():
 
         for (chunk_col, chunk_row) in sample.chunks_numerotation :
 
-            chunk_anno = sample.annotations.filter(Annotation.col==chunk_col, Annotation.row==chunk_row)
+            chunk_anno = sample.annotations.filter(new_model.Annotation.col==chunk_col, new_model.Annotation.row==chunk_row)
             tot_num_anno = chunk_anno.count()
             num_para = sum(anno.annotation.startswith("P") for anno in chunk_anno)
             try:
@@ -316,7 +316,7 @@ def get_chunk_url(sample_id, col, row):
 def get_chunk_annotation(sample_id, col, row):
 
     # get all the annotation that are made on current chunk :
-    annotations = Annotation.query.filter_by(sample_id=sample_id, col = col, row = row).all()
+    annotations = new_model.Annotation.query.filter_by(sample_id=sample_id, col = col, row = row).all()
     #query.with_entities(SomeModel.col1, SomeModel.col2) #select colum for the return
 
     # model is not JSON serializable
@@ -369,7 +369,7 @@ def add_anno(sample_id, col, row) :
     height =  request.form['height']
     annotation =  request.form['new-list-item-text']
 
-    new_anno = Annotation(
+    new_anno = new_model.Annotation(
         current_user,
         sample,
         (col, row),
@@ -408,7 +408,7 @@ def update_anno_text(sample_id, col, row, anno_id) :
     print(anno_id)
     print(request.form['new_value'])
 
-    anno = Annotation.query.get(anno_id)
+    anno = new_model.Annotation.query.get(anno_id)
     anno.annotation = request.form['new_value']
     print (anno.annotation)
     anno.date = datetime.datetime.utcnow().isoformat()
@@ -432,7 +432,7 @@ def del_anno(sample_id, col, row, anno_id) :
     print(anno_id)
 
     try :
-        Annotation.query.filter_by(id=anno_id).delete()
+        new_model.Annotation.query.filter_by(id=anno_id).delete()
         db.session.commit()
         print('anno was deleted drom the database')
         return '', 200
