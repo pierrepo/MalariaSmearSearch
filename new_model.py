@@ -30,8 +30,18 @@ import itertools
 import datetime
 
 
-# Whan table already exist, we do not need to redefine them
-# we can just load them from the database using the "autoload" feature.
+# Many to many relationship
+# http://flask-sqlalchemy.pocoo.org/2.1/models/#many-to-many-relationships
+# https://techarena51.com/index.php/many-to-many-relationships-with-flask-sqlalchemy/
+# http://stackoverflow.com/questions/25668092/flask-sqlalchemy-many-to-many-insert-data
+
+institutions = db.Table('institutions',
+    db.Column('username', db.Column(db.String(30), db.ForeignKey('users_path.username')),
+    db.Column('institution_name', db.Column(db.String(50), db.ForeignKey('institution.name')),
+    db.Column('original', db.Boolean),
+    db.PrimaryKeyConstraint('username', 'institution_name')
+)
+
 
 class User_auth(db.Model, UserMixin):
     """
@@ -84,9 +94,7 @@ class Institution(db.Model):
     __bind_key__ = 'users'
     __tablename__ = 'Institutions' # tablename
 
-    username = db.Column(db.String(30), primary_key=True)
-    institution = db.Column(db.String(50), primary_key=True)
-    original = db.Column(db.Boolean())
+    name = db.Column(db.String(50), primary_key=True)
 
 
 class User(db.Model, UserMixin):
@@ -146,7 +154,7 @@ class Sample(db.Model):
     # cascade ="all, delete-orphan”: This will delete all chunks of a sample when the referenced sample is deleted.
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
-    MAX_CHUNK_SIZE = 2000 #px
+    MAX_CHUNK_SIZE = 1000 #px
 
     def __init__(self):
         """
