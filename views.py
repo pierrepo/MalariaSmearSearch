@@ -12,7 +12,6 @@ import os
 
 from app import app, login_manager, samples_set
 from forms import RegisterForm, LoginForm, UploadForm
-from model import *
 import new_model
 
 # the route() decorator tells Flask what URL should trigger the function.

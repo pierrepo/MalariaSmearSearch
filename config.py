@@ -8,10 +8,7 @@ class Config(object):
     #-----
     # configaration of Flask-SQLAlchemy
 
-    # which db :
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db' #'sqlite://:memory:'
-
-    # new model, bind dbs :
+    # model, bind dbs :
     #http://flask-sqlalchemy.pocoo.org/2.1/binds/
     #engine://user:password@host:port/database
     SQLALCHEMY_BINDS = {
