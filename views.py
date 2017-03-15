@@ -63,7 +63,7 @@ def add_sample():
     if form.validate_on_submit() : # -> it is a POST request and it is valid
 
         # get the sample and its database attributes !
-        new_sample = Sample()
+        new_sample = new_model.Sample()
         form.populate_obj(new_sample)
         new_sample.extension = form.sample.data.filename.split('.')[-1].lower()
         # lowercase because the samples set is made from the IMAGE set
@@ -93,8 +93,8 @@ def add_sample():
             with Image.open(new_sample.path) as img :
                 width, height = img.size
                 print (width, height)
-                new_sample.num_col = (width // Sample.MAX_CHUNK_SIZE) + 1
-                new_sample.num_row = (height // Sample.MAX_CHUNK_SIZE) + 1
+                new_sample.num_col = (width // new_model.Sample.MAX_CHUNK_SIZE) + 1
+                new_sample.num_row = (height // new_model.Sample.MAX_CHUNK_SIZE) + 1
             new_sample.init_on_load()
             db.session.commit()
 
@@ -117,7 +117,7 @@ def add_sample():
 @login_required
 def uploaded(sample_id):
 
-    new_sample = Sample.query.get(sample_id)
+    new_sample = new_model.Sample.query.get(sample_id)
     new_sample.init_on_load()
 
     print('New sample was uploded and added to database, its id is {0}'.format(new_sample.id))
@@ -237,7 +237,7 @@ def account():
 @app.route('/samples/')
 def browse():
     # list uploaded sample in db :
-    samples = Sample.query.all()
+    samples = new_model.Sample.query.all()
     [sample.init_on_load() for sample in samples]
     print (samples)
 
@@ -292,7 +292,7 @@ def browse():
 @app.route('/samples/<int:sample_id>')
 def download(sample_id):
     #sample_id = secure_filename(sample_id)
-    sample = Sample.query.get(sample_id) # Primary Key
+    sample = new_model.Sample.query.get(sample_id) # Primary Key
     sample.init_on_load()
     if os.path.isfile(sample.path): # if the file exists
         # send it :
@@ -305,7 +305,7 @@ def download(sample_id):
 
 @app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>')
 def get_chunk_url(sample_id, col, row):
-    sample = Sample.query.get(sample_id) # Primary Key
+    sample = new_model.Sample.query.get(sample_id) # Primary Key
     sample.init_on_load()
     chunk_path = sample.get_chunk_path(col, row)
     resp = make_response(open(chunk_path, 'rb').read()) #open in binary mode
@@ -335,7 +335,7 @@ def about() :
 @app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotate/')
 def annotate_chunk(sample_id, col, row):
     print(sample_id, col, row)
-    sample = Sample.query.get(sample_id)
+    sample = new_model.Sample.query.get(sample_id)
     sample.init_on_load()
     chunk_path = sample.get_chunk_path(col, row)
 
@@ -360,7 +360,7 @@ def add_anno(sample_id, col, row) :
     print (current_user)
 
 
-    sample = Sample.query.get(sample_id)
+    sample = new_model.Sample.query.get(sample_id)
     sample.init_on_load()
 
     x =  request.form['x']
