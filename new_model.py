@@ -36,6 +36,7 @@ import datetime
 # http://stackoverflow.com/questions/25668092/flask-sqlalchemy-many-to-many-insert-data
 # Many to many relationship * with additional column * :
 # http://docs.sqlalchemy.org/en/latest/orm/basic_relationships.html#association-object
+# http://docs.sqlalchemy.org/en/latest/orm/extensions/associationproxy.html#simplifying-association-objects
 
 membership = db.Table('institutions',
     db.Column('username', db.Column(db.String(30), db.ForeignKey('users_path.username')),
@@ -49,8 +50,21 @@ class Membership(db.Model):
     username =  db.Column(db.String(30), db.ForeignKey('users_path.username'), primary_key=True) # left_id
     institution_name = Column(Integer, ForeignKey('right.id'), primary_key=True) #right_id
     extra_data = Column(String(50)) #extra_data
-    institution = relationship("Institution", back_populates="users_relationship")
-    user = relationship("User_auth", back_populates="institutions_relationship")
+
+    # bidirectional attribute/collection of "user"/"user_keywords"
+    user = relationship('User_auth',
+                backref=backref("user_institutions")
+            )
+
+    # reference to the "Institution" object
+    institution = relationship("Institution")
+
+    def __init__(self, institution=None, user=None, original=None):
+        self.institution = institution
+        self.user = user
+        self.original = original
+
+
 
 
 class User_auth(db.Model, UserMixin):
@@ -66,9 +80,9 @@ class User_auth(db.Model, UserMixin):
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(20))
 
-    institutions_relationship = db.relationship("Membership", back_populates="user")
-    # proxy the 'keyword' attribute from the 'kw' relationship
-    keywords = association_proxy('kw', 'keyword')
+    # association proxy of "user_institutions" collection
+    # to "institution" attribute
+    institutions = association_proxy('user_institutions', 'institution')
 
     def __repr__(self):
         """
@@ -117,8 +131,6 @@ class Institution(db.Model):
             name of the institution
         """
         self.name = name
-
-    users_relationship = relationship("Membership", back_populates="institution")
 
 
     members = db.relationship('User_aut', secondary=membership,
