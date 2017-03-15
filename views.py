@@ -8,9 +8,10 @@ import datetime
 from flask import render_template, request, redirect, url_for, Response, send_file, jsonify, make_response, flash
 from flask_login import login_required, login_user, logout_user, current_user
 import pathlib
+from PIL import Image
 import os
 
-from app import app, login_manager, samples_set
+from app import app, db, login_manager, samples_set
 from forms import RegisterForm, LoginForm, UploadForm
 import new_model
 
