@@ -99,6 +99,14 @@ class Institution(db.Model):
 
     name = db.Column(db.String(50), primary_key=True)
 
+    def __init__(self, name):
+        """
+
+        self.name : string
+            name of the institution
+        """
+        self.name = name
+
 
     members = db.relationship('User_aut', secondary=membership,
         back_populates="institutions")
