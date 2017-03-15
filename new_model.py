@@ -35,10 +35,9 @@ import datetime
 # https://techarena51.com/index.php/many-to-many-relationships-with-flask-sqlalchemy/
 # http://stackoverflow.com/questions/25668092/flask-sqlalchemy-many-to-many-insert-data
 
-institutions = db.Table('institutions',
+membership = db.Table('institutions',
     db.Column('username', db.Column(db.String(30), db.ForeignKey('users_path.username')),
     db.Column('institution_name', db.Column(db.String(50), db.ForeignKey('institution.name')),
-    db.Column('original', db.Boolean),
     db.PrimaryKeyConstraint('username', 'institution_name')
 )
 
@@ -55,6 +54,10 @@ class User_auth(db.Model, UserMixin):
     username = db.Column(db.String(30), primary_key=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(20))
+
+    institutions = db.relationship('Institution', secondary=membership,
+        back_populates="members")
+
 
     def __repr__(self):
         """
@@ -95,6 +98,10 @@ class Institution(db.Model):
     __tablename__ = 'Institutions' # tablename
 
     name = db.Column(db.String(50), primary_key=True)
+
+
+    members = db.relationship('User_aut', secondary=membership,
+        back_populates="institutions")
 
 
 class User(db.Model, UserMixin):
