@@ -25,6 +25,7 @@ http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
 from app import app, db, samples_set
 from flask_login import UserMixin
 from flask_sqlalchemy import sqlalchemy
+from sqlalchemy.ext.associationproxy import association_proxy
 from PIL import Image
 import itertools
 import datetime
@@ -38,26 +39,20 @@ import datetime
 # http://docs.sqlalchemy.org/en/latest/orm/basic_relationships.html#association-object
 # http://docs.sqlalchemy.org/en/latest/orm/extensions/associationproxy.html#simplifying-association-objects
 
-membership = db.Table('institutions',
-    db.Column('username', db.Column(db.String(30), db.ForeignKey('users_path.username')),
-    db.Column('institution_name', db.Column(db.String(50), db.ForeignKey('institution.name')),
-    db.PrimaryKeyConstraint('username', 'institution_name')
-)
-
 class Membership(db.Model):
     __bind_key__ = 'users'
     __tablename__ = 'Memberships'
-    username =  db.Column(db.String(30), db.ForeignKey('users_path.username'), primary_key=True) # left_id
-    institution_name = Column(Integer, ForeignKey('right.id'), primary_key=True) #right_id
-    extra_data = Column(String(50)) #extra_data
+    username =  db.Column(db.String(30), db.ForeignKey('Users_auth.username'), primary_key=True) # left_id
+    institution_name = db.Column(db.Integer, db.ForeignKey('Institutions.name'), primary_key=True) #right_id
+    original = db.Column(db.Boolean(50)) #extra_data
 
     # bidirectional attribute/collection of "user"/"user_keywords"
-    user = relationship('User_auth',
-                backref=backref("user_institutions")
+    user = db.relationship('User_auth',
+                backref=db.backref("user_institutions")
             )
 
     # reference to the "Institution" object
-    institution = relationship("Institution")
+    institution = db.relationship("Institution")
 
     def __init__(self, institution=None, user=None, original=None):
         self.institution = institution
