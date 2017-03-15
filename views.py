@@ -13,6 +13,7 @@ import os
 from app import app, login_manager, samples_set
 from forms import RegisterForm, LoginForm, UploadForm
 from model import *
+import new_model
 
 # the route() decorator tells Flask what URL should trigger the function.
 # the functions render associated template stored in templates folder.
@@ -32,8 +33,8 @@ def load_user(username):
     user : None / User
         the corresponding user object.
     """
-    print (User.query.filter(User.username == username).first() )
-    return User.query.filter(User.username == username).first()
+    print (new_model.User_auth.query.filter(new_model.User_auth.username == username).first() )
+    return new_model.User_auth.query.filter(new_model.User_auth.username == username).first()
 
 
 
@@ -163,7 +164,7 @@ def signup():
             # TODO : send confirmation email
 
             # Crate the user profil
-            new_user = User()
+            new_user = new_model.User_auth()
             form.populate_obj(new_user)
             print (new_user)
             print (form)
@@ -195,7 +196,7 @@ def login():
         print (form.password)
         print (form.username.data, form.password.data)
         # validate the user then log the user
-        user = User.query.filter_by(username=form.username.data).first()
+        user = new_model.User_auth.query.filter_by(username=form.username.data).first()
         if user and user.password == form.password.data :
             login_user(user)
             flash('Logged in successfully.', category='succes')
