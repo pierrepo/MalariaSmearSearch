@@ -155,7 +155,7 @@ class Sample(db.Model):
             (col, row) coordinates of the chunk
             for each chunk
         """
-        pass
+        self.date_upload = datetime.datetime.utcnow()
 
     #@sqlalchemy.orm.reconstructor # do not seems to work TODO : find why
     def init_on_load(self):
