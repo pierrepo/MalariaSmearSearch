@@ -43,8 +43,8 @@ class Membership(db.Model):
     __bind_key__ = 'users'
     __tablename__ = 'Memberships'
     username =  db.Column(db.String(30), db.ForeignKey('Users_auth.username'), primary_key=True) # left_id
-    institution_name = db.Column(db.Integer, db.ForeignKey('Institutions.name'), primary_key=True) #right_id
-    original = db.Column(db.Boolean(50)) #extra_data
+    institution_name = db.Column(db.String(50), db.ForeignKey('Institutions.name'), primary_key=True) #right_id
+    original = db.Column(db.Boolean()) #extra_data
 
     # bidirectional attribute/collection of "user"/"user_keywords"
     user = db.relationship('User_auth',
@@ -54,11 +54,20 @@ class Membership(db.Model):
     # reference to the "Institution" object
     institution = db.relationship("Institution")
 
-    def __init__(self, institution=None, user=None, original=None):
-        self.institution = institution
+
+    def __init__(self, institution=None, user=None, original=False):
+        self.institution= institution
         self.user = user
         self.original = original
 
+
+
+    def __repr__(self):
+        return "{0}, {1}, {2}".format (
+            self.institution_name ,
+            self.username,
+            self.original
+        )
 
 
 
@@ -127,9 +136,6 @@ class Institution(db.Model):
         """
         self.name = name
 
-
-    members = db.relationship('User_aut', secondary=membership,
-        back_populates="institutions")
 
 
 class User(db.Model, UserMixin):
