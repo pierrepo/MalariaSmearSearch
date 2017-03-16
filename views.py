@@ -264,8 +264,8 @@ def browse():
             tot_num_anno = chunk_anno.count()
             num_para = sum(anno.annotation.startswith("P") for anno in chunk_anno)
             try:
-                first_anno_date = min(anno.date for anno in chunk_anno)
-                last_anno_date = max(anno.date for anno in chunk_anno)
+                first_anno_date = min(anno.date_creation for anno in chunk_anno)
+                last_anno_date = max(anno.date_update for anno in chunk_anno)
             except (ValueError, TypeError):
                 print('empty datetime list')
                 first_anno_date = None
