@@ -13,6 +13,7 @@ admin.password = 'admin123'
 
 for institution in (i_a, i_b) :
     admin.institutions.append(institution)
+    #  The original argument above is left at its default value of None.
 
 # For those cases where we do want special_key to have a value, we create the UserKeyword object explicitly :
 i_true = new_model.Membership(new_model.Institution('its_original'), admin, original=True)
