@@ -21,10 +21,15 @@
             {{ render_field(form.comment) }}
             {{ render_field(form.license) }}
             {{ render_field(form.magnification) }}
+
             {{ render_field(form.patient_ref) }}
             <input type="button" value="Search" id="search" />
             <div id="result"></div>
 
+            <div id = 'add_patient' class="hidden">
+                {{ render_field(form.patient_age) }}
+                {{ render_field(form.patient_gender) }}
+            </div>
 
           </dl>
           {{ form.submit }}
@@ -53,13 +58,15 @@
                 url: Flask.url_for("get_patient", {"institution": "{{current_user.original_institution.name}}", "patient_ref":textboxvalue}),
                 //data: {txt1: textboxvalue},
                 success: function(result){
-                    $("#result").html(result);
+                    $("#result").text(result);
+                    $("#add_patient").addClass('hidden');
                 },
                 error: function (xhr) { //XMLHttpRequest
                     //Here the status code can be retrieved like;
                     alert(xhr.status);
                     //The message added to Response object in Controller can be retrieved as following.
                     alert(xhr.responseText); // http://stackoverflow.com/a/450540
+                    $("#add_patient").removeClass('hidden');
                 },
             });
         });
