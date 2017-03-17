@@ -8,11 +8,12 @@ import datetime
 from flask import render_template, request, redirect, url_for, Response, send_file, jsonify, make_response, flash
 from flask_login import login_required, login_user, logout_user, current_user
 import pathlib
+from PIL import Image
 import os
 
-from app import app, login_manager, samples_set
+from app import app, db, login_manager, samples_set
 from forms import RegisterForm, LoginForm, UploadForm
-from model import *
+import new_model
 
 # the route() decorator tells Flask what URL should trigger the function.
 # the functions render associated template stored in templates folder.
@@ -32,8 +33,8 @@ def load_user(username):
     user : None / User
         the corresponding user object.
     """
-    print (User.query.filter(User.username == username).first() )
-    return User.query.filter(User.username == username).first()
+    print (new_model.User_auth.query.filter(new_model.User_auth.username == username).first() )
+    return new_model.User_auth.query.filter(new_model.User_auth.username == username).first()
 
 
 
@@ -62,7 +63,7 @@ def add_sample():
     if form.validate_on_submit() : # -> it is a POST request and it is valid
 
         # get the sample and its database attributes !
-        new_sample = Sample()
+        new_sample = new_model.Sample()
         form.populate_obj(new_sample)
         new_sample.extension = form.sample.data.filename.split('.')[-1].lower()
         # lowercase because the samples set is made from the IMAGE set
@@ -92,8 +93,8 @@ def add_sample():
             with Image.open(new_sample.path) as img :
                 width, height = img.size
                 print (width, height)
-                new_sample.num_col = (width // Sample.MAX_CHUNK_SIZE) + 1
-                new_sample.num_row = (height // Sample.MAX_CHUNK_SIZE) + 1
+                new_sample.num_col = (width // new_model.Sample.MAX_CHUNK_SIZE) + 1
+                new_sample.num_row = (height // new_model.Sample.MAX_CHUNK_SIZE) + 1
             new_sample.init_on_load()
             db.session.commit()
 
@@ -116,7 +117,7 @@ def add_sample():
 @login_required
 def uploaded(sample_id):
 
-    new_sample = Sample.query.get(sample_id)
+    new_sample = new_model.Sample.query.get(sample_id)
     new_sample.init_on_load()
 
     print('New sample was uploded and added to database, its id is {0}'.format(new_sample.id))
@@ -163,7 +164,7 @@ def signup():
             # TODO : send confirmation email
 
             # Crate the user profil
-            new_user = User()
+            new_user = new_model.User_auth()
             form.populate_obj(new_user)
             print (new_user)
             print (form)
@@ -195,7 +196,7 @@ def login():
         print (form.password)
         print (form.username.data, form.password.data)
         # validate the user then log the user
-        user = User.query.filter_by(username=form.username.data).first()
+        user = new_model.User_auth.query.filter_by(username=form.username.data).first()
         if user and user.password == form.password.data :
             login_user(user)
             flash('Logged in successfully.', category='succes')
@@ -236,7 +237,7 @@ def account():
 @app.route('/samples/')
 def browse():
     # list uploaded sample in db :
-    samples = Sample.query.all()
+    samples = new_model.Sample.query.all()
     [sample.init_on_load() for sample in samples]
     print (samples)
 
@@ -244,7 +245,7 @@ def browse():
 
     for sample_idx, sample in enumerate(samples) :
         for (chunk_col, chunk_row) in sample.chunks_numerotation :
-            count = Annotation.query.filter_by(
+            count = new_model.Annotation.query.filter_by(
                 sample_id = sample.id,
                 col = chunk_col,
                 row = chunk_row
@@ -259,12 +260,12 @@ def browse():
 
         for (chunk_col, chunk_row) in sample.chunks_numerotation :
 
-            chunk_anno = sample.annotations.filter(Annotation.col==chunk_col, Annotation.row==chunk_row)
+            chunk_anno = sample.annotations.filter(new_model.Annotation.col==chunk_col, new_model.Annotation.row==chunk_row)
             tot_num_anno = chunk_anno.count()
             num_para = sum(anno.annotation.startswith("P") for anno in chunk_anno)
             try:
-                first_anno_date = min(anno.date for anno in chunk_anno)
-                last_anno_date = max(anno.date for anno in chunk_anno)
+                first_anno_date = min(anno.date_creation for anno in chunk_anno)
+                last_anno_date = max(anno.date_update for anno in chunk_anno)
             except (ValueError, TypeError):
                 print('empty datetime list')
                 first_anno_date = None
@@ -291,7 +292,7 @@ def browse():
 @app.route('/samples/<int:sample_id>')
 def download(sample_id):
     #sample_id = secure_filename(sample_id)
-    sample = Sample.query.get(sample_id) # Primary Key
+    sample = new_model.Sample.query.get(sample_id) # Primary Key
     sample.init_on_load()
     if os.path.isfile(sample.path): # if the file exists
         # send it :
@@ -304,7 +305,7 @@ def download(sample_id):
 
 @app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>')
 def get_chunk_url(sample_id, col, row):
-    sample = Sample.query.get(sample_id) # Primary Key
+    sample = new_model.Sample.query.get(sample_id) # Primary Key
     sample.init_on_load()
     chunk_path = sample.get_chunk_path(col, row)
     resp = make_response(open(chunk_path, 'rb').read()) #open in binary mode
@@ -315,7 +316,7 @@ def get_chunk_url(sample_id, col, row):
 def get_chunk_annotation(sample_id, col, row):
 
     # get all the annotation that are made on current chunk :
-    annotations = Annotation.query.filter_by(sample_id=sample_id, col = col, row = row).all()
+    annotations = new_model.Annotation.query.filter_by(sample_id=sample_id, col = col, row = row).all()
     #query.with_entities(SomeModel.col1, SomeModel.col2) #select colum for the return
 
     # model is not JSON serializable
@@ -334,7 +335,7 @@ def about() :
 @app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotate/')
 def annotate_chunk(sample_id, col, row):
     print(sample_id, col, row)
-    sample = Sample.query.get(sample_id)
+    sample = new_model.Sample.query.get(sample_id)
     sample.init_on_load()
     chunk_path = sample.get_chunk_path(col, row)
 
@@ -359,7 +360,7 @@ def add_anno(sample_id, col, row) :
     print (current_user)
 
 
-    sample = Sample.query.get(sample_id)
+    sample = new_model.Sample.query.get(sample_id)
     sample.init_on_load()
 
     x =  request.form['x']
@@ -368,7 +369,7 @@ def add_anno(sample_id, col, row) :
     height =  request.form['height']
     annotation =  request.form['new-list-item-text']
 
-    new_anno = Annotation(
+    new_anno = new_model.Annotation(
         current_user,
         sample,
         (col, row),
@@ -407,7 +408,7 @@ def update_anno_text(sample_id, col, row, anno_id) :
     print(anno_id)
     print(request.form['new_value'])
 
-    anno = Annotation.query.get(anno_id)
+    anno = new_model.Annotation.query.get(anno_id)
     anno.annotation = request.form['new_value']
     print (anno.annotation)
     anno.date = datetime.datetime.utcnow().isoformat()
@@ -431,7 +432,7 @@ def del_anno(sample_id, col, row, anno_id) :
     print(anno_id)
 
     try :
-        Annotation.query.filter_by(id=anno_id).delete()
+        new_model.Annotation.query.filter_by(id=anno_id).delete()
         db.session.commit()
         print('anno was deleted drom the database')
         return '', 200

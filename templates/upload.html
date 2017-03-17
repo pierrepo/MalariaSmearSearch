@@ -17,11 +17,11 @@
         <form method="POST" onsubmit="" method="post" action="{{url_for('add_sample')}}"  enctype="multipart/form-data">
           <dl>
             {{ render_field(form.sample) }}
-            {{ render_field(form.preparation_type) }}
+            {{ render_field(form.smear_type) }}
             {{ render_field(form.comment) }}
-            {{ render_field(form.source) }}
+            {{ render_field(form.license) }}
             {{ render_field(form.magnification) }}
-            {{ render_field(form.microscope_model) }}
+            {{ render_field(form.patient_ref) }}
           </dl>
           {{ form.submit }}
           {{ form.hidden_tag() }}
