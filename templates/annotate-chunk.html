@@ -147,6 +147,9 @@
     <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
 
     <script>
+        // couldn't find a better way to pass boolean from jinja :
+        var user_auth = '{{current_user.is_authenticated}}'=='True' ? true : false;
+
         var sample_id = {{sample_id}}
         var col = {{col}}
         var row ={{row}}
