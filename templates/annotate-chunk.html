@@ -69,7 +69,10 @@
 {% endblock %}
 
 {% block content %}
-    <button value = 'view' id = 'toggle-mode' class='glyphicon glyphicon-plus'>Annotate</button>
+
+    {% if current_user.is_authenticated %}
+        <button value = 'view' id = 'toggle-mode' class='glyphicon glyphicon-plus'>Annotate</button>
+    {% endif %}
 
     <section class="row limited-height">
       <div id="view-konvajs" class="col-xs-12"></div>
