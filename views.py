@@ -5,7 +5,7 @@ URLs are define without trailing slashes.
 HTML templates are in the templates folder.
 """
 import datetime
-from flask import render_template, request, redirect, url_for, Response, send_file, jsonify, make_response, flash
+from flask import render_template, request, redirect, url_for, Response, send_file, jsonify, make_response, flash, abort
 from flask_login import login_required, login_user, logout_user, current_user
 import pathlib
 from PIL import Image
@@ -233,6 +233,29 @@ def account():
     """
     #TODO
     return render_template('account-page.html')
+
+@app.route('/patients/<string:institution>/<string:patient_ref>')
+def get_patient(institution, patient_ref):
+    try :
+        print ('try to get patient')
+        # get the current patient :
+        patient = new_model.Patient.query.filter_by(ref=patient_ref, institution=institution ).first()
+        print (patient)
+
+        # model is not JSON serializable
+        # so we do it by the hand as suggested in :
+        #http://stackoverflow.com/questions/5022066/how-to-serialize-sqlalchemy-result-to-json/11884806#11884806
+        #TODO : better way ?
+        #http://stackoverflow.com/questions/5022066/how-to-serialize-sqlalchemy-result-to-json/31569287#31569287
+        #http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask/27951648#27951648
+        serialized_patient = {key : patient.__dict__[key] for key in ['age', 'gender', 'ref', 'institution'] }
+        print ("serialized patient :", serialized_patient )
+        return jsonify(serialized_patient)
+    except AttributeError as e :
+        #AttributeError: 'NoneType' object has no attribute '__dict__'
+        #because get has returned None because this patient does not exist
+        print (e)
+        abort(400) # bad request
 
 @app.route('/samples/')
 def browse():
