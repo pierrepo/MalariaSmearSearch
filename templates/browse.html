@@ -16,7 +16,7 @@
                     {%for e in colnames%}
                         <th>{{e}}</th>
                     {%endfor%}
-                    <th>annotate</th>
+                    <th>view</th>
                 </tr>
             </thead>
             <!-- Do the same to set the table footer : -->
@@ -25,7 +25,7 @@
                     {%for e in colnames%}
                         <th>{{e}}</th>
                     {%endfor%}
-                    <th>annotate</th>
+                    <th>view</th>
                 </tr>
             </tfoot>
 
@@ -38,7 +38,7 @@
                         {%endfor%}
                         <td>
                             <a href="{{ url_for('annotate_chunk', sample_id = row[0], col = row[4], row = row[3] ) }}">
-                            annotate this chunk
+                                <span class="glyphicon glyphicon-eye-open"></span>
                             </a>
                         </td>
                     </tr>
