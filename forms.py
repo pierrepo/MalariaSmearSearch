@@ -29,8 +29,8 @@ class UploadForm(FlaskForm):
             ], validators=[Required()] )
     comment = TextAreaField('Comment', render_kw={"placeholder": "URL, legend, etc...", "rows": 3, "cols": 70})
     license = RadioField('License', choices=[
-            ('CC0',  'CC0 / PD : Freeing content globally without restrictions'),
-            ('BY',  'CC-BY : Attribution alone'),
+            ('CC0',  'CC0 / Public Domain : Freeing content globally without restrictions'),
+            ('BY',  'CC-BY : Attribution'),
             ('BY-SA',  'CC-BY-SA : Attribution + ShareAlike')
             ], validators=[Required()] )
     provider = TextAreaField('Provider', render_kw={"rows": 3, "cols": 70})
