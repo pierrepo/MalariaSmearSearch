@@ -11,3 +11,6 @@ samples/*.jpg
 
 # chunks
 chunks/*.jpg
+
+# databases
+*.db
