@@ -8,9 +8,13 @@ venv/
 
 # uploaded photos
 samples/*.jpg
+samples/*.jpeg
+samples/*.png
 
 # chunks
 chunks/*.jpg
+chunks/*.jpeg
+chunks/*.png
 
 # databases
 *.db
