@@ -44,14 +44,16 @@
                     <div class="collapse navbar-collapse" id="myNavbar">
                         <ul class="nav navbar-nav">
                             <li ><a href="{{url_for('index')}}">Home</a></li>
-                            <li ><a href="{{url_for('upload')}}">Add sample</a></li>
-                            <li ><a href="{{url_for('browse')}}">Browse samples</a></li>
-                            <li ><a href="#">Train</a></li>
+                            {% if current_user.is_authenticated %}
+                            <li ><a href="{{url_for('upload')}}">Add blood smear sample</a></li>
+                            {% endif %}
+                            <li ><a href="{{url_for('browse')}}">Browse blood smears and annotations</a></li>
+                            <li ><a href="#">Test yourself</a></li>
                             <li ><a href="{{url_for('about')}}">About</a></li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right"> <!-- {{current_user.username}} -->
                             {% if current_user.is_authenticated %}
-                            <li>  <a href="{{url_for('account')}}"> Your account</a> </li>
+                            <li>  <a href="{{url_for('account')}}">Your account</a> </li>
                             <li>  <a href="{{url_for('logout')}}"><span class="glyphicon glyphicon-log-out"></span> Logout</a> </li>
                             {% else %}
                             <li> <a href="{{url_for('login')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a> </li>
