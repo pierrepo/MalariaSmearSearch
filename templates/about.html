@@ -4,8 +4,29 @@
 
 {% block content %}
 
-	<img src="{{ url_for('static', filename='img/logo_P7.png')}}" alt="logo Univ. Paris Diderot" height="300">
-	<img src="{{ url_for('static', filename='img/logo_CNRS.png')}}" alt="logo CNRS" height="300">
-	<img src="{{ url_for('static', filename='img/logo_FCRM.png')}}" alt="logo FCRM" height="300">
+<div class="big-text">
+MalariaSmearSearch is a database of annotated blood smears to help research and training to fight malaria.
+</div>
+
+<div class="big-text">
+MalariaSmearSearch is a project lead by:
+<ul>
+	<li>Université Paris Diderot - Paris 7</li>
+	<li>Centre National de la Recherche Scientifique (CNRS)</li>
+	<li>Fondation Congolaise pour la Recherche Médicale (FCRM)</li>
+</ul>
+</div>
+
+<div class="row">
+        <div class="col-sm-4">
+			<img src="{{ url_for('static', filename='img/logo_P7.png')}}" alt="logo Univ. Paris Diderot" height="250">
+		</div>
+        <div class="col-sm-4">
+        	<img src="{{ url_for('static', filename='img/logo_CNRS.png')}}" alt="logo CNRS" height="250">
+        </div>
+        <div class="col-sm-4">
+			<img src="{{ url_for('static', filename='img/logo_FCRM.png')}}" alt="logo FCRM" height="250">
+		</div>
+</div>
 
 {% endblock %}
