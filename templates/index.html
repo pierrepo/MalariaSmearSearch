@@ -3,31 +3,22 @@
 {% block title %}Index{% endblock %}
 
 {% block content %}
-    <!-- Action grid 3 * 4 = 12-->
+    <!-- Action grid 2 * 6 = 12-->
     <div class="row">
-        <div class="col-sm-4">
-            <a href="{{ url_for('upload') }}" target="_self" class="thumbnail">
-                <img  src="static/img/logo-MSS-upload.svg" alt="add image icon">
-                <div class="caption text-center landing">
-                Add blood smear
-                </div>
-            </a>
-
-        </div>
-        <div class="col-sm-4">
+        <div class="col-sm-6">
               <a href="{{url_for('browse')}}" target="_self" class="thumbnail">
                 <img src="static/img/logo-MSS-browse.svg" alt="browse images icon">
                 <div class="caption text-center landing">
-                  Browse images
+                  Browse blood smears and annotations
                 </div>
               </a>
 
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-6">
             <a href="" target="_self" class="thumbnail">
                 <img src="static/img/logo-MSS-train.svg" alt="Train yourself">
                 <div class="caption text-center landing">
-                  Train yourself
+                  Test yourself!
                 </div>
             </a>
 
