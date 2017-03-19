@@ -18,7 +18,7 @@ class UploadForm(FlaskForm):
     """
     Form for image upload.
     """
-    sample = FileField('sample', validators=[
+    sample = FileField('Sample image file', validators=[
         FileRequired(),
         FileAllowed( app.samples_set, 'Images only!')
     ])
@@ -29,12 +29,12 @@ class UploadForm(FlaskForm):
             ], validators=[Required()] )
     comment = TextAreaField('Comment', render_kw={"placeholder": "URL, legend, etc...", "rows": 3, "cols": 70})
     license = RadioField('License', choices=[
-            ('CC0',  'CC0 / Public Domain : Freeing content globally without restrictions'),
-            ('BY',  'CC-BY : Attribution'),
-            ('BY-SA',  'CC-BY-SA : Attribution + ShareAlike')
-            ], validators=[Required()] )
+            ('CC0',  'CC0 / Public Domain: Freeing content globally without restrictions'),
+            ('BY',  'CC-BY: Attribution'),
+            ('BY-SA',  'CC-BY-SA: Attribution + ShareAlike')
+            ], validators=[Required()], default='BY' )
     provider = TextAreaField('Provider', render_kw={"rows": 3, "cols": 70})
-    magnification =IntegerField ('Magnification', widget=NumberInput(), render_kw={"placeholder": "e.g. 100"})
+    magnification =IntegerField ('Microscope magnification factor', widget=NumberInput(), render_kw={"placeholder": "e.g. 100"})
     patient_ref = TextField('Patient reference', validators=[Length(max=50)])
     patient_year_of_birth = IntegerField ('Patient year of birth', widget=NumberInput() )
     patient_gender =RadioField('Patient gender', choices=[
@@ -44,7 +44,7 @@ class UploadForm(FlaskForm):
     patient_city = TextField('Patient city', validators=[Length(max=50)])
     patient_country = TextField('Patient country', validators=[Length(max=50)])
 
-    submit = SubmitField('Upload image')
+    submit = SubmitField('Upload blood smear', render_kw={"class": "btn btn-info btn-lg", "id": "submit-button"})
 
 
 class LoginForm(FlaskForm):

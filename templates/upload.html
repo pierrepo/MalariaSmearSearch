@@ -15,11 +15,17 @@
 
         {% from "_formhelpers.html" import render_field %}
         <form method="POST" onsubmit="" method="post" action="{{url_for('add_sample')}}"  enctype="multipart/form-data">
+        <fieldset class="field-upload">
+            <legend id="legend-upload-mandatory">Blood smear details</legend>
+            <p id="info-mandatory">Fields with <span style="color:red;">*</span> are mandatory</p>
           <dl>
             {{ render_field(form.sample) }}
             {{ render_field(form.smear_type) }}
-            {{ render_field(form.comment) }}
             {{ render_field(form.license) }}
+        </fieldset>
+        <fieldset class="field-upload">
+            <legend id="legend-upload-optional">Complementary details</legend>
+            {{ render_field(form.comment) }}
             {{ render_field(form.magnification) }}
 
             {{ render_field(form.patient_ref) }}
@@ -34,8 +40,11 @@
             </div>
 
           </dl>
+        </fieldset>
           {{ form.submit }}
           {{ form.hidden_tag() }}
+        
+        
         </form>
 
 

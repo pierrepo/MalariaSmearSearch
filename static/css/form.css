@@ -1,8 +1,16 @@
 ul {
-  list-style-type: none;
+	list-style-type: none;
 }
 
 label.required::before {
-  content: '*' ;
-  color: red; 
+	content: '* ' ;
+	color: red; 
+}
+
+#info-mandatory {
+	font-style: italic;
+}
+
+#submit-button {
+	margin-top: 20px;
 }

@@ -120,11 +120,13 @@ def uploaded(sample_id):
     new_sample = new_model.Sample.query.get(sample_id)
     new_sample.init_on_load()
 
-    print('New sample was uploded and added to database, its id is {0}'.format(new_sample.id))
-    flash('New sample was uploded and added to database, its id is {0}.'.format(new_sample.id), category = 'succes')
+    msg = 'New sample was uploaded and store to the database. ID: {0}'.format(new_sample.id)
+    print(msg)
+    flash(msg, category = 'succes')
 
-    print('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_sample.num_col * new_sample.num_row))
-    flash('To ease the annotation, the image has been split into {0} chunks. Its chunks were added to database.'.format(new_sample.num_col * new_sample.num_row), category = 'succes')
+    msg = 'The input blood smear image was quite large and has been split into {0} chunk(s).'.format(new_sample.num_col * new_sample.num_row)
+    print(msg)
+    flash(msg, category = 'succes')
 
     return render_template('choice_after_upload.html', sample = new_sample )
 
