@@ -65,7 +65,10 @@ $(document).ready(function(){
         // the action button events are bind automatically,
         // but ensure the click-to-edit functionality is working
         // on newly appended list items even before a page refresh :
-        makeEditable("#annotations-list li[name="+new_anno.name+"] span");
+
+        if (user_auth) {
+            makeEditable("#annotations-list li[name="+new_anno.name+"] span");
+        }
 
         // add the annotation as a rect on the anno layer of the anno stage
         console.log(new_anno) ;
