@@ -36,11 +36,13 @@ class UploadForm(FlaskForm):
     provider = TextAreaField('Provider', render_kw={"rows": 3, "cols": 70})
     magnification =IntegerField ('Magnification', widget=NumberInput(), render_kw={"placeholder": "e.g. 100"})
     patient_ref = TextField('Patient reference', validators=[Length(max=50)])
-    patient_age = IntegerField ('Patient age', widget=NumberInput() )
+    patient_year_of_birth = IntegerField ('Patient year of birth', widget=NumberInput() )
     patient_gender =RadioField('Patient gender', choices=[
             ('M',  'Male'),
             ('F',  'Female')
     ])
+    patient_city = TextField('Patient city', validators=[Length(max=50)])
+    patient_country = TextField('Patient country', validators=[Length(max=50)])
 
     submit = SubmitField('Upload image')
 
