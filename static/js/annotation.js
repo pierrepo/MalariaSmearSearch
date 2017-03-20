@@ -60,7 +60,14 @@ $(document).ready(function(){
         console.log("================================");
         // the new anno is appended in the anno list :
         $("#annotations-list")
-            .append("<li name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span><button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button></li>");
+            .append("<li name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span>");
+        if (user_auth) {
+            $("#annotations-list")
+                .append("<button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button>");
+        }
+        $("#annotations-list")
+            .append("</li>");
+
         // TODO : do not use the annotation code
         // the action button events are bind automatically,
         // but ensure the click-to-edit functionality is working
