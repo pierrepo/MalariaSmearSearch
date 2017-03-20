@@ -159,7 +159,7 @@ class User(db.Model):
     original_institution = db.Column(db.String(50))
 
     #Defining One to Many relationships with the relationship function on the Parent Table
-    samples = db.relationship('Sample', backref="user", lazy='dynamic')
+    uploaded_samples = db.relationship('Sample', backref="user_upload", lazy='dynamic')
     annotations = db.relationship('Annotation', backref="user", lazy='dynamic')
     # backref="user" : This argument adds a user attribute on the Sample table, so you can access a User via the Samples Class as Sample.user.
     # omit the cascade argument : keep the children when you delete the parent
@@ -193,7 +193,7 @@ class Sample(db.Model):
     num_row = db.Column(db.Integer)
 
     #Defining the Foreign Key on the Child Table :
-    username = db.Column(db.String(30), db.ForeignKey('Users.username')) # tablename
+    username_upload = db.Column(db.String(30), db.ForeignKey('Users.username')) # tablename
     patient_id = db.Column(db.Integer, db.ForeignKey('Patients.id')) # tablename
 
     #Defining One to Many relationships with the relationship function on the Parent Table
