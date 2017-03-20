@@ -131,7 +131,11 @@
           <input type="submit" id="add-new-submit" value="Add" class="button" />
       </form>
     </section>
-
+    {%if current_user.is_authenticated%}
+        <section class="row">
+            Double-click the annotation value to edit it.
+        </section>
+    {%endif%}
     <section class="row">
       <ul id = "annotations-list">
       </ul>
