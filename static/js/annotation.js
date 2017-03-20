@@ -462,9 +462,10 @@ $(document).ready(function(){
         }
     });
 
-    // edit button :
+    // anno text edition button :
     $('#annotations-list').on('click', '.glyphicon-pencil', function(){
         console.log("edit");
+        $(this).closest("li").trigger("dblclick"); // Fire the dblclick event programatically
     });
 
     // static varaiable.
