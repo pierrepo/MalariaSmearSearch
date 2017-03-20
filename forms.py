@@ -33,7 +33,7 @@ class UploadForm(FlaskForm):
             ('BY',  'CC-BY: Attribution'),
             ('BY-SA',  'CC-BY-SA: Attribution + ShareAlike')
             ], validators=[Required()], default='BY' )
-    provider = TextAreaField('Provider', render_kw={"rows": 3, "cols": 70})
+    provider = TextAreaField('Provider', render_kw={"rows": 3, "cols": 70}, validators=[Required()])
     magnification =IntegerField ('Microscope magnification factor', widget=NumberInput(), render_kw={"placeholder": "e.g. 100"}, validators=[Optional()], default=None )
     patient_ref = TextField('Patient reference', validators=[Length(max=50)])
     patient_year_of_birth = IntegerField ('Patient year of birth', widget=NumberInput(), validators=[Optional()], default=None )
