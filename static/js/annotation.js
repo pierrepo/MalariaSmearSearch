@@ -63,7 +63,7 @@ $(document).ready(function(){
             .append("<li name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span>");
         if (user_auth) {
             $("#annotations-list")
-                .append("<button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button>");
+                .append("<button class='glyphicon glyphicon-trash'></button>");
         }
         $("#annotations-list")
             .append("</li>");
@@ -469,11 +469,6 @@ $(document).ready(function(){
         }
     });
 
-    // anno text edition button :
-    $('#annotations-list').on('click', '.glyphicon-pencil', function(){
-        console.log("edit");
-        $(this).closest("li").trigger("dblclick"); // Fire the dblclick event programatically
-    });
 
     // static varaiable.
     // will be deleted when adding a new annotation in db by ajax will return the id of the annotation
