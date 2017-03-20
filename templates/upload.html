@@ -14,7 +14,7 @@
         {% endif %}
 
         {% from "_formhelpers.html" import render_field %}
-        <form method="POST" onsubmit="" method="post" action="{{url_for('add_sample')}}"  enctype="multipart/form-data">
+        <form method="POST" onsubmit="" action="{{url_for('upload')}}"  enctype="multipart/form-data">
         <fieldset class="field-upload">
             <legend id="legend-upload-mandatory">Blood smear details</legend>
             <p id="info-mandatory">Fields with <span style="color:red;">*</span> are mandatory</p>
