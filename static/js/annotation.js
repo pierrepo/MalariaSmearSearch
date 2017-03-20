@@ -60,7 +60,14 @@ $(document).ready(function(){
         console.log("================================");
         // the new anno is appended in the anno list :
         $("#annotations-list")
-            .append("<li name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span><button class='glyphicon glyphicon-trash'></button><button class='glyphicon glyphicon-pencil'></button></li>");
+            .append("<li name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span>");
+        if (user_auth) {
+            $("#annotations-list")
+                .append("<button class='glyphicon glyphicon-trash'></button>");
+        }
+        $("#annotations-list")
+            .append("</li>");
+
         // TODO : do not use the annotation code
         // the action button events are bind automatically,
         // but ensure the click-to-edit functionality is working
@@ -406,7 +413,7 @@ $(document).ready(function(){
             /*select is built from JSON encoded array.
              - Array keys are values for <option> tag.
              - Array values are text shown in pulldown.*/
-            data      : " {'P':'parasite','RC':'red cell','WC':'white cell', 'O':'other'}",
+            data      : anno_decoder,
 
             /*NB for server side : */
             method    : 'POST', /*the default = POST TODO : think about PUT*/
@@ -462,10 +469,6 @@ $(document).ready(function(){
         }
     });
 
-    // edit button :
-    $('#annotations-list').on('click', '.glyphicon-pencil', function(){
-        console.log("edit");
-    });
 
     // static varaiable.
     // will be deleted when adding a new annotation in db by ajax will return the id of the annotation

@@ -446,7 +446,10 @@ def update_anno_text(sample_id, col, row, anno_id) :
     try :
         db.session.commit()
         print('anno was modified in the database')
-        return '', 200
+        return new_model.Annotation.anno_decoder[request.form['new_value'] ], 200
+        #http://stackoverflow.com/a/7984950
+        #" Your saving script needs to return the value you want Jeditable to display.
+        # If you're not returning anything from the saving script, then you'll get the default 'Click to edit'."
 
     except Exception as e:
         print (e)
