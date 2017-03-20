@@ -159,8 +159,6 @@ class User(db.Model):
     original_institution = db.Column(db.String(50))
 
     #Defining One to Many relationships with the relationship function on the Parent Table
-    uploaded_samples = db.relationship('Sample', backref="user_upload", lazy='dynamic')
-    updated_samples = db.relationship('Sample', backref="user_update", lazy='dynamic')
     annotations = db.relationship('Annotation', backref="user", lazy='dynamic')
     # backref="user" : This argument adds a user attribute on the Sample table, so you can access a User via the Samples Class as Sample.user.
     # omit the cascade argument : keep the children when you delete the parent
@@ -194,8 +192,13 @@ class Sample(db.Model):
     num_row = db.Column(db.Integer)
 
     #Defining the Foreign Key on the Child Table :
+
+    # http://docs.sqlalchemy.org/en/rel_0_9/orm/join_conditions.html#handling-multiple-join-paths :
     username_upload = db.Column(db.String(30), db.ForeignKey('Users.username')) # tablename
+    user_upload = db.relationship('User', backref="uploaded_samples", foreign_keys=[username_upload])
     username_update = db.Column(db.String(30), db.ForeignKey('Users.username')) # tablename
+    user_update = db.relationship('User', backref="updated_samples", foreign_keys=[username_update])
+
     patient_id = db.Column(db.Integer, db.ForeignKey('Patients.id')) # tablename
 
     #Defining One to Many relationships with the relationship function on the Parent Table
