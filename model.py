@@ -146,7 +146,7 @@ class Institution(db.Model):
 
 
 
-class User(db.Model, UserMixin):
+class User(db.Model):
     """
     User model.
 
