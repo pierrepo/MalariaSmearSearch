@@ -34,15 +34,15 @@ class UploadForm(FlaskForm):
             ('BY-SA',  'CC-BY-SA: Attribution + ShareAlike')
             ], validators=[Required()], default='BY' )
     provider = TextAreaField('Provider', render_kw={"rows": 3, "cols": 70})
-    magnification =IntegerField ('Microscope magnification factor', widget=NumberInput(), render_kw={"placeholder": "e.g. 100"})
+    magnification =IntegerField ('Microscope magnification factor', widget=NumberInput(), render_kw={"placeholder": "e.g. 100"}, validators=[Optional()], default=None )
     patient_ref = TextField('Patient reference', validators=[Length(max=50)])
-    patient_year_of_birth = IntegerField ('Patient year of birth', widget=NumberInput() )
-    patient_gender =RadioField('Patient gender', choices=[
+    patient_year_of_birth = IntegerField ('Patient year of birth', widget=NumberInput(), validators=[Optional()], default=None )
+    patient_gender =RadioField('Patient gender', validators=[Optional()], default=None, choices=[
             ('M',  'Male'),
             ('F',  'Female')
     ])
-    patient_city = TextField('Patient city', validators=[Length(max=50)])
-    patient_country = TextField('Patient country', validators=[Length(max=50)])
+    patient_city = TextField('Patient city', validators=[Length(max=50), Optional()], default=None)
+    patient_country = TextField('Patient country', validators=[Length(max=50),  Optional()], default=None)
 
     submit = SubmitField('Upload blood smear', render_kw={"class": "btn btn-info btn-lg", "id": "submit-button"})
 
