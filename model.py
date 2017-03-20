@@ -207,7 +207,7 @@ class Sample(db.Model):
     # cascade ="all, delete-orphan”: This will delete all chunks of a sample when the referenced sample is deleted.
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
-    MAX_CHUNK_SIZE = 1000 #px
+    MAX_CHUNK_SIZE = 2000 #px
 
     def __init__(self):
         """
