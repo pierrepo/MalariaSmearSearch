@@ -25,34 +25,68 @@ http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
 from app import app, db, samples_set
 from flask_login import UserMixin
 from flask_sqlalchemy import sqlalchemy
+from sqlalchemy.ext.associationproxy import association_proxy
 from PIL import Image
 import itertools
 import datetime
 
 
-# Whan table already exist, we do not need to redefine them
-# we can just load them from the database using the "autoload" feature.
+# Many to many relationship
+# http://flask-sqlalchemy.pocoo.org/2.1/models/#many-to-many-relationships
+# https://techarena51.com/index.php/many-to-many-relationships-with-flask-sqlalchemy/
+# http://stackoverflow.com/questions/25668092/flask-sqlalchemy-many-to-many-insert-data
+# Many to many relationship * with additional column * :
+# http://docs.sqlalchemy.org/en/latest/orm/basic_relationships.html#association-object
+# http://docs.sqlalchemy.org/en/latest/orm/extensions/associationproxy.html#simplifying-association-objects
 
-class User(db.Model, UserMixin):
+class Membership(db.Model):
+    __bind_key__ = 'users'
+    __tablename__ = 'Memberships'
+    username =  db.Column(db.String(30), db.ForeignKey('Users_auth.username'), primary_key=True) # left_id
+    institution_name = db.Column(db.String(50), db.ForeignKey('Institutions.name'), primary_key=True) #right_id
+    original = db.Column(db.Boolean()) #extra_data
+
+    # bidirectional attribute/collection of "user"/"user_keywords"
+    user = db.relationship('User_auth',
+                backref=db.backref("user_institutions")
+            )
+
+    # reference to the "Institution" object
+    institution = db.relationship("Institution")
+
+
+    def __init__(self, institution=None, user=None, original=False):
+        self.institution= institution
+        self.user = user
+        self.original = original
+
+
+
+    def __repr__(self):
+        return "{0}, {1}, {2}".format (
+            self.institution_name ,
+            self.username,
+            self.original
+        )
+
+
+
+class User_auth(db.Model, UserMixin):
     """
     User model.
 
     Interact with the database and with the Flask-login module.
     """
-    __tablename__ = 'Users' # tablename
+    __bind_key__ = 'users'
+    __tablename__ = 'Users_auth' # tablename
+
     username = db.Column(db.String(30), primary_key=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(20))
-    level = db.Column(db.String(10))
-    institution = db.Column(db.String(50))
 
-    #Defining One to Many relationships with the relationship function on the Parent Table
-    samples = db.relationship('Sample', backref="user", lazy='dynamic')
-    annotations = db.relationship('Annotation', backref="user", lazy='dynamic')
-
-    # backref="user" : This argument adds a user attribute on the Sample table, so you can access a User via the Samples Class as Sample.user.
-    # omit the cascade argument : keep the children when you delete the parent
-    # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
+    # association proxy of "user_institutions" collection
+    # to "institution" attribute
+    institutions = association_proxy('user_institutions', 'institution')
 
     def __repr__(self):
         """
@@ -63,12 +97,10 @@ class User(db.Model, UserMixin):
         repr : string
             printable representation of a user.
         """
-        return 'User : %r , email = %r, password = %r, level = %r, institution = %r' %  (
+        return 'User : %r , email = %r, password = %r' %  (
             self.username ,
             self.email,
-            self.password ,
-            self.level,
-            self.institution
+            self.password
         )
 
     #UserMixin inheritance provide basic implementation for
@@ -83,19 +115,78 @@ class User(db.Model, UserMixin):
     def id (self) :
         return self.username
 
+    @property
+    def original_institution (self) :
+        print (Membership.query.filter(Membership.username == self.username, Membership.original == True) )
+        print (Membership.query.filter(Membership.username == self.username, Membership.original == True).first() )
+        print ('====================')
+        original_institution = Membership.query.filter(Membership.username == self.username, Membership.original == True).first()
+        return original_institution.institution
+
+
+
+class Institution(db.Model):
+    """
+    Institution model.
+
+    Interact with the database.
+    """
+    __bind_key__ = 'users'
+    __tablename__ = 'Institutions' # tablename
+
+    name = db.Column(db.String(50), primary_key=True)
+
+    def __init__(self, name):
+        """
+
+        self.name : string
+            name of the institution
+        """
+        self.name = name
+
+
+
+class User(db.Model, UserMixin):
+    """
+    User model.
+
+    Interact with the database and with the Flask-login module.
+    """
+    __bind_key__ = 'data'
+    __tablename__ = 'Users' # tablename
+
+    username = db.Column(db.String(30), primary_key=True)
+    original_institution = db.Column(db.String(50))
+
+    #Defining One to Many relationships with the relationship function on the Parent Table
+    samples = db.relationship('Sample', backref="user", lazy='dynamic')
+    annotations = db.relationship('Annotation', backref="user", lazy='dynamic')
+    # backref="user" : This argument adds a user attribute on the Sample table, so you can access a User via the Samples Class as Sample.user.
+    # omit the cascade argument : keep the children when you delete the parent
+    # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
+
+
+
 class Sample(db.Model):
     """
     Sample Model
 
     Interact with the database.
     """
+    __bind_key__ = 'data'
     __tablename__ = 'Samples' # tablename
+
     id = db.Column(db.Integer, primary_key=True)
     extension = db.Column(db.String(5))
-    preparation_type = db.Column(db.String(5))
-    # CHECK (preparation_type IN ('thick' , 'thin') )
+    smear_type = db.Column(db.String(5))
+    # CHECK (smear_type IN ('thick' , 'thin') )
+
+    date_upload = db.Column(db.DateTime)
+    date_update = db.Column(db.DateTime)
+
     comment  = db.Column(db.Text)
-    source  = db.Column(db.String(250))
+    license  = db.Column(db.String(5))
+    provider = db.Column(db.Text)
     magnification  = db.Column(db.Integer)
     microscope_model  = db.Column(db.String(20))
 
@@ -112,7 +203,7 @@ class Sample(db.Model):
     # cascade ="all, delete-orphan”: This will delete all chunks of a sample when the referenced sample is deleted.
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
-    MAX_CHUNK_SIZE = 2000 #px
+    MAX_CHUNK_SIZE = 1000 #px
 
     def __init__(self):
         """
@@ -121,7 +212,7 @@ class Sample(db.Model):
             (col, row) coordinates of the chunk
             for each chunk
         """
-        pass
+        self.date_upload = datetime.datetime.utcnow()
 
     #@sqlalchemy.orm.reconstructor # do not seems to work TODO : find why
     def init_on_load(self):
@@ -201,10 +292,18 @@ class Patient(db.Model):
 
     Interact with the database.
     """
+    __bind_key__ = 'data'
     __tablename__ = 'Patients' # tablename
+
     id = db.Column(db.Integer, primary_key=True)
     age = db.Column(db.Integer)
     gender  = db.Column(db.String(1))
+    ref = db.Column(db.String(50))
+    institution  =  db.Column(db.String(50))
+    year_of_birth = db.Column(db.Integer) #could be datetime
+    city = db.Column(db.String(50))
+    country = db.Column(db.String(50))
+
     #Defining One to Many relationships with the relationship function on the Parent Table
     samples = db.relationship('Sample', backref="patient", lazy='dynamic')
     # backref="chunk" : This argument adds a sample attribute on the ANnotation table, so you can access a Chunk via the Annotation Class as Annotation.chunk.
@@ -219,12 +318,14 @@ class Annotation(db.Model) :
 
     Interact with the database.
     """
+    __bind_key__ = 'data'
     __tablename__ = 'Annotations' # tablename
 
     id = db.Column(db.Integer, primary_key=True)
     col = db.Column(db.Integer)
     row = db.Column(db.Integer)
-    date = db.Column(db.DateTime)
+    date_creation = db.Column(db.DateTime)
+    date_update = db.Column(db.DateTime)
     x = db.Column(db.Integer)
     y = db.Column(db.Integer)
     width = db.Column(db.Integer)
