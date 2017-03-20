@@ -23,3 +23,14 @@ print(admin.institutions)
 
 db.session.add(admin)
 db.session.commit()
+
+
+
+
+# put the User in data.db :
+dat_user = model.User()
+dat_user.username = admin.username
+dat_user.original_institution = admin.original_institution.name
+
+db.session.add(dat_user)
+db.session.commit()

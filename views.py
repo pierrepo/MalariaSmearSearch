@@ -67,6 +67,7 @@ def add_sample():
         # get the sample and its database attributes !
         new_sample = model.Sample()
         form.populate_obj(new_sample)
+        new_sample.user_upload = model.User.query.get(current_user.username)
         new_sample.extension = form.sample.data.filename.split('.')[-1].lower()
         # lowercase because the samples set is made from the IMAGE set
         # that do use lowercase extensions.
