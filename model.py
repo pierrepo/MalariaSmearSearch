@@ -188,7 +188,6 @@ class Sample(db.Model):
     license  = db.Column(db.String(5))
     provider = db.Column(db.Text)
     magnification  = db.Column(db.Integer)
-    microscope_model  = db.Column(db.String(20))
 
     num_col = db.Column(db.Integer)
     num_row = db.Column(db.Integer)
