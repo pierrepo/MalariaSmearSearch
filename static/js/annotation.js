@@ -406,7 +406,7 @@ $(document).ready(function(){
             /*select is built from JSON encoded array.
              - Array keys are values for <option> tag.
              - Array values are text shown in pulldown.*/
-            data      : " {'P':'parasite','RC':'red cell','WC':'white cell', 'O':'other'}",
+            data      : anno_decoder,
 
             /*NB for server side : */
             method    : 'POST', /*the default = POST TODO : think about PUT*/
