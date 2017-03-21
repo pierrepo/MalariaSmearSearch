@@ -16,7 +16,6 @@
                     {%for e in colnames%}
                         <th>{{e}}</th>
                     {%endfor%}
-                    <th>view</th>
                 </tr>
             </thead>
             <!-- Do the same to set the table footer : -->
@@ -25,22 +24,26 @@
                     {%for e in colnames%}
                         <th>{{e}}</th>
                     {%endfor%}
-                    <th>view</th>
                 </tr>
             </tfoot>
 
             <!-- Fill table body with data -->
             <tbody>
-                {%for row in rows%}
+                {%for data in rows%}
                     <tr>
-                        {%for col in row%}
-                            <td>{{col}}</td>
-                        {%endfor%}
+                        <td>{{data[0]}}</td> <!-- sample id / update sample infos -->
+                        <td>{{data[1]}}</td> <!-- date upload -->
+                        <td>{{data[2]}}</td> <!-- upoaded by -->
                         <td>
-                            <a href="{{ url_for('annotate_chunk', sample_id = row[0], col = row[4], row = row[3] ) }}">
+                            {{data[0]}}_{{data[4]}}_{{data[3]}}
+                            <a href="{{ url_for('annotate_chunk', sample_id = data[0], col = data[4], row = data[3] ) }}">
                                 <span class="glyphicon glyphicon-eye-open"></span>
                             </a>
-                        </td>
+                        </td> <!-- chunk idx -> sampleidx_col_row / view (& annotate) -->
+                        <td>{{data[5]}}</td> <!-- tt num of anno-->
+                        <td>{{data[6]}}</td> <!-- num of annotated parasite -->
+                        <td>{{data[7]}}</td> <!-- date first anno -->
+                        <td>{{data[8]}}</td> <!-- date last anno -->
                     </tr>
                 {%endfor%}
             </tbody>

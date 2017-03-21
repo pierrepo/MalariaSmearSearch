@@ -283,7 +283,7 @@ def browse():
             print (count)
             nb_annotations[sample_idx].append(count)
 
-    colnames=['sample id', 'date upload', 'user', 'row idx', 'col idx', 'total number of annnotations', 'number of annotated parasites', 'date of the first annotation', 'date of the last annotation']
+    colnames=['sample id', 'date upload', 'uploaded by', 'sample', 'total number of annnotations', 'number of annotated parasites', 'date of the first annotation', 'date of the last annotation']
 
     rows = []
     for sample_idx, sample in enumerate (samples) :
@@ -303,7 +303,7 @@ def browse():
 
             row = [
                 sample.id,
-                None,
+                sample.date_upload,
                 sample.user_upload.username,
                 chunk_row,
                 chunk_col,
