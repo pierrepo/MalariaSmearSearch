@@ -59,6 +59,11 @@ $(document).ready(function(){
     function addAnnoView(new_anno){
         console.log("================================");
         // the new anno is appended in the anno list :
+
+        // http://stackoverflow.com/a/12949050
+        // jQuery append function close tags automatically.
+        // that is why why cannot use :
+        /*
         $("#annotations-list")
             .append("<li name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span>");
         if (user_auth) {
@@ -67,6 +72,15 @@ $(document).ready(function(){
         }
         $("#annotations-list")
             .append("</li>");
+        */
+        // Instead, we put the html in an string then append that string to the dom :
+         var html="<li name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span>"
+         if (user_auth) {
+             html+="<button class='glyphicon glyphicon-trash'></button>";
+         }
+         html+="</li>";
+
+         $("#annotations-list").append(html)
 
         // TODO : do not use the annotation code
         // the action button events are bind automatically,
