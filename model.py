@@ -158,13 +158,6 @@ class User(db.Model):
     username = db.Column(db.String(30), primary_key=True)
     original_institution = db.Column(db.String(50))
 
-    #Defining One to Many relationships with the relationship function on the Parent Table
-    annotations = db.relationship('Annotation', backref="user", lazy='dynamic')
-    # backref="user" : This argument adds a user attribute on the Sample table, so you can access a User via the Samples Class as Sample.user.
-    # omit the cascade argument : keep the children when you delete the parent
-    # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
-
-
 
 class Sample(db.Model):
     """
@@ -339,7 +332,13 @@ class Annotation(db.Model) :
     # see table of annotations
 
     #Defining the Foreign Key on the Child Table :
-    username = db.Column(db.String(30), db.ForeignKey('Users.username')) # tablename
+
+    # http://docs.sqlalchemy.org/en/rel_0_9/orm/join_conditions.html#handling-multiple-join-paths :
+    username_creation = db.Column(db.String(30), db.ForeignKey('Users.username')) # tablename
+    user_creation = db.relationship('User', backref="created_annotations", foreign_keys=[username_creation])
+    username_update = db.Column(db.String(30), db.ForeignKey('Users.username')) # tablename
+    user_update = db.relationship('User', backref="updated_annotations", foreign_keys=[username_update])
+
     sample_id = db.Column(db.Integer, db.ForeignKey('Samples.id')) # tablename
 
 
