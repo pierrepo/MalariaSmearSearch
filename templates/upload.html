@@ -32,7 +32,7 @@
             {{ render_field(form.patient_ref) }}
             <div id="result"></div>
 
-            <div id = 'add_patient' class="hidden">
+            <div id = 'add_patient'>
                 {{ render_field(form.patient_year_of_birth) }}
                 {{ render_field(form.patient_gender) }}
                 {{ render_field(form.patient_city) }}
@@ -60,6 +60,8 @@
         $("#patient_ref").focusout(function() {
             var textboxvalue = $('input[name=patient_ref]').val();
 
+
+
             if( $(this).val() ) {
                 // I have not found an error handler for get json ajax,
                 // that is why I use the more verbose ajax method :
@@ -70,14 +72,12 @@
                     //data: {txt1: textboxvalue},
                     success: function(result){
                         $("#result").text(result);
-                        $("#add_patient").addClass('hidden');
                     },
                     error: function (xhr) { //XMLHttpRequest
                         //Here the status code can be retrieved like;
                         alert(xhr.status);
                         //The message added to Response object in Controller can be retrieved as following.
                         alert(xhr.responseText); // http://stackoverflow.com/a/450540
-                        $("#add_patient").removeClass('hidden');
                     },
                 });
             }
