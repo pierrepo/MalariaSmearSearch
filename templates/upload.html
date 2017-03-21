@@ -30,7 +30,6 @@
             {{ render_field(form.magnification) }}
 
             {{ render_field(form.patient_ref) }}
-            <input type="button" value="Search" id="search" />
             <div id="result"></div>
 
             <div id = 'add_patient' class="hidden">
@@ -58,7 +57,7 @@
 
     <script>
 
-        $("#search").click(function(){
+        $("#patient_ref").focusout(function() {
             var textboxvalue = $('input[name=patient_ref]').val();
 
             // I have not found an error handler for get json ajax,
