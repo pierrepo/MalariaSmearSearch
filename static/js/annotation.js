@@ -59,6 +59,11 @@ $(document).ready(function(){
     function addAnnoView(new_anno){
         console.log("================================");
         // the new anno is appended in the anno list :
+
+        // http://stackoverflow.com/a/12949050
+        // jQuery append function close tags automatically.
+        // that is why why cannot use :
+        /*
         $("#annotations-list")
             .append("<li name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span>");
         if (user_auth) {
@@ -67,6 +72,15 @@ $(document).ready(function(){
         }
         $("#annotations-list")
             .append("</li>");
+        */
+        // Instead, we put the html in an string then append that string to the dom :
+         var html="<li name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span>"
+         if (user_auth) {
+             html+="<button class='glyphicon glyphicon-trash'></button>";
+         }
+         html+="</li>";
+
+         $("#annotations-list").append(html)
 
         // TODO : do not use the annotation code
         // the action button events are bind automatically,
@@ -456,6 +470,28 @@ $(document).ready(function(){
                 type: "DELETE", /*TODO : REST - the DELETE method requests thant the origin server delete the resource identified by the request URI*/
 
                 success: function(r){
+
+                    rect = anno_stage_anno_layer.find( "."+ thiscache.parent().attr("name") );
+                    rect.destroy();
+                    anno_stage_anno_layer.draw();
+                    //Resource the cropper to take the deletion into account
+                    new_url = $('#anno-konvajs .konvajs-content canvas')[0].toDataURL();
+                    //the first (and the only one) canvas selected here corresponds both to the image and annotation layer of the annotation stage.
+                    console.log (new_url);
+                    $('#anno-konvajs .konvajs-content canvas').cropper(
+                        'replace',
+                        new_url,
+                        true
+                    );
+
+
+                    ratio_rect = view_stage_anno_layer.find( "."+ thiscache.parent().attr("name") );
+                    ratio_rect.off('mouseover');
+                    ratio_rect.off('mouseout');
+                    ratio_rect.off('mousedown');
+                    ratio_rect.destroy();
+                    view_stage_anno_layer.draw();
+
                     thiscache
                         .parent()
                             .hide(400, function(){$(this).remove()});
