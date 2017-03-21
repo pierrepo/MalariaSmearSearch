@@ -14,6 +14,29 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 import app
 
+
+
+class RequiredIf(Optional, Required):
+    """ A validator which makes a field required if
+        another field is set and has a truthy value
+
+        Adapted from : http://stackoverflow.com/a/8464478
+    """
+    def __init__(self, other_field_name, *args, **kwargs):
+        self.other_field_name = other_field_name
+        super().__init__(*args, **kwargs)
+
+    def __call__(self, form, field):
+        # Why use the __call__ special method : http://stackoverflow.com/a/5826283
+        other_field = form._fields.get(self.other_field_name)
+        if other_field is None:
+            raise Exception('no field named "%s" in form' % self.other_field_name)
+        if len(other_field.data) != 0:
+            Required()(form, field)
+        else :
+            Optional()(form, field)
+
+
 class UploadForm(FlaskForm):
     """
     Form for image upload.
@@ -36,13 +59,13 @@ class UploadForm(FlaskForm):
     provider = TextAreaField('Provider', render_kw={"rows": 3, "cols": 70}, validators=[Required()])
     magnification =IntegerField ('Microscope magnification factor', widget=NumberInput(), render_kw={"placeholder": "e.g. 100"}, validators=[Optional()], default=None )
     patient_ref = TextField('Patient reference', validators=[Length(max=50)])
-    patient_year_of_birth = IntegerField ('Patient year of birth', widget=NumberInput(), validators=[Optional()], default=None )
-    patient_gender =RadioField('Patient gender', validators=[Optional()], default=None, choices=[
+    patient_year_of_birth = IntegerField ('Patient year of birth', widget=NumberInput(), validators=[RequiredIf('patient_ref')], default=None )
+    patient_gender =RadioField('Patient gender', validators=[RequiredIf('patient_ref')], default=None, choices=[
             ('M',  'Male'),
             ('F',  'Female')
     ])
-    patient_city = TextField('Patient city', validators=[Length(max=50), Optional()], default=None)
-    patient_country = TextField('Patient country', validators=[Length(max=50),  Optional()], default=None)
+    patient_city = TextField('Patient city', validators=[Length(max=50), RequiredIf('patient_ref')], default=None)
+    patient_country = TextField('Patient country', validators=[Length(max=50), RequiredIf('patient_ref')], default=None)
 
     submit = SubmitField('Upload blood smear', render_kw={"class": "btn btn-info btn-lg", "id": "submit-button"})
 
