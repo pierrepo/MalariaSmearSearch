@@ -60,25 +60,27 @@
         $("#patient_ref").focusout(function() {
             var textboxvalue = $('input[name=patient_ref]').val();
 
-            // I have not found an error handler for get json ajax,
-            // that is why I use the more verbose ajax method :
-            $.ajax( {
-                type: "GET",
-                dataType: 'json',
-                url: Flask.url_for("get_patient", {"institution": "{{current_user.original_institution.name}}", "patient_ref":textboxvalue}),
-                //data: {txt1: textboxvalue},
-                success: function(result){
-                    $("#result").text(result);
-                    $("#add_patient").addClass('hidden');
-                },
-                error: function (xhr) { //XMLHttpRequest
-                    //Here the status code can be retrieved like;
-                    alert(xhr.status);
-                    //The message added to Response object in Controller can be retrieved as following.
-                    alert(xhr.responseText); // http://stackoverflow.com/a/450540
-                    $("#add_patient").removeClass('hidden');
-                },
-            });
+            if( $(this).val() ) {
+                // I have not found an error handler for get json ajax,
+                // that is why I use the more verbose ajax method :
+                $.ajax( {
+                    type: "GET",
+                    dataType: 'json',
+                    url: Flask.url_for("get_patient", {"institution": "{{current_user.original_institution.name}}", "patient_ref":textboxvalue}),
+                    //data: {txt1: textboxvalue},
+                    success: function(result){
+                        $("#result").text(result);
+                        $("#add_patient").addClass('hidden');
+                    },
+                    error: function (xhr) { //XMLHttpRequest
+                        //Here the status code can be retrieved like;
+                        alert(xhr.status);
+                        //The message added to Response object in Controller can be retrieved as following.
+                        alert(xhr.responseText); // http://stackoverflow.com/a/450540
+                        $("#add_patient").removeClass('hidden');
+                    },
+                });
+            }
         });
         // TODO :
         // http://stackoverflow.com/questions/16627964/how-do-you-send-an-ajax-request-every-time-that-a-form-input-field-changes/16628110#16628110
