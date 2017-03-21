@@ -304,7 +304,7 @@ def browse():
             row = [
                 sample.id,
                 None,
-                sample.username,
+                sample.user_upload.username,
                 chunk_row,
                 chunk_col,
                 tot_num_anno,
@@ -351,7 +351,7 @@ def get_chunk_annotation(sample_id, col, row):
 
     # model is not JSON serializable
     # so we do it by the hand : #TODO : better way ?
-    serialized_annotations = [ {key : e.__dict__[key] for key in ['sample_id', 'col', 'row', 'id', 'username','x','y','width','height', 'annotation'] } for e in annotations ]
+    serialized_annotations = [ {key : e.__dict__[key] for key in ['sample_id', 'col', 'row', 'id', 'username_upload','x','y','width','height', 'annotation'] } for e in annotations ]
     for e in serialized_annotations : print (e)
 
 
