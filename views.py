@@ -303,7 +303,7 @@ def browse():
 
             row = [
                 sample.id,
-                None,
+                sample.date_upload,
                 sample.user_upload.username,
                 chunk_row,
                 chunk_col,
