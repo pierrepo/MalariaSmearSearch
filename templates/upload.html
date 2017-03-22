@@ -77,6 +77,12 @@
                     //data: {txt1: textboxvalue},
                     success: function(result){
                         $("#result").text(result);
+                        console.log(result.year_of_birth, result.gender, result.city, result.country);
+                        $('#patient_year_of_birth').val(result.year_of_birth);
+                        console.log( $(':radio[value='+ result.gender +']')) ;
+                        $(':radio[value='+ result.gender +']').prop("checked", true);
+                        $('#patient_city').val(result.city);
+                        $('#patient_country').val(result.country);
                     },
                     error: function (xhr) { //XMLHttpRequest
                         //Here the status code can be retrieved like;
