@@ -63,6 +63,11 @@
 
 
             if( $(this).val() ) {
+
+                //apply the required class to the patient form fields :
+                // = fields in div#patient-infos
+                $( "#patient-infos").find( "label" ).addClass( "required" );
+
                 // I have not found an error handler for get json ajax,
                 // that is why I use the more verbose ajax method :
                 $.ajax( {
@@ -80,6 +85,10 @@
                         alert(xhr.responseText); // http://stackoverflow.com/a/450540
                     },
                 });
+            }else{
+                //do not apply the required class to the patient form fields :
+                // = fields in div#patient-infos
+                $( "#patient-infos").find( "label" ).removeClass( "required" );
             }
         });
         // TODO :
