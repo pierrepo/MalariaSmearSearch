@@ -506,15 +506,6 @@ $(document).ready(function(){
     });
 
 
-    // static varaiable.
-    // will be deleted when adding a new annotation in db by ajax will return the id of the annotation
-    var incr = (function () {
-        var i = 20; // There are 20 rect on the canvas
-        return function () {
-            return i++;
-        }
-    })();
-
     $('#add-new').submit(function(){
         var newAnnotationText= $( "#new-list-item-text option:selected" ).text();
 
@@ -526,7 +517,6 @@ $(document).ready(function(){
 
             success: function(theResponse){
 
-                theResponse = incr().toString();
                 console.log(theResponse);
 
                 // draw the annotation on the konvas :
