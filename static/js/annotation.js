@@ -528,7 +528,7 @@ $(document).ready(function(){
                     height: $('#add-sel-height').val(),
                     stroke: 'red',
                     strokeWidth: 4,
-                    name: theResponse
+                    name: theResponse.toString() // it has to be a string !!
                 };
                 console.log("!!!!!!!!!!!!!!!!!!!!!!!!!");
                 addAnnoView(new_anno);
