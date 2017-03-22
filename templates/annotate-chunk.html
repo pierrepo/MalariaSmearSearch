@@ -82,10 +82,10 @@
 
     <section class="row">
       <form action="/add_anno" method='POST' class='anno-stuff' id="add-new">
-          <input type="number" name = 'x' id = 'add-sel-x' readonly>
-          <input type="number" name = 'y' id = 'add-sel-y' readonly>
-          <input type="number" name = 'width'  id = 'add-sel-width' readonly>
-          <input type="number" name = 'height' id = 'add-sel-height' readonly>
+          <input type="number" name = 'x' id = 'add-sel-x' step="1" readonly>
+          <input type="number" name = 'y' id = 'add-sel-y' step="1" readonly>
+          <input type="number" name = 'width'  id = 'add-sel-width' step="1" readonly>
+          <input type="number" name = 'height' id = 'add-sel-height' step="1" readonly>
           <select  id="new-list-item-text" name="new-list-item-text">
               <option selected="selected" disabled="disabled">Select an annotation</option>
               <optgroup label="Parasite - Unknown species ">
