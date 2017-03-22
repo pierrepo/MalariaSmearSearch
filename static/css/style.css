@@ -16,6 +16,10 @@
 }
 
 
+a.link-silent {
+	text-decoration: none;
+}
+
 footer {
 	padding-top: 10px;
 }
