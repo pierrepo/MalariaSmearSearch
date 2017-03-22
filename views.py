@@ -280,7 +280,7 @@ def get_patient(institution, patient_ref):
         #TODO : better way ?
         #http://stackoverflow.com/questions/5022066/how-to-serialize-sqlalchemy-result-to-json/31569287#31569287
         #http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask/27951648#27951648
-        serialized_patient = {key : patient.__dict__[key] for key in ['age', 'gender', 'ref', 'institution'] }
+        serialized_patient = {key : patient.__dict__[key] for key in ['institution', 'ref', 'year_of_birth', 'gender', 'city', 'country'] }
         print ("serialized patient :", serialized_patient )
         return jsonify(serialized_patient)
     except AttributeError as e :

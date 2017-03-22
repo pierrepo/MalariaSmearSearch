@@ -30,7 +30,6 @@
             {{ render_field(form.magnification) }}
 
             {{ render_field(form.patient_ref) }}
-            <div id="result"></div>
 
             <div id = 'patient-infos'>
                 {{ render_field(form.patient_year_of_birth) }}
@@ -60,7 +59,7 @@
         $("#patient_ref").focusout(function() {
             var textboxvalue = $('input[name=patient_ref]').val();
 
-
+            $('#patient-infos :input').attr('readonly',false);
 
             if( $(this).val() ) {
 
@@ -76,7 +75,15 @@
                     url: Flask.url_for("get_patient", {"institution": "{{current_user.original_institution.name}}", "patient_ref":textboxvalue}),
                     //data: {txt1: textboxvalue},
                     success: function(result){
-                        $("#result").text(result);
+                        console.log(result.year_of_birth, result.gender, result.city, result.country);
+                        $('#patient_year_of_birth').val(result.year_of_birth);
+                        console.log( $(':radio[value='+ result.gender +']')) ;
+                        $(':radio[value='+ result.gender +']').prop("checked", true);
+                        $('#patient_city').val(result.city);
+                        $('#patient_country').val(result.country);
+
+                        $('#patient-infos :input').attr('readonly',true);
+
                     },
                     error: function (xhr) { //XMLHttpRequest
                         //Here the status code can be retrieved like;
