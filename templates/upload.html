@@ -59,7 +59,7 @@
         $("#patient_ref").focusout(function() {
             var textboxvalue = $('input[name=patient_ref]').val();
 
-
+            $('#patient-infos :input').attr('readonly',false);
 
             if( $(this).val() ) {
 
@@ -82,7 +82,8 @@
                         $('#patient_city').val(result.city);
                         $('#patient_country').val(result.country);
 
-                        $('#patient-infos :input').attr('readonly','readonly');
+                        $('#patient-infos :input').attr('readonly',true);
+
                     },
                     error: function (xhr) { //XMLHttpRequest
                         //Here the status code can be retrieved like;
