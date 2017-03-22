@@ -17,7 +17,7 @@
         <form method="POST" onsubmit="" action="{{url_for('upload')}}"  enctype="multipart/form-data">
         <fieldset class="field-upload">
             <legend id="legend-upload-mandatory">Blood smear details</legend>
-            <p id="info-mandatory">Fields with <span style="color:red;">*</span> are mandatory</p>
+            <p id="info-msg">Fields with <span style="color:red;">*</span> are mandatory</p>
           <dl>
             {{ render_field(form.sample) }}
             {{ render_field(form.smear_type) }}
@@ -28,9 +28,11 @@
             <legend id="legend-upload-optional">Complementary details</legend>
             {{ render_field(form.comment) }}
             {{ render_field(form.magnification) }}
-
+        </fieldset>
+		<fieldset class="field-upload">
+			<legend id="legend-upload-patient">Patient details</legend>
             {{ render_field(form.patient_ref) }}
-            <div id="patient-msg"></div>
+            <div id="patient-msg" class="info-msg"></div>
             <div id = 'patient-infos'>
                 {{ render_field(form.patient_year_of_birth) }}
                 {{ render_field(form.patient_gender) }}
