@@ -113,7 +113,7 @@ $(document).ready(function(){
             height: new_anno.height * ratio,
             stroke: new_anno.stroke,
             strokeWidth: new_anno.strokeWidth * ratio,
-            name: new_anno.name
+            name: new_anno.name.toString() // it has to be a string !!
         };
 
         // add the ration annotation as a rect on the anno layer of the view stage
@@ -126,7 +126,7 @@ $(document).ready(function(){
           fill : null,
           stroke: ratio_new_anno.stroke,
           strokeWidth:  ratio_new_anno.strokeWidth,
-          name: ratio_new_anno.name
+          name: ratio_new_anno.name.toString() // it has to be a string !!
         });
         view_stage_anno_layer.add(ratio_rect);
 
@@ -528,7 +528,7 @@ $(document).ready(function(){
                     height: $('#add-sel-height').val(),
                     stroke: 'red',
                     strokeWidth: 4,
-                    name: theResponse
+                    name: theResponse.toString() // it has to be a string !!
                 };
                 console.log("!!!!!!!!!!!!!!!!!!!!!!!!!");
                 addAnnoView(new_anno);
