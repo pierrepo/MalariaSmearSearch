@@ -76,6 +76,29 @@ def add_sample():
         print (new_sample)
         print (form)
 
+        print('handle patient')
+        patient = model.Patient.query.filter_by(
+            ref=form.patient_ref.data,
+            institution=current_user.original_institution.name
+        ).first()
+        print (patient)
+
+        if not patient :
+            patient = model.Patient()
+
+            patient.gender  = form.patient_gender.data
+            patient.ref =form.patient_ref.data
+            patient.institution  =  current_user.original_institution.name
+            patient.year_of_birth = form.patient_year_of_birth.data
+            patient.city =form.patient_city.data
+            patient.country = form.patient_country.data
+
+
+        new_sample.patient = patient
+
+        print ("!!!!!!!!!!!!!!")
+        print (patient)
+
         try :
             # add the sample in the database :
             db.session.add(new_sample)
@@ -103,6 +126,8 @@ def add_sample():
 
             # cut the sample into chunks :
             new_sample.make_chunks()
+
+            print (new_sample.patient.id)
 
             return redirect( url_for('uploaded', sample_id = new_sample.id) )
 
