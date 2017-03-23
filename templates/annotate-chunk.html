@@ -71,7 +71,11 @@
 {% block content %}
 
     {% if current_user.is_authenticated %}
-        <button value = 'view' id = 'toggle-mode' class='glyphicon glyphicon-plus'>Annotate</button>
+        <div class="btn btn-primary" id = "toggle-mode">
+        	<span id="icon-annotate" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        	<span id="icon-view" class="glyphicon glyphicon-eye-open" aria-hidden="true" style="display: none;"></span>
+        	<span id="icon-text">Annotate</span>
+        </div>
     {% endif %}
 
     <section class="row limited-height">

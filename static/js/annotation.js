@@ -376,30 +376,28 @@ $(document).ready(function(){
 
     $( "#toggle-mode" ).click(function() {
 
-        value = $(this).val() ;
+        // Toggle button Annotate <-> View
+        value = $(this).text();
+        console.log(value);
 
-        console.log (value)
-
-        if ($(this).val() == 'view' ) {
-            // Change button attribute to handle reclick -> return in view mode
-            $(this).val('annotation')
-            $(this).toggleClass( 'glyphicon-plus');
-            $(this).toggleClass( 'glyphicon-eye-open');
-            $(this).text('View');
+        if ($( "#icon-text" ).text().trim() == "Annotate" ) {
+            // Change button text and icon Annotate -> View
+            $( "#icon-annotate" ).hide();
+            $( "#icon-view" ).show();
+            $( "#icon-text" ).text("View");
             // Show annotation stuff : the cropper div and the input form
-            $('.anno-stuff').show()
+            $( ".anno-stuff" ).show();
             // Hide rendered kanva :
-            $('#view-konvajs').hide()
+            $( "#view-konvajs" ).hide();
         }else{
-            // Change button attribute to handle reclick -> return in annotation mode
-            $(this).val('view');
-            $(this).toggleClass( 'glyphicon-plus');
-            $(this).toggleClass( 'glyphicon-eye-open');
-            $(this).text('Annotate');
+             // Change button text and icon View -> Annotate
+            $( "#icon-annotate" ).show();
+            $( "#icon-view" ).hide();
+            $( "#icon-text" ).text("Annotate");
             // Hide anno stuff : cropper div, the input form :
-            $('.anno-stuff').hide();
+            $( ".anno-stuff" ).hide();
             // Show rendered kanva :
-            $('#view-konvajs').show()
+            $( "#view-konvajs" ).show();
             // Destroy the cropper :
             //$('#anno-konvajs .konvajs-content canvas').cropper("destroy");
         }
