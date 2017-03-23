@@ -67,7 +67,7 @@ class UploadForm(FlaskForm):
     patient_city = TextField('Patient city', validators=[Length(max=50), RequiredIf('patient_ref')], default=None)
     patient_country = TextField('Patient country', validators=[Length(max=50), RequiredIf('patient_ref')], default=None)
 
-    submit = SubmitField('Upload blood smear', render_kw={"class": "btn btn-info btn-lg", "id": "submit-button"})
+    submit = SubmitField('Upload new blood smear', render_kw={"class": "btn btn-info btn-lg", "id": "submit-button"})
 
 
 class LoginForm(FlaskForm):

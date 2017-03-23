@@ -7,10 +7,3 @@ label.required::before {
 	color: red; 
 }
 
-#info-mandatory {
-	font-style: italic;
-}
-
-#submit-button {
-	margin-top: 20px;
-}

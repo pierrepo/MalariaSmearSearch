@@ -17,7 +17,7 @@
         <form method="POST" onsubmit="" action="{{url_for('upload')}}"  enctype="multipart/form-data">
         <fieldset class="field-upload">
             <legend id="legend-upload-mandatory">Blood smear details</legend>
-            <p id="info-mandatory">Fields with <span style="color:red;">*</span> are mandatory</p>
+            <p id="info-msg">Fields with <span style="color:red;">*</span> are mandatory</p>
           <dl>
             {{ render_field(form.sample) }}
             {{ render_field(form.smear_type) }}
@@ -28,9 +28,11 @@
             <legend id="legend-upload-optional">Complementary details</legend>
             {{ render_field(form.comment) }}
             {{ render_field(form.magnification) }}
-
+        </fieldset>
+		<fieldset class="field-upload">
+			<legend id="legend-upload-patient">Patient details</legend>
             {{ render_field(form.patient_ref) }}
-
+            <div id="patient-msg" class="info-msg"></div>
             <div id = 'patient-infos'>
                 {{ render_field(form.patient_year_of_birth) }}
                 {{ render_field(form.patient_gender) }}
@@ -75,6 +77,7 @@
                     url: Flask.url_for("get_patient", {"institution": "{{current_user.original_institution.name}}", "patient_ref":textboxvalue}),
                     //data: {txt1: textboxvalue},
                     success: function(result){
+                    	$("#patient-msg").text("Patient found in database.");
                         console.log(result.year_of_birth, result.gender, result.city, result.country);
                         $('#patient_year_of_birth').val(result.year_of_birth);
                         console.log( $(':radio[value='+ result.gender +']')) ;
@@ -86,10 +89,11 @@
 
                     },
                     error: function (xhr) { //XMLHttpRequest
+                    	$("#patient-msg").text("New patient. Please fill details below:");
                         //Here the status code can be retrieved like;
-                        alert(xhr.status);
+                        //alert(xhr.status);
                         //The message added to Response object in Controller can be retrieved as following.
-                        alert(xhr.responseText); // http://stackoverflow.com/a/450540
+                        //alert(xhr.responseText); // http://stackoverflow.com/a/450540
                     },
                 });
             }else{
