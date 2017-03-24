@@ -109,7 +109,7 @@ class User(db.Model):
     __tablename__ = 'Users' # tablename
 
     username = db.Column(db.String(30), primary_key=True)
-    institution_primary_name = db.Column(db.String(50), db.ForeignKey('Institutions.name')) # tablename
+    primary_institution_name = db.Column(db.String(50), db.ForeignKey('Institutions.name')) # tablename
 
 
 class Institution(db.Model):
@@ -127,7 +127,7 @@ class Institution(db.Model):
     url= db.Column(db.String(100))
     comment = db.Column(db.Text)
 
-    users = db.relationship('User', backref='institution_primary',
+    users = db.relationship('User', backref='primary_institution',
                                 lazy='dynamic')
 
     def __init__(self, name, place, description, url, comment):
