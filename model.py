@@ -156,8 +156,47 @@ class User(db.Model):
     __tablename__ = 'Users' # tablename
 
     username = db.Column(db.String(30), primary_key=True)
-    original_institution = db.Column(db.String(50))
+    institution_primary_name = db.Column(db.String(50), db.ForeignKey('Institutions.name')) # tablename
 
+
+class Institution(db.Model):
+    """
+    Institution model.
+
+    Interact with the database.
+    """
+    __bind_key__ = 'data'
+    __tablename__ = 'Institutions' # tablename
+
+    name = db.Column(db.String(50), primary_key=True)
+    place = db.Column(db.String(100))
+    description = db.Column(db.Text)
+    url= db.Column(db.String(100))
+    comment = db.Column(db.Text)
+
+    users = db.relationship('User', backref='institution_primary',
+                                lazy='dynamic')
+
+    def __init__(self, name, place, description, url, comment):
+        """
+        Arguments :
+        ----------
+        name : string max 50 chars
+            name of the institution
+        place : string max 100 chars
+            place of the institution
+        description : string
+            description of the institution
+        url : string max 100 chars
+            url of the institution
+        comment : string
+            comment of the institution
+        """
+        self.name = name
+        self.place = place
+        self.description = description
+        self.url= url
+        self.comment = comment
 
 class Sample(db.Model):
     """
