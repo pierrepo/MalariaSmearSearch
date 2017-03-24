@@ -79,7 +79,7 @@ def add_sample():
         print('handle patient')
         patient = model.Patient.query.filter_by(
             ref=form.patient_ref.data,
-            institution=current_user.original_institution.name
+            institution=current_user.primary_institution_name
         ).first()
         print (patient)
 
@@ -88,7 +88,7 @@ def add_sample():
 
             patient.gender  = form.patient_gender.data
             patient.ref =form.patient_ref.data
-            patient.institution  =  current_user.original_institution.name
+            patient.institution  =  current_user.primary_institution_name
             patient.year_of_birth = form.patient_year_of_birth.data
             patient.city =form.patient_city.data
             patient.country = form.patient_country.data
