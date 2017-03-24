@@ -42,33 +42,8 @@ import datetime
 class Membership(db.Model):
     __bind_key__ = 'users'
     __tablename__ = 'Memberships'
-    username =  db.Column(db.String(30), db.ForeignKey('Users_auth.username'), primary_key=True) # left_id
-    institution_name = db.Column(db.String(50), db.ForeignKey('Institutions.name'), primary_key=True) #right_id
-    original = db.Column(db.Boolean()) #extra_data
-
-    # bidirectional attribute/collection of "user"/"user_keywords"
-    user = db.relationship('User_auth',
-                backref=db.backref("user_institutions")
-            )
-
-    # reference to the "Institution" object
-    institution = db.relationship("Institution")
-
-
-    def __init__(self, institution=None, user=None, original=False):
-        self.institution= institution
-        self.user = user
-        self.original = original
-
-
-
-    def __repr__(self):
-        return "{0}, {1}, {2}".format (
-            self.institution_name ,
-            self.username,
-            self.original
-        )
-
+    username =  db.Column(db.String(30), db.ForeignKey('Users_auth.username'), primary_key=True)
+    institution_name = db.Column(db.String(50), primary_key=True)
 
 
 class User_auth(db.Model, UserMixin):
@@ -83,10 +58,10 @@ class User_auth(db.Model, UserMixin):
     username = db.Column(db.String(30), primary_key=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(20))
+    primary_institution_name = db.Column(db.String(50))
 
-    # association proxy of "user_institutions" collection
-    # to "institution" attribute
-    institutions = association_proxy('user_institutions', 'institution')
+    secondary_institutions = db.relationship('Membership', backref='user',
+                                lazy='dynamic')
 
     def __repr__(self):
         """
@@ -122,28 +97,6 @@ class User_auth(db.Model, UserMixin):
         print ('====================')
         original_institution = Membership.query.filter(Membership.username == self.username, Membership.original == True).first()
         return original_institution.institution
-
-
-
-class Institution(db.Model):
-    """
-    Institution model.
-
-    Interact with the database.
-    """
-    __bind_key__ = 'users'
-    __tablename__ = 'Institutions' # tablename
-
-    name = db.Column(db.String(50), primary_key=True)
-
-    def __init__(self, name):
-        """
-
-        self.name : string
-            name of the institution
-        """
-        self.name = name
-
 
 
 class User(db.Model):
