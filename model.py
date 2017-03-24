@@ -288,7 +288,7 @@ class Patient(db.Model):
     age = db.Column(db.Integer)
     gender  = db.Column(db.String(1))
     ref = db.Column(db.String(50))
-    institution  =  db.Column(db.String(50))
+    institution_name  =  db.Column(db.String(50))
     year_of_birth = db.Column(db.Integer) #could be datetime
     city = db.Column(db.String(50))
     country = db.Column(db.String(50))

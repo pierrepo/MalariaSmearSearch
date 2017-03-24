@@ -74,7 +74,7 @@
                 $.ajax( {
                     type: "GET",
                     dataType: 'json',
-                    url: Flask.url_for("get_patient", {"institution": "{{current_user.primary_institution_name}}", "patient_ref":textboxvalue}),
+                    url: Flask.url_for("get_patient", {"institution_name": "{{current_user.primary_institution_name}}", "patient_ref":textboxvalue}),
                     //data: {txt1: textboxvalue},
                     success: function(result){
                     	$("#patient-msg").text("Patient found in database.");
