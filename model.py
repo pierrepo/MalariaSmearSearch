@@ -42,33 +42,8 @@ import datetime
 class Membership(db.Model):
     __bind_key__ = 'users'
     __tablename__ = 'Memberships'
-    username =  db.Column(db.String(30), db.ForeignKey('Users_auth.username'), primary_key=True) # left_id
-    institution_name = db.Column(db.String(50), db.ForeignKey('Institutions.name'), primary_key=True) #right_id
-    original = db.Column(db.Boolean()) #extra_data
-
-    # bidirectional attribute/collection of "user"/"user_keywords"
-    user = db.relationship('User_auth',
-                backref=db.backref("user_institutions")
-            )
-
-    # reference to the "Institution" object
-    institution = db.relationship("Institution")
-
-
-    def __init__(self, institution=None, user=None, original=False):
-        self.institution= institution
-        self.user = user
-        self.original = original
-
-
-
-    def __repr__(self):
-        return "{0}, {1}, {2}".format (
-            self.institution_name ,
-            self.username,
-            self.original
-        )
-
+    username =  db.Column(db.String(30), db.ForeignKey('Users_auth.username'), primary_key=True)
+    institution_name = db.Column(db.String(50), primary_key=True)
 
 
 class User_auth(db.Model, UserMixin):
@@ -83,10 +58,10 @@ class User_auth(db.Model, UserMixin):
     username = db.Column(db.String(30), primary_key=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(20))
+    primary_institution_name = db.Column(db.String(50))
 
-    # association proxy of "user_institutions" collection
-    # to "institution" attribute
-    institutions = association_proxy('user_institutions', 'institution')
+    secondary_institutions = db.relationship('Membership', backref='user',
+                                lazy='dynamic')
 
     def __repr__(self):
         """
@@ -124,28 +99,6 @@ class User_auth(db.Model, UserMixin):
         return original_institution.institution
 
 
-
-class Institution(db.Model):
-    """
-    Institution model.
-
-    Interact with the database.
-    """
-    __bind_key__ = 'users'
-    __tablename__ = 'Institutions' # tablename
-
-    name = db.Column(db.String(50), primary_key=True)
-
-    def __init__(self, name):
-        """
-
-        self.name : string
-            name of the institution
-        """
-        self.name = name
-
-
-
 class User(db.Model):
     """
     User model.
@@ -156,8 +109,49 @@ class User(db.Model):
     __tablename__ = 'Users' # tablename
 
     username = db.Column(db.String(30), primary_key=True)
-    original_institution = db.Column(db.String(50))
+    primary_institution_name = db.Column(db.String(50), db.ForeignKey('Institutions.name')) # tablename
 
+
+class Institution(db.Model):
+    """
+    Institution model.
+
+    Interact with the database.
+    """
+    __bind_key__ = 'data'
+    __tablename__ = 'Institutions' # tablename
+
+    name = db.Column(db.String(50), primary_key=True)
+    place = db.Column(db.String(100))
+    description = db.Column(db.Text)
+    url= db.Column(db.String(100))
+    comment = db.Column(db.Text)
+
+    users = db.relationship('User', backref='primary_institution',
+                                lazy='dynamic')
+    patients = db.relationship('Patient', backref='institution',
+                                lazy='dynamic')
+
+    def __init__(self, name, place, description, url, comment):
+        """
+        Arguments :
+        ----------
+        name : string max 50 chars
+            name of the institution
+        place : string max 100 chars
+            place of the institution
+        description : string
+            description of the institution
+        url : string max 100 chars
+            url of the institution
+        comment : string
+            comment of the institution
+        """
+        self.name = name
+        self.place = place
+        self.description = description
+        self.url= url
+        self.comment = comment
 
 class Sample(db.Model):
     """
@@ -296,7 +290,7 @@ class Patient(db.Model):
     age = db.Column(db.Integer)
     gender  = db.Column(db.String(1))
     ref = db.Column(db.String(50))
-    institution  =  db.Column(db.String(50))
+    institution_name  =  db.Column(db.String(50), db.ForeignKey('Institutions.name')) # tablename
     year_of_birth = db.Column(db.Integer) #could be datetime
     city = db.Column(db.String(50))
     country = db.Column(db.String(50))

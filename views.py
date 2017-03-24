@@ -79,7 +79,7 @@ def add_sample():
         print('handle patient')
         patient = model.Patient.query.filter_by(
             ref=form.patient_ref.data,
-            institution=current_user.original_institution.name
+            institution_name=current_user.primary_institution_name
         ).first()
         print (patient)
 
@@ -88,7 +88,7 @@ def add_sample():
 
             patient.gender  = form.patient_gender.data
             patient.ref =form.patient_ref.data
-            patient.institution  =  current_user.original_institution.name
+            patient.institution_name  =  current_user.primary_institution_name
             patient.year_of_birth = form.patient_year_of_birth.data
             patient.city =form.patient_city.data
             patient.country = form.patient_country.data
@@ -266,12 +266,12 @@ def account():
     #TODO
     return render_template('account-page.html')
 
-@app.route('/patients/<string:institution>/<string:patient_ref>')
-def get_patient(institution, patient_ref):
+@app.route('/patients/<string:institution_name>/<string:patient_ref>')
+def get_patient(institution_name, patient_ref):
     try :
         print ('try to get patient')
         # get the current patient :
-        patient = model.Patient.query.filter_by(ref=patient_ref, institution=institution ).first()
+        patient = model.Patient.query.filter_by(ref=patient_ref, institution_name=institution_name ).first()
         print (patient)
 
         # model is not JSON serializable
@@ -280,7 +280,7 @@ def get_patient(institution, patient_ref):
         #TODO : better way ?
         #http://stackoverflow.com/questions/5022066/how-to-serialize-sqlalchemy-result-to-json/31569287#31569287
         #http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask/27951648#27951648
-        serialized_patient = {key : patient.__dict__[key] for key in ['institution', 'ref', 'year_of_birth', 'gender', 'city', 'country'] }
+        serialized_patient = {key : patient.__dict__[key] for key in ['institution_name', 'ref', 'year_of_birth', 'gender', 'city', 'country'] }
         print ("serialized patient :", serialized_patient )
         return jsonify(serialized_patient)
     except AttributeError as e :
