@@ -54,11 +54,8 @@
     {{super()}}
 
     <script>
-
-
         // !!! for now, every fields are readonly :
-        $(':input').attr('readonly',true);
-
+        $(':fieldset').attr('disabled',true);
 
         // auto-fill the fields based on the given info :
         $(':radio[value='+ '{{sample.smear_type}}' +']').prop("checked", true);
@@ -71,7 +68,6 @@
         $(':radio[value='+ '{{sample.patient.gender}}' +']').prop("checked", true);
         $('#patient_city').val('{{sample.patient.city}}');
         $('#patient_country').val('{{sample.patient.country}}');
-
 
     </script>
 
