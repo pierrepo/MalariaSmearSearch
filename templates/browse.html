@@ -31,7 +31,11 @@
             <tbody>
                 {%for data in rows%}
                     <tr>
-                        <td>{{data[0]}}</td> <!-- sample id / update sample infos -->
+                        <td>
+                            <a class="link-silent" href="{{ url_for('show_update_sample_info', sample_id = data[0]) }}">
+                                {{data[0]}} <span class="glyphicon glyphicon-eye-open"></span>
+                            </a>
+                        </td> <!-- sample id / update sample infos -->
                         <td>{{data[1]}}</td> <!-- date upload -->
                         <td>{{data[2]}}</td> <!-- upoaded by -->
                         <td>

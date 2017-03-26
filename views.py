@@ -162,10 +162,9 @@ def uploaded(sample_id):
 
 
 
-@app.route('/samples/<int:sample_id>/change-info', methods=['GET'])
+@app.route('/samples/<int:sample_id>/show-update', methods=['GET'])
 @login_required
-def change_sample_infos(sample_id):
-
+def show_update_sample_info(sample_id):
 
     sample = model.Sample.query.get(sample_id)
     sample.init_on_load()
@@ -183,7 +182,7 @@ def change_sample_infos(sample_id):
 
     form = UploadForm()
 
-    return render_template('image-infos.html', sample = sample, form = form )
+    return render_template('show-update-sample-info.html', sample = sample, form = form )
 
 
 @app.route("/")
