@@ -31,24 +31,21 @@
         /* Flashed message by js :  */
 
         #flash-container {
-            /* Initially we don't want any height, and we want the contents to be hidden */
-            overflow: hidden;
-            max-height: 0;
-
-            width:100%;
-            text-align:center;
+            display: inline;
+            opacity: 0;
+            vertical-align: middle;
+            text-align: center;
 
             /* Set the transitions up. */
-            transition: max-height 2s ease-out;
+            transition: opacity 2s ease-out;
         }
 
         #flash-container.showing {
-            max-height: 500px;
-            transition: max-height 2s ease-in;
+            opacity: 1;
+            transition: opacity 1s ease-in;
         }
         .message {
-            display: inline-block;
-            padding: 10px 20px;
+            padding-top: 10px;
             border-radius: 0 0 4px 4px;
         }
         .message.success {
@@ -65,17 +62,21 @@
 
 {% block header %}
     {{super()}}
-    <div id='flash-container'></div>
+    <div id='flash-containerPP'></div>
 {% endblock %}
 
 {% block content %}
 
     {% if current_user.is_authenticated %}
-        <div class="btn btn-primary" id = "toggle-mode">
+    <section class="row">
+        <div class="col-md-2 d-inline btn btn-primary" id="toggle-mode">
         	<span id="icon-annotate" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         	<span id="icon-view" class="glyphicon glyphicon-eye-open" aria-hidden="true" style="display: none;"></span>
         	<span id="icon-text">Annotate</span>
         </div>
+        <div class="col-md-10 d-inline" id='flash-container'>
+        </div>
+    </section>
     {% endif %}
 
     <section class="row limited-height">
