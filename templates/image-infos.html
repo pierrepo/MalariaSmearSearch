@@ -1,0 +1,78 @@
+{% extends "skeleton.html" %}
+
+{% block title %}Image infos{% endblock %}
+
+
+{% block head %}
+{{super()}}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/form.css')}}" />
+{% endblock %}
+
+
+{% block content %}
+
+
+        {% from "_formhelpers.html" import render_field %}
+        <form method="POST" onsubmit="" action="{{url_for('upload')}}"  enctype="multipart/form-data">
+        <fieldset class="field-upload">
+            <legend id="legend-upload-mandatory">Blood smear details</legend>
+            <p id="info-msg">Fields with <span style="color:red;">*</span> are mandatory</p>
+          <dl>
+            {{ render_field(form.smear_type) }}
+            {{ render_field(form.license) }}
+            {{ render_field(form.provider) }}
+        </fieldset>
+        <fieldset class="field-upload">
+            <legend id="legend-upload-optional">Complementary details</legend>
+            {{ render_field(form.comment) }}
+            {{ render_field(form.magnification) }}
+        </fieldset>
+        <fieldset class="field-upload">
+            <legend id="legend-upload-patient">Patient details</legend>
+            {{ render_field(form.patient_ref) }}
+            <div id="patient-msg" class="info-msg"></div>
+            <div id = 'patient-infos'>
+                {{ render_field(form.patient_year_of_birth) }}
+                {{ render_field(form.patient_gender) }}
+                {{ render_field(form.patient_city) }}
+                {{ render_field(form.patient_country) }}
+            </div>
+
+          </dl>
+        </fieldset>
+          {{ form.hidden_tag() }}
+
+
+        </form>
+
+
+{% endblock %}
+
+
+
+{% block imports %}
+    {{super()}}
+
+    <script>
+
+
+        // !!! for now, every fields are readonly :
+        $(':input').attr('readonly',true);
+
+
+        // auto-fill the fields based on the given info :
+        $(':radio[value='+ '{{sample.smear_type}}' +']').prop("checked", true);
+        $(':radio[value='+ '{{sample.license}}' +']').prop("checked", true);
+        $('#provider').val('{{sample.provider}}');
+        $('#comment').val('{{sample.comment}}');
+        $('#magnification').val('{{sample.magnification}}');
+        $('#patient_ref').val('{{sample.patient.ref}}');
+        $('#patient_year_of_birth').val('{{sample.patient.year_of_birth}}');
+        $(':radio[value='+ '{{sample.patient.gender}}' +']').prop("checked", true);
+        $('#patient_city').val('{{sample.patient.city}}');
+        $('#patient_country').val('{{sample.patient.country}}');
+
+
+    </script>
+
+{% endblock %}

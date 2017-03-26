@@ -161,6 +161,31 @@ def uploaded(sample_id):
     return render_template('choice_after_upload.html', sample = new_sample )
 
 
+
+@app.route('/samples/<int:sample_id>/change-info', methods=['GET'])
+@login_required
+def change_sample_infos(sample_id):
+
+
+    sample = model.Sample.query.get(sample_id)
+    sample.init_on_load()
+
+    print(sample.smear_type)
+    print(sample.license)
+    print(sample.provider)
+    print(sample.comment)
+    print(sample.magnification)
+    print(sample.patient.ref)
+    print(sample.patient.year_of_birth)
+    print(sample.patient.gender)
+    print(sample.patient.city)
+    print(sample.patient.country)
+
+    form = UploadForm()
+
+    return render_template('image-infos.html', sample = sample, form = form )
+
+
 @app.route("/")
 def index():
     """
