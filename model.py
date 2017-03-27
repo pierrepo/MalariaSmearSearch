@@ -277,6 +277,28 @@ class Sample(db.Model):
                 new_chunk = img.crop(box)
                 new_chunk.save (chunk_path)
 
+    def get_chunk_size(self, chunk_col, chunk_row) :
+
+        path = self.get_chunk_path(chunk_col, chunk_row)
+
+        nbytes = os.path.getsize(path)
+
+        size_unit = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+
+        if nbytes == 0: return '0 B'
+        i = 0
+        while  nbytes >= 1024 and i < len(size_unit)-1:
+            nbytes /= 1024.
+            i += 1
+        f = ('%.2f' %  nbytes).rstrip('0').rstrip('.')
+        return '%s %s' % (f, size_unit[i])
+
+
+
+    def get_chunk_pixel_size(self, chunk_col, chunk_row) :
+        path = self.get_chunk_path(chunk_col, chunk_row)
+        with Image.open(path) as img :
+            return img.size #width, height
 
     def get_chunk_filename(self, chunk_col, chunk_row) :
         #TODO : check the given row and col are okay

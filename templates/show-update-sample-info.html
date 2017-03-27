@@ -28,7 +28,9 @@
                        target="_self">
                        <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
                     </a>
-                    {{ sample.get_chunk_filename ( chunk_col, chunk_row ) }}
+                    {{ sample.get_chunk_filename ( chunk_col, chunk_row ) }};
+                    Size : {{sample.get_chunk_size( chunk_col, chunk_row ) }},
+                    {{sample.get_chunk_pixel_size( chunk_col, chunk_row ) }} px
                 </div>
             {% endfor %}
 
