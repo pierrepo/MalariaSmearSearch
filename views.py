@@ -169,6 +169,7 @@ def show_update_sample_info(sample_id):
     sample = model.Sample.query.get(sample_id)
     sample.init_on_load()
 
+    print(sample.size)
     print(sample.smear_type)
     print(sample.license)
     print(sample.provider)

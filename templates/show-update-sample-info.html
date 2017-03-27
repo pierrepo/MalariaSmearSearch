@@ -16,6 +16,9 @@
         <form method="POST" onsubmit="" action="{{url_for('upload')}}"  enctype="multipart/form-data">
         <fieldset class="field-upload">
             <legend id="legend-upload-mandatory">Blood smear details</legend>
+
+            <p> Size : {{sample.size}} </p>
+
             <p id="info-msg">Fields with <span style="color:red;">*</span> are mandatory</p>
           <dl>
             {{ render_field(form.smear_type) }}

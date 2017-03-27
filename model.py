@@ -29,6 +29,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from PIL import Image
 import itertools
 import datetime
+import os
 
 
 # Many to many relationship
@@ -216,7 +217,22 @@ class Sample(db.Model):
             print ('chunk_numerotation could not be initialize. num_col and num_row missing')
         self.filename = '{0}.{1}'.format(self.id, self.extension )
         self.path = samples_set.path(self.filename)
+        self.size = self.human_readable_size()
 
+
+    def human_readable_size(self):
+
+        nbytes = os.path.getsize(self.path)
+
+        size_unit = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+
+        if nbytes == 0: return '0 B'
+        i = 0
+        while  nbytes >= 1024 and i < len(size_unit)-1:
+            nbytes /= 1024.
+            i += 1
+        f = ('%.2f' %  nbytes).rstrip('0').rstrip('.')
+        return '%s %s' % (f, size_unit[i])
 
     def make_chunks(self):
         """
