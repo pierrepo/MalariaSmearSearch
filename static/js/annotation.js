@@ -493,7 +493,7 @@ $(document).ready(function(){
                     thiscache
                         .parent()
                             .hide(400, function(){$(this).remove()});
-                    Flash.success("The annotation was deleted");
+                    Flash.success("The annotation was deleted", 2000);
                 }
             });
         }
@@ -552,7 +552,7 @@ $(document).ready(function(){
                 // That makes adding a bunch of annotation items in sequence very easy and natural.
 
 
-                Flash.success("The annotation was added");
+                Flash.success("The annotation was added", 2000);
             },
             error: function(){
                 // TODO
