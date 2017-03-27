@@ -219,6 +219,11 @@ class Sample(db.Model):
         self.path = samples_set.path(self.filename)
         self.size = self.human_readable_size()
 
+        with Image.open(self.path) as img :
+            #----------
+            # get chunk infos (numerotation and coordinates) of desired chunks
+            self.width, self.height = img.size
+
 
     def human_readable_size(self):
 
@@ -242,12 +247,11 @@ class Sample(db.Model):
         with Image.open(self.path) as img :
             #----------
             # get chunk infos (numerotation and coordinates) of desired chunks
-            width, height = img.size
 
             # compute crop properties using image measure
             # and the wanted number of pieces
-            width_crop_col = width / self.num_col
-            width_crop_row = height / self.num_row
+            width_crop_col = self.width / self.num_col
+            width_crop_row = self.height / self.num_row
 
             # values in cut_col and cut_row represent Cartesian pixel coordinates.
             # 0,0 is up left
