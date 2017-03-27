@@ -32,6 +32,50 @@ import datetime
 import os
 
 
+
+def get_hr_file_size(path):
+    """
+    Get human readable file size
+
+    Argument :
+    ----------
+    path : string
+        the path to the file of which you want the size
+    Return :
+    --------
+    size : string
+        value with the right unit
+        among ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+    """
+    nbytes = os.path.getsize(path)
+
+    SIZE_UNIT = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+
+    if nbytes == 0: return '0 B'
+    i = 0
+    while  nbytes >= 1024 and i < len(SIZE_UNIT)-1:
+        nbytes /= 1024.
+        i += 1
+    f = ('%.2f' %  nbytes).rstrip('0').rstrip('.')
+    return '%s %s' % (f, SIZE_UNIT[i])
+
+def get_img_pixel_size(path) :
+    """
+    Get human pixel size
+
+    Argument :
+    ----------
+    path : string
+        the path to the image of which tyou want the pixel size
+    Return :
+    ---------
+    size : tuple of 2 ints
+        (width, height) pixel values
+    """
+    with Image.open(self.path) as img :
+        return img.size
+
+
 # Many to many relationship
 # http://flask-sqlalchemy.pocoo.org/2.1/models/#many-to-many-relationships
 # https://techarena51.com/index.php/many-to-many-relationships-with-flask-sqlalchemy/
@@ -217,27 +261,8 @@ class Sample(db.Model):
             print ('chunk_numerotation could not be initialize. num_col and num_row missing')
         self.filename = '{0}.{1}'.format(self.id, self.extension )
         self.path = samples_set.path(self.filename)
-        self.size = self.human_readable_size()
-
-        with Image.open(self.path) as img :
-            #----------
-            # get chunk infos (numerotation and coordinates) of desired chunks
-            self.width, self.height = img.size
-
-
-    def human_readable_size(self):
-
-        nbytes = os.path.getsize(self.path)
-
-        size_unit = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
-
-        if nbytes == 0: return '0 B'
-        i = 0
-        while  nbytes >= 1024 and i < len(size_unit)-1:
-            nbytes /= 1024.
-            i += 1
-        f = ('%.2f' %  nbytes).rstrip('0').rstrip('.')
-        return '%s %s' % (f, size_unit[i])
+        self.size = get_hr_file_size(self.path)
+        self.width, self.height = get_img_pixel_size(self.path)
 
     def make_chunks(self):
         """
@@ -278,27 +303,12 @@ class Sample(db.Model):
                 new_chunk.save (chunk_path)
 
     def get_chunk_size(self, chunk_col, chunk_row) :
-
         path = self.get_chunk_path(chunk_col, chunk_row)
-
-        nbytes = os.path.getsize(path)
-
-        size_unit = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
-
-        if nbytes == 0: return '0 B'
-        i = 0
-        while  nbytes >= 1024 and i < len(size_unit)-1:
-            nbytes /= 1024.
-            i += 1
-        f = ('%.2f' %  nbytes).rstrip('0').rstrip('.')
-        return '%s %s' % (f, size_unit[i])
-
-
+        return get_hr_file_size(path)
 
     def get_chunk_pixel_size(self, chunk_col, chunk_row) :
         path = self.get_chunk_path(chunk_col, chunk_row)
-        with Image.open(path) as img :
-            return img.size #width, height
+        return get_img_pixel_size(path)
 
     def get_chunk_filename(self, chunk_col, chunk_row) :
         #TODO : check the given row and col are okay
