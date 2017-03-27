@@ -14,28 +14,31 @@
 
         {% from "_formhelpers.html" import render_field %}
         <form method="POST" onsubmit="" action="{{url_for('upload')}}"  enctype="multipart/form-data">
+
+
+            <fieldset class="field-upload">
+                <legend>Image details</legend>
+                <p> Size : {{sample.size}}, ( {{sample.height}} x {{sample.width}} ) px</p>
+
+                <p> Chunks related to this sample : {{sample.num_col * sample.num_row}} </p>
+
+                {% for (chunk_col, chunk_row) in sample.chunks_numerotation %}
+
+                    <div>
+                        <a href="{{url_for('annotate_chunk',sample_id=sample.id, col=chunk_col, row=chunk_row) }}"
+                           target="_self">
+                           <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
+                        </a>
+                        {{ sample.get_chunk_filename ( chunk_col, chunk_row ) }};
+                        Size : {{sample.get_chunk_size( chunk_col, chunk_row ) }},
+                        {% set (chunk_width, chunk_height) = sample.get_chunk_pixel_size( chunk_col, chunk_row ) %}
+                        {{ chunk_width }}x{{chunk_height}} px
+                    </div>
+                {% endfor %}
+            </fieldset class="field-upload">
+
         <fieldset class="field-upload">
             <legend id="legend-upload-mandatory">Blood smear details</legend>
-
-            <p> Size : {{sample.size}}, ( {{sample.height}} x {{sample.width}} ) px</p>
-
-            <p> Chunks related to this sample : {{sample.num_col * sample.num_row}} </p>
-
-            {% for (chunk_col, chunk_row) in sample.chunks_numerotation %}
-
-                <div>
-                    <a href="{{url_for('annotate_chunk',sample_id=sample.id, col=chunk_col, row=chunk_row) }}"
-                       target="_self">
-                       <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
-                    </a>
-                    {{ sample.get_chunk_filename ( chunk_col, chunk_row ) }};
-                    Size : {{sample.get_chunk_size( chunk_col, chunk_row ) }},
-                    {% set (chunk_width, chunk_height) = sample.get_chunk_pixel_size( chunk_col, chunk_row ) %}
-                    {{ chunk_width }}x{{chunk_height}} px
-                </div>
-            {% endfor %}
-
-
             <p id="info-msg">Fields with <span style="color:red;">*</span> are mandatory</p>
           <dl>
             {{ render_field(form.smear_type) }}
