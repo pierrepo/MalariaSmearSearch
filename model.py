@@ -72,7 +72,7 @@ def get_img_pixel_size(path) :
     size : tuple of 2 ints
         (width, height) pixel values
     """
-    with Image.open(self.path) as img :
+    with Image.open(path) as img :
         return img.size
 
 
