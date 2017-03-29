@@ -31,6 +31,11 @@
     <script>
 
 
+        var sample_id = {{sample_id}}
+        var col = {{col}}
+        var row ={{row}}
+
+
         /*********************/
         /* Set the crop tool */
         /*********************/
@@ -48,6 +53,75 @@
         view_stage_img_layer.moveToBottom();
         // - the other for the annotations :
         var view_stage_anno_layer = new Konva.Layer();
+
+
+
+        /***************/
+        /* Fetch data */
+        /*************/
+
+        //***  fetch image :
+        image_loaded = false ;
+        var imageObj = new Image();
+        imageObj.src = Flask.url_for("get_chunk_url", {"sample_id": sample_id, "col":col, "row":row});
+
+
+        // once the image is loaded :
+        var ratio = 1;
+        imageObj.onload = function() {
+
+            // compute ratio :
+            console.log(imageObj.naturalWidth)
+            ratio = view_stage.width()/imageObj.naturalWidth;
+            console.log(ratio);
+            var view_stage_image = new Konva.Image({
+                x: 0,
+                y: 0,
+                image: this,
+                width: imageObj.naturalWidth * ratio,
+                height: imageObj.naturalHeight * ratio
+            });
+            //adjust stage height :
+            view_stage.height( view_stage_image.height() );
+            // add the shape to the layer
+            view_stage_img_layer.add(view_stage_image);
+
+            image_loaded =true ;
+            play_game()
+        }
+
+
+
+        //*** fetch corresponding annotation data :
+        var data = []; // global var
+        data_loaded = false ;
+
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
+
+        $.getJSON(
+
+            Flask.url_for("get_chunk_annotation", {"sample_id":sample_id , "col":col, "row":row}),
+
+            function(received_data){
+                console.log(received_data);
+
+
+
+                for(var i = 0; i < received_data.length; i++) {
+                    var obj = received_data[i];
+
+                    obj.stroke = 'black';
+                    obj.strokeWidth = 4;
+                    obj.name = obj.id.toString(); // TODO : Change the code to use id directly.
+
+                    console.log(obj);
+                }
+
+                data_loaded = true ;
+                data = received_data; // set the global var
+                play_game() ;
+            }
+        );
 
 
 
