@@ -36,6 +36,29 @@
         var row ={{row}}
 
 
+        /*Functions that flash messages in the flash div :
+        *
+        * @param {string} msg - the msg that have to be printed
+        * @param {int} time - the duration of the flash
+        *
+        */
+        Flash = {}
+        Flash.success = function(msg, time =1000){
+            $('#flash-container')[0].innerHTML = "<div class='success message'>" + msg + "</div>";
+            $('#flash-container').addClass('showing');
+            setTimeout(function(){
+              $('#flash-container').removeClass('showing');
+            }, time);
+          };
+        Flash.error = function(msg, time =1000){
+            $('#flash-container')[0].innerHTML = "<div class='error message'>" + msg + "</div>";
+            $('#flash-container').addClass('showing');
+            setTimeout(function(){
+                $('#flash-container').removeClass('showing');
+            }, time);
+        };
+
+
         /*********************/
         /* Set the crop tool */
         /*********************/
@@ -69,7 +92,7 @@
         // once the image is loaded :
         var ratio = 1;
         imageObj.onload = function() {
-
+            Flash.success('Image was retrieved from the server', 3000);
             // compute ratio :
             console.log(imageObj.naturalWidth)
             ratio = view_stage.width()/imageObj.naturalWidth;
@@ -105,6 +128,7 @@
             function(received_data){
                 console.log(received_data);
 
+                Flash.success('Annotation was retrieved from the server', 3000);
 
 
                 for(var i = 0; i < received_data.length; i++) {
