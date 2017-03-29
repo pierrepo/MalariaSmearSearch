@@ -1,0 +1,32 @@
+{% extends "skeleton.html" %}
+
+
+{% block content %}
+
+    <section class="row">
+        <div id='flash-container'>
+    </section>
+
+    <section class="row limited-height">
+      <div id="view-konvajs" class="col-xs-12"></div>
+    </section>
+
+    <section class="row">
+        score : <span id ='score'>0</span>  ; error(s) : <span id = 'error'>0</span>
+    </section>
+
+    <section class="row">
+        Parasite ?
+        <button type="button" id = 'yes' value="yes">Yes !</button>
+        <button type="button" id = 'no' value="no">No !</button>
+    </section>
+{%endblock%}
+
+
+
+{% block imports %}
+    {{super()}}
+    <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
+    </script>
+
+{% endblock %}
