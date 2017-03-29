@@ -88,7 +88,7 @@ class Membership(db.Model):
     __bind_key__ = 'users'
     __tablename__ = 'Memberships'
     username =  db.Column(db.String(30), db.ForeignKey('Users_auth.username'), primary_key=True)
-    institution_name = db.Column(db.String(50), primary_key=True)
+    secondary_institution_name = db.Column(db.String(50), primary_key=True)
 
 
 class User_auth(db.Model, UserMixin):
