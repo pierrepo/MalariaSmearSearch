@@ -15,6 +15,7 @@ class Config(object):
         'users': 'sqlite:///users.db',
         'data': 'sqlite:///data.db'
     }
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     #https://github.com/mitsuhiko/flask-sqlalchemy/issues/471
 
