@@ -339,7 +339,6 @@ class Patient(db.Model):
     __tablename__ = 'Patients' # tablename
 
     id = db.Column(db.Integer, primary_key=True)
-    age = db.Column(db.Integer)
     gender  = db.Column(db.String(1))
     ref = db.Column(db.String(50))
     institution_name  =  db.Column(db.String(50), db.ForeignKey('Institutions.name')) # tablename
