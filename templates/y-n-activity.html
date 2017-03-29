@@ -27,6 +27,31 @@
 {% block imports %}
     {{super()}}
     <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
+
+    <script>
+
+
+        /*********************/
+        /* Set the crop tool */
+        /*********************/
+
+        /* create Konva instances */
+        // Konva stage
+        var view_stage = new Konva.Stage({
+          container: 'view-konvajs',   // id of container <div>
+          width: $('#view-konvajs').width()
+        });
+        // and layers added to corresponding stage from the bottom to the top :
+        // - one for the image (in the bottom):
+        var view_stage_img_layer = new Konva.Layer();
+        view_stage.add(view_stage_img_layer);
+        view_stage_img_layer.moveToBottom();
+        // - the other for the annotations :
+        var view_stage_anno_layer = new Konva.Layer();
+
+
+
+
     </script>
 
 {% endblock %}
