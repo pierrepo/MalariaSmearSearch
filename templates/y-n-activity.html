@@ -58,6 +58,21 @@
             }, time);
         };
 
+        /* Shuffle array
+        * Fisher-Yates-Durstenfeld shuffle
+        * http://stackoverflow.com/a/3718452
+        */
+        function shuffle(sourceArray) {
+            for (var i = 0; i < sourceArray.length - 1; i++) {
+                var j = i + Math.floor(Math.random() * (sourceArray.length - i));
+
+                var temp = sourceArray[j];
+                sourceArray[j] = sourceArray[i];
+                sourceArray[i] = temp;
+            }
+            return sourceArray;
+        };
+
 
         /*********************/
         /* Set the crop tool */
@@ -147,6 +162,22 @@
             }
         );
 
+
+
+
+
+        function play_game(){
+            if(data_loaded && image_loaded) {
+                //shuffle the data :
+
+
+                console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                console.log(data);
+                data = shuffle(data)
+                console.log(data);
+
+            }
+        };
 
 
 
