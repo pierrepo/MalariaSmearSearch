@@ -8,7 +8,7 @@ automatically.
 from flask_wtf import FlaskForm
 from wtforms.fields import TextField, BooleanField, PasswordField, RadioField, SubmitField, TextField, IntegerField, TextAreaField
 from wtforms.validators import Optional,  Required, Email, EqualTo, Length
-from flask_wtf.html5 import NumberInput
+from wtforms.widgets.html5 import NumberInput
 from flask_uploads import UploadSet, IMAGES
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
