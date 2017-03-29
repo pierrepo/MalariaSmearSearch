@@ -14,9 +14,9 @@ admin.username = 'admin'
 admin.password = 'admin123'
 admin.primary_institution_name = i_original.name
 
-for secondarary_institution in (i_a, i_b) :
+for secondary_institution in (i_a, i_b) :
     new_membership = model.Membership()
-    new_membership.institution_name = secondarary_institution.name
+    new_membership.secondary_institution_name = secondary_institution.name
     admin.secondary_institutions.append(new_membership)
 
 print(admin.secondary_institutions.all())

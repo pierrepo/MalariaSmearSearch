@@ -88,7 +88,7 @@ class Membership(db.Model):
     __bind_key__ = 'users'
     __tablename__ = 'Memberships'
     username =  db.Column(db.String(30), db.ForeignKey('Users_auth.username'), primary_key=True)
-    institution_name = db.Column(db.String(50), primary_key=True)
+    secondary_institution_name = db.Column(db.String(50), primary_key=True)
 
 
 class User_auth(db.Model, UserMixin):
@@ -134,14 +134,6 @@ class User_auth(db.Model, UserMixin):
     @property
     def id (self) :
         return self.username
-
-    @property
-    def original_institution (self) :
-        print (Membership.query.filter(Membership.username == self.username, Membership.original == True) )
-        print (Membership.query.filter(Membership.username == self.username, Membership.original == True).first() )
-        print ('====================')
-        original_institution = Membership.query.filter(Membership.username == self.username, Membership.original == True).first()
-        return original_institution.institution
 
 
 class User(db.Model):
@@ -339,7 +331,6 @@ class Patient(db.Model):
     __tablename__ = 'Patients' # tablename
 
     id = db.Column(db.Integer, primary_key=True)
-    age = db.Column(db.Integer)
     gender  = db.Column(db.String(1))
     ref = db.Column(db.String(50))
     institution_name  =  db.Column(db.String(50), db.ForeignKey('Institutions.name')) # tablename
