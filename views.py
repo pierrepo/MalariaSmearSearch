@@ -162,7 +162,7 @@ def uploaded(sample_id):
 
 
 
-@app.route('/samples/<int:sample_id>/show-update', methods=['GET'])
+@app.route('/samples/<int:sample_id>/view-update', methods=['GET'])
 @login_required
 def show_update_sample_info(sample_id):
 
@@ -412,7 +412,7 @@ def about() :
     return render_template ('about.html')
 
 
-@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotate/')
+@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/view-annotate/')
 def annotate_chunk(sample_id, col, row):
     print(sample_id, col, row)
     sample = model.Sample.query.get(sample_id)
