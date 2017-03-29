@@ -176,6 +176,37 @@
                 data = shuffle(data)
                 console.log(data);
 
+
+                i = 0
+                anno = data[i];
+                console.log(anno);
+                // compute the ratio annotation :
+                ratio_anno = {
+                    x: anno.x * ratio,
+                    y: anno.y * ratio,
+                    width: anno.width * ratio,
+                    height: anno.height * ratio,
+                    stroke: anno.stroke,
+                    strokeWidth: anno.strokeWidth * ratio,
+                    name: anno.name.toString() // it has to be a string !!
+                };
+
+                // add the ration annotation as a rect on the anno layer of the view stage
+                console.log(ratio_anno) ;
+                var ratio_rect = new Konva.Rect({
+                  x: ratio_anno.x,
+                  y: ratio_anno.y,
+                  width: ratio_anno.width,
+                  height: ratio_anno.height,
+                  fill : null,
+                  stroke: ratio_anno.stroke,
+                  strokeWidth:  ratio_anno.strokeWidth,
+                  name: ratio_anno.name.toString() // it has to be a string !!
+                });
+
+                view_stage_anno_layer.add(ratio_rect);
+                view_stage_anno_layer.draw();
+
             }
         };
 
