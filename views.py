@@ -47,6 +47,16 @@ def test():
     """
     return "here you are ! in a restricted area, oh my gosh"
 
+
+
+@app.route('/e-learning/y-n', methods=['GET'])
+def elearning_yn():
+    """
+    """
+    return render_template('y-n-activity.html', sample_id = 1,  col = 0, row =0)
+
+
+
 @app.route('/samples/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
