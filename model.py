@@ -135,14 +135,6 @@ class User_auth(db.Model, UserMixin):
     def id (self) :
         return self.username
 
-    @property
-    def original_institution (self) :
-        print (Membership.query.filter(Membership.username == self.username, Membership.original == True) )
-        print (Membership.query.filter(Membership.username == self.username, Membership.original == True).first() )
-        print ('====================')
-        original_institution = Membership.query.filter(Membership.username == self.username, Membership.original == True).first()
-        return original_institution.institution
-
 
 class User(db.Model):
     """
