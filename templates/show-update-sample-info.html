@@ -18,9 +18,9 @@
 
             <fieldset class="field-upload">
                 <legend>Image details</legend>
-                <p> Size : {{sample.size}}, {{sample.width}}x{{sample.height}} px</p>
+                <p> Size: {{sample.size}} -- dimensions: {{sample.width}} x {{sample.height}} px</p>
 
-                <p> Chunk(s) related to this sample : {{sample.num_col * sample.num_row}} </p>
+                <p> Chunk(s) related to this sample: {{sample.num_col * sample.num_row}} </p>
 
                 {% for (chunk_col, chunk_row) in sample.chunks_numerotation %}
 
