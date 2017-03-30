@@ -187,11 +187,12 @@ def show_update_sample_info(sample_id):
     print(sample.provider)
     print(sample.comment)
     print(sample.magnification)
-    print(sample.patient.ref)
-    print(sample.patient.year_of_birth)
-    print(sample.patient.gender)
-    print(sample.patient.city)
-    print(sample.patient.country)
+    if (sample.patient) :
+        print(sample.patient.ref)
+        print(sample.patient.year_of_birth)
+        print(sample.patient.gender)
+        print(sample.patient.city)
+        print(sample.patient.country)
 
     form = UploadForm()
 
