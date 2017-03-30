@@ -15,35 +15,34 @@
         {% from "_formhelpers.html" import render_field %}
         <form method="POST" onsubmit="" action="{{url_for('upload')}}"  enctype="multipart/form-data">
 
+        <fieldset>
+            <legend>Image details</legend>
+            <p>{{sample.width}} x {{sample.height}} px ({{sample.size}})</p>
+            <p>Uploaded {{ sample.date_upload }} by  {{sample.username_upload}}</p>
+            <p> Chunk(s) related to this sample: {{sample.num_col * sample.num_row}} </p>
 
-            <fieldset class="field-upload">
-                <legend>Image details</legend>
-                <p>{{sample.width}} x {{sample.height}} px ({{sample.size}})</p>
-
-                <p> Chunk(s) related to this sample: {{sample.num_col * sample.num_row}} </p>
-
-                {% for (chunk_col, chunk_row) in sample.chunks_numerotation %}
-
-                    <div>
-                        <a href="{{url_for('annotate_chunk',sample_id=sample.id, col=chunk_col, row=chunk_row) }}"
-                           target="_self">
-                           <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
-                        </a>
-                        name: {{ sample.get_chunk_filename ( chunk_col, chunk_row ) }} --
-                        {% set (chunk_width, chunk_height) = sample.get_chunk_pixel_size( chunk_col, chunk_row ) %}
-                        {{ chunk_width }} x {{chunk_height}} px
-                        ({{sample.get_chunk_size( chunk_col, chunk_row ) }})
-                    </div>
-                {% endfor %}
-            </fieldset class="field-upload">
+            {% for (chunk_col, chunk_row) in sample.chunks_numerotation %}
+                {% set (chunk_width, chunk_height) = sample.get_chunk_pixel_size( chunk_col, chunk_row ) %}
+                <a href="{{url_for('annotate_chunk',sample_id=sample.id, col=chunk_col, row=chunk_row) }}" 
+                   target="_self" class="link-silent">
+                <div class="btn btn-warning btn-block btn-choice">
+                    <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
+                    name: {{ sample.get_chunk_filename ( chunk_col, chunk_row ) }} --
+                    {{ chunk_width }} x {{chunk_height}} px
+                    ({{sample.get_chunk_size( chunk_col, chunk_row ) }})
+                </div>
+                </a>
+            {% endfor %}
+        </fieldset>
 
         <fieldset class="field-upload">
             <legend id="legend-upload-mandatory">Blood smear details</legend>
             <p id="info-msg">Fields with <span style="color:red;">*</span> are mandatory</p>
-          <dl>
-            {{ render_field(form.smear_type) }}
-            {{ render_field(form.license) }}
-            {{ render_field(form.provider) }}
+            <dl>
+                {{ render_field(form.smear_type) }}
+                {{ render_field(form.license) }}
+                {{ render_field(form.provider) }}
+            </dl>
         </fieldset>
         <fieldset class="field-upload">
             <legend id="legend-upload-optional">Complementary details</legend>
@@ -55,13 +54,13 @@
             {{ render_field(form.patient_ref) }}
             <div id="patient-msg" class="info-msg"></div>
             <div id = 'patient-infos'>
+            <dl>
                 {{ render_field(form.patient_year_of_birth) }}
                 {{ render_field(form.patient_gender) }}
                 {{ render_field(form.patient_city) }}
                 {{ render_field(form.patient_country) }}
+            </dl>
             </div>
-
-          </dl>
         </fieldset>
           {{ form.hidden_tag() }}
 
@@ -78,7 +77,7 @@
 
     <script>
         // !!! for now, every fields are readonly :
-        $('fieldset').attr('disabled', true);
+        $('.field-upload').attr('disabled', true);
 
         // auto-fill the fields based on the given info :
         $(':radio[value='+ '{{sample.smear_type}}' +']').prop("checked", true);
