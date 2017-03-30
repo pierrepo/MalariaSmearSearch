@@ -243,9 +243,18 @@ class Sample(db.Model):
         self.date_upload = datetime.datetime.utcnow()
 
     def save_image_file(self, form_image_data):
-        self.filename = '{0}.{1}'.format(self.id, self.extension )
+        """
+        Save sample image file to disk and create image properties.
+
+        Arguments :
+        ----------
+        form_image_data : data from html form
+            sample image
+
+        """
+        self.filename = '{0}.{1}'.format(self.id, self.extension)
         samples_set.save(
-                storage = form_image_data, # The uploaded file to save.
+                storage = form_image_data, # the uploaded image file
                 name = self.filename
         )
         self.path = samples_set.path(self.filename)
