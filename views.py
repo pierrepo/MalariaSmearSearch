@@ -107,8 +107,7 @@ def add_sample():
             # and thus update the fields that need sample.id
             new_sample.init_on_load()
 
-            # upload the sample
-            # its name is the sample 00000id in the database
+            # upload and save the sample image
             new_sample.save_image_file(form.sample.data)
 
 
@@ -167,7 +166,6 @@ def show_update_sample_info(sample_id):
     sample = model.Sample.query.get(sample_id)
     sample.init_on_load()
 
-    print(sample.size)
     print(sample.smear_type)
     print(sample.license)
     print(sample.provider)
