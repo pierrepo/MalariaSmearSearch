@@ -100,32 +100,47 @@ def add_sample():
         print (patient)
 
         try :
-            # add the sample in the database :
+            print ('try to save the new sample')
+            #------------- new_sample in db
+            # add the sample in the database with all the infos we have for now :
             db.session.add(new_sample)
             db.session.commit()
-            # call the reconstructor
-            # and thus update the fields that need sample.id
-            new_sample.init_on_load()
 
-            # upload and save the sample image
-            new_sample.save_image_file(form.sample.data)
+            #------------- new_sample on disk
+            # now the sample is in the db, we have its auto increment id
+            # thus the filename :
+            new_sample.filename = '{0}.{1}'.format(new_sample.id, new_sample.extension)
+            #thus we can upload and save the sample image :
+            samples_set.save(
+                    storage = form.sample.data, # the uploaded image file
+                    name = new_sample.filename
+            )
+            # and now the image is saved, we can retrieve its path :
+            new_sample.path = samples_set.path(new_sample.filename)
 
+            print('Saved {} in {}'.format(new_sample.filename, new_sample.path))
 
+            #------------- new_sample cut into chunks :
+            # now we have the path we can open the image and get its size
+            # and px width and height :
+            new_sample.size = model.get_hr_file_size(new_sample.path)
+            new_sample.width, new_sample.height = model.get_img_pixel_size(new_sample.path)
+
+            # now the have px width and height, we can
             # get the number of pieces using integer division :
             # chunk dimensions are always BELOW Sample.MAX_CHUNK_SIZE px
-            with Image.open(new_sample.path) as img :
-                width, height = img.size
-                print (width, height)
-                new_sample.num_col = (width // model.Sample.MAX_CHUNK_SIZE) + 1
-                new_sample.num_row = (height // model.Sample.MAX_CHUNK_SIZE) + 1
-            new_sample.init_on_load()
+            new_sample.num_col = (new_sample.width // model.Sample.MAX_CHUNK_SIZE) + 1
+            new_sample.num_row = (new_sample.height // model.Sample.MAX_CHUNK_SIZE) + 1
+            # these infos will be stored in the db :
             db.session.commit()
 
-            # cut the sample into chunks :
+            # know we know how many chunks will be made from the image,
+            # we can numerote them :
+            new_sample.chunks_numerotation = [(col,row) for col in  range(new_sample.num_col) for row in range(new_sample.num_row)]
+            # and cut the sample into chunks :
             new_sample.make_chunks()
 
-            print (new_sample.patient.id)
-
+            #-------------
             return redirect( url_for('uploaded', sample_id = new_sample.id) )
 
 
