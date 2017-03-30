@@ -242,6 +242,17 @@ class Sample(db.Model):
         """
         self.date_upload = datetime.datetime.utcnow()
 
+    def save_image_file(self, form_image_data):
+        self.filename = '{0}.{1}'.format(self.id, self.extension )
+        samples_set.save(
+                storage = form_image_data, # The uploaded file to save.
+                name = self.filename
+        )
+        self.path = samples_set.path(self.filename)
+        self.size = get_hr_file_size(self.path)
+        self.width, self.height = get_img_pixel_size(self.path)
+
+
     #@sqlalchemy.orm.reconstructor # do not seems to work TODO : find why
     def init_on_load(self):
         """
@@ -251,10 +262,7 @@ class Sample(db.Model):
             self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
         except :
             print ('chunk_numerotation could not be initialize. num_col and num_row missing')
-        self.filename = '{0}.{1}'.format(self.id, self.extension )
-        self.path = samples_set.path(self.filename)
-        self.size = get_hr_file_size(self.path)
-        self.width, self.height = get_img_pixel_size(self.path)
+
 
     def make_chunks(self):
         """

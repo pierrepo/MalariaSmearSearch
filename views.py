@@ -109,10 +109,8 @@ def add_sample():
 
             # upload the sample
             # its name is the sample 00000id in the database
-            samples_set.save(
-                storage = form.sample.data, # The uploaded file to save.
-                name = new_sample.filename
-            )
+            new_sample.save_image_file(form.sample.data)
+
 
             # get the number of pieces using integer division :
             # chunk dimensions are always BELOW Sample.MAX_CHUNK_SIZE px
