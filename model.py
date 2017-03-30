@@ -245,16 +245,17 @@ class Sample(db.Model):
     #@sqlalchemy.orm.reconstructor # do not seems to work TODO : find why
     def init_on_load(self):
         """
+        Initialize sample properties.
+
         http://docs.sqlalchemy.org/en/latest/orm/constructors.html
         """
-        try :
-            self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
-        except :
-            print ('chunk_numerotation could not be initialize. num_col and num_row missing')
-        self.filename = '{0}.{1}'.format(self.id, self.extension )
+        self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
+        self.filename = '{0}.{1}'.format(self.id, self.extension)
         self.path = samples_set.path(self.filename)
         self.size = get_hr_file_size(self.path)
         self.width, self.height = get_img_pixel_size(self.path)
+        print('Image {}: {} x {} px / {}'.format(self.path, self.width, self.height, self.size))
+
 
     def make_chunks(self):
         """
