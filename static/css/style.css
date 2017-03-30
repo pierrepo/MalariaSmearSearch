@@ -41,7 +41,7 @@ input.anno-coord {
 	width: 50px;	
 }
 
-/* browse page */
+/* remove link decoration */
 a.link-silent {
 	text-decoration: none;
 }
