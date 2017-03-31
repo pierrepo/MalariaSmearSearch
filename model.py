@@ -246,6 +246,11 @@ class Sample(db.Model):
     num_col = db.Column(db.Integer)
     num_row = db.Column(db.Integer)
 
+    size = db.Column(db.Float)
+    width = db.Column(db.Integer)
+    height = db.Column(db.Integer)
+    sha256 = db.Column(db.Text)
+
     #Defining the Foreign Key on the Child Table :
 
     # http://docs.sqlalchemy.org/en/rel_0_9/orm/join_conditions.html#handling-multiple-join-paths :
@@ -283,9 +288,8 @@ class Sample(db.Model):
         self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
         self.filename = '{0}.{1}'.format(self.id, self.extension)
         self.path = samples_set.path(self.filename)
-        self.size = get_hr_file_size(self.path)
-        self.width, self.height = get_img_pixel_size(self.path)
-        print('Image {}: {} x {} px / {}'.format(self.path, self.width, self.height, self.size))
+        self.hr_size = get_hr_file_size(self.path)
+        print('Image {}: {} x {} px / {}'.format(self.path, self.width, self.height, self.hr_size))
 
 
     def make_chunks(self):
@@ -324,7 +328,13 @@ class Sample(db.Model):
                 chunk_path = self.get_chunk_path (chunk_col, chunk_row )
                 box = list(itertools.chain.from_iterable(chunk_coords)) #(left , upper , right , lower) # pixel coords of the chunk
                 new_chunk = img.crop(box)
-                new_chunk.save (chunk_path)
+                new_chunk.save (chunk_path, quality=95)
+                #quality :
+                # The image quality, on a scale from 1 (worst) to 95 (best).
+                # The default is 75.
+                # Values above 95 should be avoided;
+                # 100 disables portions of the JPEG compression algorithm,
+                # and results in large files with hardly any gain in image quality.`
 
     def get_chunk_size(self, chunk_col, chunk_row) :
         path = self.get_chunk_path(chunk_col, chunk_row)
