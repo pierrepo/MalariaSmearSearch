@@ -257,7 +257,8 @@ class Sample(db.Model):
         self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
         self.filename = '{0}.{1}'.format(self.id, self.extension)
         self.path = samples_set.path(self.filename)
-        print('Image {}: {} x {} px / {}'.format(self.path, self.width, self.height, self.size))
+        self.hr_size = get_hr_file_size(self.path)
+        print('Image {}: {} x {} px / {}'.format(self.path, self.width, self.height, self.hr_size))
 
 
     def make_chunks(self):
