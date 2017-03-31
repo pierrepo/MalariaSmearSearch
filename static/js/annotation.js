@@ -196,14 +196,14 @@ $(document).ready(function(){
     */
     Flash = {}
     Flash.success = function(msg, time =1000){
-        $('#flash-container')[0].innerHTML = "<div class='success message'>" + msg + "</div>";
+        $('#flash-container').html ("<div class='success message'>" + msg + "</div>");
         $('#flash-container').addClass('showing');
         setTimeout(function(){
           $('#flash-container').removeClass('showing');
         }, time);
       };
     Flash.error = function(msg, time =1000){
-        $('#flash-container')[0].innerHTML = "<div class='error message'>" + msg + "</div>";
+        $('#flash-container').html("<div class='error message'>" + msg + "</div>");
         $('#flash-container').addClass('showing');
         setTimeout(function(){
             $('#flash-container').removeClass('showing');

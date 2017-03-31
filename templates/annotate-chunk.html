@@ -60,17 +60,16 @@
 
 {% block content %}
 
-    {% if current_user.is_authenticated %}
     <section class="row">
+    {% if current_user.is_authenticated %}
         <div class="col-md-2 d-inline btn btn-primary" id="toggle-mode">
         	<span id="icon-annotate" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         	<span id="icon-view" class="glyphicon glyphicon-eye-open" aria-hidden="true" style="display: none;"></span>
         	<span id="icon-text">Annotate</span>
         </div>
-        <div class="col-md-10 d-inline" id='flash-container'>
-        </div>
-    </section>
     {% endif %}
+        <div class="col-md-10 d-inline" id='flash-container'></div>
+    </section>
 
     <section class="row limited-height">
       <div id="view-konvajs" class="col-xs-12"></div>
