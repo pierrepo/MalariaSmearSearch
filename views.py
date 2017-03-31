@@ -188,7 +188,6 @@ def uploaded(sample_id):
 
 
 @app.route('/samples/<int:sample_id>/view-update', methods=['GET'])
-@login_required
 def show_update_sample_info(sample_id):
 
     sample = model.Sample.query.get(sample_id)
