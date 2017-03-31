@@ -124,7 +124,7 @@ def add_sample():
             #------------- new_sample cut into chunks :
             # now we have the path we can open the image and get its size
             # and px width and height :
-            new_sample.size = model.get_hr_file_size(new_sample.path)
+            new_sample.size = os.path.getsize(new_sample.path)
             new_sample.width, new_sample.height = model.get_img_pixel_size(new_sample.path)
 
             # now the have px width and height, we can
