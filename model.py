@@ -293,7 +293,13 @@ class Sample(db.Model):
                 chunk_path = self.get_chunk_path (chunk_col, chunk_row )
                 box = list(itertools.chain.from_iterable(chunk_coords)) #(left , upper , right , lower) # pixel coords of the chunk
                 new_chunk = img.crop(box)
-                new_chunk.save (chunk_path)
+                new_chunk.save (chunk_path, quality=95)
+                #quality :
+                # The image quality, on a scale from 1 (worst) to 95 (best).
+                # The default is 75.
+                # Values above 95 should be avoided;
+                # 100 disables portions of the JPEG compression algorithm,
+                # and results in large files with hardly any gain in image quality.`
 
     def get_chunk_size(self, chunk_col, chunk_row) :
         path = self.get_chunk_path(chunk_col, chunk_row)
