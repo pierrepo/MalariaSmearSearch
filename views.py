@@ -366,14 +366,14 @@ def browse():
 
             row = [
                 sample.id,
-                sample.date_upload,
+                model.get_hr_datetime(sample.date_upload),
                 sample.user_upload.username,
                 chunk_row,
                 chunk_col,
                 tot_num_anno,
                 num_para,
-                first_anno_date,
-                last_anno_date
+                model.get_hr_datetime(first_anno_date),
+                model.get_hr_datetime(last_anno_date)
             ]
             print (row)
             print('=============================================')

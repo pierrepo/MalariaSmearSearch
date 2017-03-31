@@ -32,6 +32,37 @@ import datetime
 import os
 
 
+def get_hr_datetime(dt):
+    """
+    Get human readable datetime in the following format : "YY-MM-DD HH:MM:SS"
+
+    Argument :
+    ----------
+    dt : instance of datetime.datetime / None
+        the datetime you want to convert
+    Return :
+    --------
+    output : string / None
+        human readable datetime in the format "YY-MM-DD HH:MM:SS"
+        or None if the provided argument was None
+    """
+
+    #date, datetime, and time objects from datetime module all support a strftime(format) method, to create a string representing the time under the control of an explicit format string.
+    #The behavior of this function is describd here: https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
+    #For the requested format we use :
+    #|Directive|             Meaning                                   |    Example
+    #|---------|-------------------------------------------------------|----------------
+    #|   %y    | Year without century as a zero-padded decimal number. |00, 01, ..., 99
+    #|   %m    | Month as a zero-padded decimal number.                |01, 02, ..., 12
+    #|   %d    | Day of the month as a zero-padded decimal number.     |01, 02, ..., 31
+    #|   %H    | Hour (24-hour clock) as a zero-padded decimal number. |00, 01, ..., 23
+    #|   %M    | Minute as a zero-padded decimal number.               |00, 01, ..., 59
+    #|   %S    | Second as a zero-padded decimal number.               |00, 01, ..., 59
+    if dt :
+        return dt.strftime("%y-%m-%d %H:%M:%S")
+    return None
+
+
 
 def get_hr_file_size(path):
     """
