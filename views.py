@@ -196,7 +196,7 @@ def show_update_sample_info(sample_id):
 
     form = UploadForm()
 
-    return render_template('show-update-sample-info.html', sample = sample, form = form )
+    return render_template('show-update-sample-info.html', sample = sample, form = form , get_hr_datetime = model.get_hr_datetime)
 
 
 @app.route("/")
