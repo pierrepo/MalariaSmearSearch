@@ -218,7 +218,7 @@ class Sample(db.Model):
     size = db.Column(db.Float)
     width = db.Column(db.Integer)
     height = db.Column(db.Integer)
-
+    sha256 = db.Column(db.Text)
 
     #Defining the Foreign Key on the Child Table :
 

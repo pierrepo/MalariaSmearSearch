@@ -7,6 +7,7 @@ HTML templates are in the templates folder.
 import datetime
 from flask import render_template, request, redirect, url_for, Response, send_file, jsonify, make_response, flash, abort
 from flask_login import login_required, login_user, logout_user, current_user
+import hashlib
 import pathlib
 from PIL import Image
 import os
@@ -132,6 +133,17 @@ def add_sample():
             # chunk dimensions are always BELOW Sample.MAX_CHUNK_SIZE px
             new_sample.num_col = (new_sample.width // model.Sample.MAX_CHUNK_SIZE) + 1
             new_sample.num_row = (new_sample.height // model.Sample.MAX_CHUNK_SIZE) + 1
+
+
+            #------------- sha256:
+            # /!\  pretty memory inefficient way
+            # http://stackoverflow.com/a/3431835
+            print ('sha256')
+            with open(new_sample.path, 'rb') as im :
+                new_sample.sha256 = hashlib.sha256(im.read()).hexdigest()
+            print (new_sample.sha256)
+
+
             # these infos will be stored in the db :
             db.session.commit()
 
