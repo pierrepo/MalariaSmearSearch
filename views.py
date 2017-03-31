@@ -207,7 +207,7 @@ def show_update_sample_info(sample_id):
 
     form = UploadForm()
 
-    return render_template('show-update-sample-info.html', sample = sample, form = form )
+    return render_template('show-update-sample-info.html', sample = sample, form = form , get_hr_datetime = model.get_hr_datetime)
 
 
 @app.route("/")
@@ -377,14 +377,14 @@ def browse():
 
             row = [
                 sample.id,
-                sample.date_upload,
+                model.get_hr_datetime(sample.date_upload),
                 sample.user_upload.username,
                 chunk_row,
                 chunk_col,
                 tot_num_anno,
                 num_para,
-                first_anno_date,
-                last_anno_date
+                model.get_hr_datetime(first_anno_date),
+                model.get_hr_datetime(last_anno_date)
             ]
             print (row)
             print('=============================================')
