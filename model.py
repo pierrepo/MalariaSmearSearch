@@ -270,7 +270,7 @@ class Sample(db.Model):
     #Defining One to Many relationships with the relationship function on the Parent Table
     annotations = db.relationship('Annotation', backref="sample", cascade="all, delete-orphan" , lazy='dynamic')
     # backref="sample" : This argument adds a sample attribute on the Annotation table, so you can access a Sample via the Annotation Class as Annotation.sample.
-    # cascade ="all, delete-orphan”: This will delete all chunks of a sample when the referenced sample is deleted.
+    # cascade ="all, delete-orphan”: This will delete all annotations of a sample when the referenced sample is deleted.
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
     MAX_CHUNK_SIZE = 2000 #px
