@@ -32,6 +32,12 @@ import datetime
 import os
 
 
+def delete_file(filepath):
+    try:
+        os.remove(filepath)
+    except OSError:
+        print ('could not del the file {}'.format(filepath))
+
 def get_hr_datetime(dt):
     """
     Get human readable datetime in the following format : "YY-MM-DD HH:MM:SS"
