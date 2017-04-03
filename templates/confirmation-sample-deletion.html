@@ -1,0 +1,18 @@
+{% extends "skeleton.html" %}
+
+{% block title %}Confirm sample deletion {% endblock %}
+
+{%block content %}
+
+    <div class = 'row' >
+        Are you sure you want to delete sample number {{sample.id}},
+        and its {{sample.num_col * sample.num_row }} chunk(s)
+        on which are associated {{ sample.annotations.all() | length }} annotations?
+    </div>
+    <div class = 'row' >
+        <a  role="button" class="btn btn-danger"  href="">Yes</a>
+        <a  role="button" class="btn btn-secondary"  href="">No</a>
+    </div>
+
+
+{%endblock%}

@@ -58,6 +58,17 @@ def upload():
         return redirect( url_for('add_sample'), code=307 )
     return render_template('upload.html', form = form)
 
+
+
+@app.route('/samples/<int:sample_id>/del-confirmation/')
+@login_required
+def del_conformation_sample(sample_id):
+    sample = model.Sample.query.get(sample_id)
+    print (len ( sample.annotations.all() ))
+    return render_template('confirmation-sample-deletion.html', sample = sample)
+
+
+
 @app.route('/samples/', methods=['POST'])
 @login_required
 def add_sample():
