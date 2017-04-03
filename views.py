@@ -68,6 +68,37 @@ def del_conformation_sample(sample_id):
     return render_template('confirmation-sample-deletion.html', sample = sample)
 
 
+@app.route('/samples/<int:sample_id>/delete' , methods = ['GET']) # this is not REST : use DELETE method !
+def del_sample(sample_id) :
+    print(sample_id)
+
+    try :
+        sample = model.Sample.query.get(sample_id)
+        sample.init_on_load()
+
+        # delete the files :
+
+        model.delete_file(sample.path)
+        print('bim')
+        for chunk_path in sample.get_chunks_paths() :
+            model.delete_file(chunk_path)
+
+        print ('bam')
+        # delete entry in db :
+        db.session.delete(sample)
+        db.session.commit()
+        print('sample was deleted from the database')
+        flash('sample was deleted from the database', category = 'succes')
+        return redirect(url_for('index'))
+
+    except Exception as e:
+        print (e)
+        db.session.rollback()
+        print('An error occurred accessing the database.')
+        flash('An error occurred accessing the database.', category = 'error')
+        return redirect(url_for('index'), 500)
+
+
 
 @app.route('/samples/', methods=['POST'])
 @login_required
