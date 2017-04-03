@@ -364,7 +364,7 @@ class Sample(db.Model):
     def get_chunks_paths(self) :
         paths_array = []
         for col in range (self.num_col) :
-            for row in range (self.num.row) :
+            for row in range (self.num_row) :
                 path_cur_chunk = self.get_chunk_path(col, row)
                 paths_array.append(path_cur_chunk)
         return paths_array
