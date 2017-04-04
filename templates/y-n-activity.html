@@ -164,6 +164,9 @@
 
 
 
+        var current_ratio_rect;
+
+
         function play_round(i){
             anno = data[i];
             console.log(anno);
@@ -206,6 +209,27 @@
 
                 i = 0
                 play_round(i)
+
+                $("#yes").click(function() {
+                    if (i < data.length-1  ) {
+                        console.log(i);
+                        current_ratio_rect.destroy();
+                        i = i + 1 ;
+                        play_round(i)
+                    }else{
+                        alert("stop")
+                    }
+                });
+                $("#no").click(function() {
+                    if (i < data.length-1  ) {
+                    console.log(i);
+                    current_ratio_rect.destroy();
+                        i = i + 1 ;
+                        play_round(i)
+                    }else{
+                        alert("stop")
+                    }
+                });
             }
         };
 
