@@ -9,6 +9,7 @@ from flask import render_template, request, redirect, url_for, Response, send_fi
 from flask_login import login_required, login_user, logout_user, current_user
 import hashlib
 import pathlib
+import random
 from PIL import Image
 import os
 
@@ -53,7 +54,16 @@ def test():
 def elearning_yn():
     """
     """
-    return render_template('y-n-activity.html', sample_id = 1,  col = 0, row =0)
+    # select random sample id :
+    sample_count = model.Sample.query.count()
+    print (sample_count)
+    random_sample_id = sample_count*random.randint(1, sample_count)
+    print (random_sample_id)
+    # select random chunk :
+    random_sample = model.Sample.query.get(random_sample_id)
+    random_sample.init_on_load()
+    random_col, random_row = random.choice( random_sample.chunks_numerotation  )
+    return render_template('y-n-activity.html', sample_id = random_sample_id,  col = random_col, row = random_row)
 
 
 
