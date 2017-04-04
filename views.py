@@ -56,15 +56,18 @@ def elearning_yn():
     """
     # select random sample id :
     sample_count = model.Sample.query.count()
-    print (sample_count)
-    random_sample_id = sample_count*random.randint(1, sample_count)
-    print (random_sample_id)
-    # select random chunk :
-    random_sample = model.Sample.query.get(random_sample_id)
-    random_sample.init_on_load()
-    random_col, random_row = random.choice( random_sample.chunks_numerotation  )
-    return render_template('y-n-activity.html', sample_id = random_sample_id,  col = random_col, row = random_row)
-
+    if (sample_count > 0 ) :
+        print (sample_count)
+        random_sample_id = sample_count*random.randint(1, sample_count)
+        print (random_sample_id)
+        # select random chunk :
+        random_sample = model.Sample.query.get(random_sample_id)
+        random_sample.init_on_load()
+        random_col, random_row = random.choice( random_sample.chunks_numerotation  )
+        return render_template('y-n-activity.html', sample_id = random_sample_id,  col = random_col, row = random_row)
+    else :
+        flash ("There is no sample on which to train.")
+        return redirect( url_for('index'))
 
 
 @app.route('/samples/upload', methods=['GET', 'POST'])
