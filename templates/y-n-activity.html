@@ -163,6 +163,34 @@
         );
 
 
+        var score = error = 0 ;
+
+        // Pass argument to event handle in jquerry
+        // when we want to keep the this bind
+        // http://stackoverflow.com/a/979344
+        // http://jsfiddle.net/Tk7yF/
+        function response_validation(){
+            /* Arguments :
+            * ------------
+            * this
+            * current annotation
+            */
+
+            console.log( anno.annotation[0], anno.annotation[0]=='P', $(this).val(),  score, error);
+            if (anno.annotation[0]=='P' && $(this).val() == 'yes' ) {
+                score = ++score ;
+                $('#score').html(score);
+            }else if (anno.annotation[0]!='P' && $(this).val() != 'yes' ) {
+                score = ++score ;
+                $('#score').html(score);
+            }else{
+                error = ++error  ;
+                $('#error').html(error);
+            }
+        }
+
+
+
 
         var current_ratio_rect;
 
@@ -211,6 +239,7 @@
                 play_round(i)
 
                 $("#yes").click(function() {
+                    response_validation.call(this, anno);
                     if (i < data.length-1  ) {
                         console.log(i);
                         current_ratio_rect.destroy();
@@ -221,6 +250,7 @@
                     }
                 });
                 $("#no").click(function() {
+                    response_validation.call(this, anno);
                     if (i < data.length-1  ) {
                     console.log(i);
                     current_ratio_rect.destroy();
