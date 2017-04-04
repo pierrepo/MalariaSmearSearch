@@ -16,6 +16,8 @@ import os
 from app import app, db, login_manager, samples_set
 from forms import RegisterForm, LoginForm, UploadForm
 import model
+from flask_sqlalchemy import sqlalchemy
+from sqlalchemy import func
 
 # the route() decorator tells Flask what URL should trigger the function.
 # the functions render associated template stored in templates folder.
@@ -55,16 +57,25 @@ def elearning_yn():
     """
     """
     # select random sample id :
-    sample_count = model.Sample.query.count()
-    if (sample_count > 0 ) :
-        print (sample_count)
-        random_sample_id = sample_count*random.randint(1, sample_count)
-        print (random_sample_id)
-        # select random chunk :
-        random_sample = model.Sample.query.get(random_sample_id)
+
+    # inspired from "SQLAlchemy many to many filter rows by number of children"
+    #http://stackoverflow.com/a/34183819
+
+    # eligible sample are samples that have at least 3 annotations
+    eligible_samples = model.Sample.query.\
+                                join(model.Sample.annotations).\
+                                group_by(model.Sample).\
+                                having(func.count(model.Annotation.id) > 1).\
+                                all()
+
+    if (eligible_samples ) :
+        print (eligible_samples)
+        print (len(eligible_samples))
+        random_sample = random.choice(eligible_samples)
         random_sample.init_on_load()
+        # select random chunk :
         random_col, random_row = random.choice( random_sample.chunks_numerotation  )
-        return render_template('y-n-activity.html', sample_id = random_sample_id,  col = random_col, row = random_row)
+        return render_template('y-n-activity.html', sample_id = random_sample.id,  col = random_col, row = random_row)
     else :
         flash ("There is no sample on which to train.")
         return redirect( url_for('index'))
