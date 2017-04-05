@@ -7,6 +7,10 @@
         <div id='flash-container'>
     </section>
 
+    <section class="row limited-height">
+      <div id="view-konvajs" class="col-xs-12"></div>
+    </section>
+
 {%endblock%}
 
 
@@ -16,6 +20,11 @@
     <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
 
     <script>
+
+
+        var sample_id = {{sample_id}}
+        var col = {{col}}
+        var row ={{row}}
 
 
         /*Functions that flash messages in the flash div :
@@ -39,6 +48,59 @@
                 $('#flash-container').removeClass('showing');
             }, time);
         };
+
+        /*********************/
+        /* Set the crop tool */
+        /*********************/
+
+        /* create Konva instances */
+        // Konva stage
+        var view_stage = new Konva.Stage({
+          container: 'view-konvajs',   // id of container <div>
+          width: $('#view-konvajs').width()
+        });
+        // and layers added to corresponding stage from the bottom to the top :
+        // - one for the image (in the bottom):
+        var view_stage_img_layer = new Konva.Layer();
+        view_stage.add(view_stage_img_layer);
+        view_stage_img_layer.moveToBottom();
+        // - the other for the annotations :
+        var view_stage_anno_layer = new Konva.Layer();
+        view_stage.add(view_stage_anno_layer);
+
+
+        /***************/
+        /* Fetch data */
+        /*************/
+
+        //***  fetch image :
+        image_loaded = false ;
+        var imageObj = new Image();
+        imageObj.src = Flask.url_for("get_chunk_url", {"sample_id": sample_id, "col":col, "row":row});
+
+
+        // once the image is loaded :
+        var ratio = 1;
+        imageObj.onload = function() {
+            Flash.success('Image was retrieved from the server', 3000);
+            // compute ratio :
+            console.log(imageObj.naturalWidth)
+            ratio = view_stage.width()/imageObj.naturalWidth;
+            console.log(ratio);
+            var view_stage_image = new Konva.Image({
+                x: 0,
+                y: 0,
+                image: this,
+                width: imageObj.naturalWidth * ratio,
+                height: imageObj.naturalHeight * ratio
+            });
+            //adjust stage height :
+            view_stage.height( view_stage_image.height() );
+            // add the shape to the layer
+            view_stage_img_layer.add(view_stage_image);
+
+            image_loaded =true ;
+        }
 
     </script>
 

@@ -222,7 +222,7 @@ def index():
 def find_para_activity():
     """
     """
-    return render_template('find-para.html')
+    return render_template('find-para.html', sample_id = 1, col = 0, row = 0 )
 
 
 @app.route("/signup", methods = ['GET', 'POST'])
