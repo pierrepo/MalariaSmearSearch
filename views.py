@@ -217,6 +217,14 @@ def index():
     """
     return render_template('index.html')
 
+
+@app.route("/find-para")
+def find_para_activity():
+    """
+    """
+    return render_template('find-para.html')
+
+
 @app.route("/signup", methods = ['GET', 'POST'])
 def signup():
     """
