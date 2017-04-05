@@ -57,6 +57,44 @@
             }, time);
         };
 
+
+        /* This function adds the annotation on the annotation layers
+        *   of the view Konva stage (using ratio)
+        *
+        * It doesn't refresh the layer
+        *
+        * @param {object} new_anno - the newly added annotation
+        *
+        */
+        function draw_ratio_rect_from(new_anno){
+
+            // compute the ratio annotation :
+            ratio_new_anno = {
+                x: new_anno.x * ratio,
+                y: new_anno.y * ratio,
+                width: new_anno.width * ratio,
+                height: new_anno.height * ratio,
+                stroke: new_anno.stroke,
+                strokeWidth: new_anno.strokeWidth * ratio,
+                name: new_anno.name.toString() // it has to be a string !!
+            };
+
+            // add the ration annotation as a rect on the anno layer of the view stage
+            console.log(ratio_new_anno) ;
+            var ratio_rect = new Konva.Rect({
+              x: ratio_new_anno.x,
+              y: ratio_new_anno.y,
+              width: ratio_new_anno.width,
+              height: ratio_new_anno.height,
+              fill : null,
+              stroke: ratio_new_anno.stroke,
+              strokeWidth:  ratio_new_anno.strokeWidth,
+              name: ratio_new_anno.name.toString() // it has to be a string !!
+            });
+            view_stage_anno_layer.add(ratio_rect);
+        }
+
+
         /*********************/
         /* Set the crop tool */
         /*********************/
@@ -108,6 +146,7 @@
             view_stage_img_layer.add(view_stage_image);
 
             image_loaded =true ;
+            init_anno();
         }
 
 
@@ -141,8 +180,30 @@
 
                 data_loaded = true ;
                 data = received_data; // set the global var
+                init_anno();
             }
         );
+
+        /* Render the loaded annotations on the loaded chunk */
+        function init_anno(){ // use global var data
+            console.log("data_loaded", data_loaded, "image_loaded", image_loaded);
+            if(data_loaded && image_loaded) {
+            // once image is loaded
+            // AND once data are loaded
+                console.log( '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                console.log(data)
+                // render (false) annotations = add the shape to the layer // TODO : is there a for each loop in js ?
+                for(var i = 0; i < data.length; i++) {
+                    draw_ratio_rect_from(data[i]);
+                }
+
+                // add the layer to the stage
+                view_stage.add(view_stage_anno_layer);
+
+                Flash.success('The annotations were added on the view canvas. Everything is ready.', 3000);
+            }
+        }
+
 
     </script>
 
