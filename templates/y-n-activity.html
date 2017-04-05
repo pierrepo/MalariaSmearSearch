@@ -190,7 +190,15 @@
         }
 
 
-
+        function handle_end_game(){
+            if(confirm("Replay ? ")){
+                location.reload();
+            }else {
+                window.location.href = "{{url_for('index')}}";
+                // href or replace ?
+                //http://stackoverflow.com/a/506004
+            }
+        }
 
         var current_ratio_rect;
 
@@ -246,7 +254,7 @@
                         i = i + 1 ;
                         play_round(i)
                     }else{
-                        alert("stop")
+                        handle_end_game();
                     }
                 });
                 $("#no").click(function() {
@@ -257,7 +265,7 @@
                         i = i + 1 ;
                         play_round(i)
                     }else{
-                        alert("stop")
+                        handle_end_game(); 
                     }
                 });
             }
