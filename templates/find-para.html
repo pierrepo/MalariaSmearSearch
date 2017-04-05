@@ -92,6 +92,13 @@
               name: ratio_new_anno.name.toString() // it has to be a string !!
             });
             view_stage_anno_layer.add(ratio_rect);
+
+
+
+            ratio_rect.on('click', function(evt) {
+                console.log( evt.target) ;
+                console.log('cliiiiiick');
+            });
         }
 
 
