@@ -124,6 +124,9 @@
             * current annotation
             */
 
+            this.destroy() ;
+            view_stage_anno_layer.draw()
+
             console.log( anno.annotation[0], anno.annotation[0]=='P', this,  score, error);
             if (anno.annotation[0]=='P') {
                 score = ++score ;
