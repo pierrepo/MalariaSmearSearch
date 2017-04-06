@@ -94,37 +94,6 @@
             view_stage_anno_layer.add(ratio_rect);
 
             console.log(ratio_rect);
-
-            ratio_rect.on('click', function(evt) {
-                console.log( evt.target) ;
-                console.log('cliiiiiick on para anno');
-                console.log(evt.target.name());
-                // return the first ( the only one) element that have the correct name
-                result = $.grep(data, function(e){ return e.name == evt.target.name(); });
-                console.log(result);
-                // there is always 1 result :
-                anno = result[0] ;
-                console.log(anno);
-
-                score = ++score ;
-                $('#score').html(score);
-
-                // remove the found parasite from the parasite array :
-                // index of the element you want to remove :
-                var index = data.indexOf(anno);
-                if (index > -1) {
-                    data.splice(index, 1); // 1 : number of elements to remove
-                    //splice modifies the array in place and
-                    // returns a new array containing the elements that have been removed
-                }
-                // remove from the konva :
-                evt.target.destroy() ;
-                view_stage_anno_layer.draw()
-                if (typeof data !== 'undefined' && data.length == 0) {
-                // the array is defined and has no element left :
-                    alert( "the end")
-                }
-            });
         }
 
 
@@ -240,13 +209,48 @@
                 // add the layer to the stage
                 view_stage.add(view_stage_anno_layer);
 
-                // trigger every where
-                view_stage.on('contentClick', function() {
-                  console.log('click on ' + JSON.stringify(view_stage.getPointerPosition()));
-                  error = ++error  ;
-                  $('#error').html(error);
 
+                // trigger on shape -> everywhere because shape or image :
+                //https://konvajs.github.io/docs/events/Stage_Events.html
+                view_stage.on('click', function(evt) {
+                  console.log('usual click on ' + JSON.stringify(view_stage.getPointerPosition()));
+                  console.log(evt.target);
+                  if (evt.target.className == 'Image') {
+                    // the user have not cliked on a parasite annotation
+                    error = ++error  ;
+                    $('#error').html(error);
+                  }else if (evt.target.className == "Rect"){
+                        // the user has cliked on a para annotation
 
+                        console.log( evt.target) ;
+                        console.log('cliiiiiick on para anno');
+                        console.log(evt.target.name());
+                        // return the first ( the only one) element that have the correct name
+                        result = $.grep(data, function(e){ return e.name == evt.target.name(); });
+                        console.log(result);
+                        // there is always 1 result :
+                        anno = result[0] ;
+                        console.log(anno);
+
+                        score = ++score ;
+                        $('#score').html(score);
+
+                        // remove the found parasite from the parasite array :
+                        // index of the element you want to remove :
+                        var index = data.indexOf(anno);
+                        if (index > -1) {
+                            data.splice(index, 1); // 1 : number of elements to remove
+                            //splice modifies the array in place and
+                            // returns a new array containing the elements that have been removed
+                        }
+                        // remove from the konva :
+                        evt.target.destroy() ;
+                        view_stage_anno_layer.draw()
+                        if (typeof data !== 'undefined' && data.length == 0) {
+                        // the array is defined and has no element left :
+                            alert( "the end")
+                        }
+                    }
                 });
                 Flash.success('The annotations were added on the view canvas. Everything is ready.', 3000);
             }
