@@ -15,7 +15,9 @@ import os
 from app import app, db, login_manager, samples_set
 from forms import RegisterForm, LoginForm, UploadForm
 import model
-
+from flask_sqlalchemy import sqlalchemy
+from sqlalchemy import func
+import random
 # the route() decorator tells Flask what URL should trigger the function.
 # the functions render associated template stored in templates folder.
 
@@ -222,7 +224,27 @@ def index():
 def find_para_activity():
     """
     """
-    return render_template('find-para.html', sample_id = 1, col = 0, row = 0 )
+    # inspired from "SQLAlchemy many to many filter rows by number of children"
+    #http://stackoverflow.com/a/34183819
+
+    # eligible sample are samples that have at least 3 annotations
+    eligible_samples = model.Sample.query.\
+                                join(model.Sample.annotations).\
+                                group_by(model.Sample).\
+                                having(func.count(model.Annotation.id) > 1).\
+                                all()
+
+    if (eligible_samples ) :
+        print (eligible_samples)
+        print (len(eligible_samples))
+        random_sample = random.choice(eligible_samples)
+        random_sample.init_on_load()
+        # select random chunk :
+        random_col, random_row = random.choice( random_sample.chunks_numerotation  )
+        return render_template('find-para.html', sample_id = random_sample.id,  col = random_col, row = random_row)
+    else :
+        flash ("There is no sample on which to train.")
+        return redirect( url_for('index'))
 
 
 @app.route("/signup", methods = ['GET', 'POST'])
