@@ -93,14 +93,46 @@
             });
             view_stage_anno_layer.add(ratio_rect);
 
-
+            console.log(ratio_rect);
 
             ratio_rect.on('click', function(evt) {
                 console.log( evt.target) ;
                 console.log('cliiiiiick');
+                console.log(evt.target.name());
+                // return the first ( the only one) element that have the correct name
+                result = $.grep(data, function(e){ return e.name == evt.target.name(); });
+                console.log(result);
+                // there is always 1 result :
+                anno = result[0] ;
+                console.log(anno);
+                // Pass argument to event handle in jquerry
+                // when we want to keep the this bind
+                // http://stackoverflow.com/a/979344
+                // http://jsfiddle.net/Tk7yF/
+                response_validation.call(this, anno);
             });
         }
 
+
+        var score = error = 0 ;
+
+
+        function response_validation(){
+            /* Arguments :
+            * ------------
+            * this
+            * current annotation
+            */
+
+            console.log( anno.annotation[0], anno.annotation[0]=='P', this,  score, error);
+            if (anno.annotation[0]=='P') {
+                score = ++score ;
+                $('#score').html(score);
+            }else{
+                error = ++error  ;
+                $('#error').html(error);
+            }
+        }
 
         /*********************/
         /* Set the crop tool */
