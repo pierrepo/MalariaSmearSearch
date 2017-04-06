@@ -97,7 +97,7 @@
 
             ratio_rect.on('click', function(evt) {
                 console.log( evt.target) ;
-                console.log('cliiiiiick');
+                console.log('cliiiiiick on para anno');
                 console.log(evt.target.name());
                 // return the first ( the only one) element that have the correct name
                 result = $.grep(data, function(e){ return e.name == evt.target.name(); });
@@ -105,30 +105,7 @@
                 // there is always 1 result :
                 anno = result[0] ;
                 console.log(anno);
-                // Pass argument to event handle in jquerry
-                // when we want to keep the this bind
-                // http://stackoverflow.com/a/979344
-                // http://jsfiddle.net/Tk7yF/
-                response_validation.call(this, anno);
-            });
-        }
 
-
-        var score = error = 0 ;
-
-
-        function response_validation(){
-            /* Arguments :
-            * ------------
-            * this
-            * current annotation
-            */
-
-            this.destroy() ;
-            view_stage_anno_layer.draw()
-
-            console.log( anno.annotation[0], anno.annotation[0]=='P', this,  score, error);
-            if (anno.annotation[0]=='P') {
                 score = ++score ;
                 $('#score').html(score);
 
@@ -140,16 +117,19 @@
                     //splice modifies the array in place and
                     // returns a new array containing the elements that have been removed
                 }
-
+                // remove from the konva :
+                evt.target.destroy() ;
+                view_stage_anno_layer.draw()
                 if (typeof data !== 'undefined' && data.length == 0) {
                 // the array is defined and has no element left :
                     alert( "the end")
                 }
-            }else{
-                error = ++error  ;
-                $('#error').html(error);
-            }
+            });
         }
+
+
+        var score = error = 0 ;
+
 
         /*********************/
         /* Set the crop tool */
@@ -236,7 +216,7 @@
 
                 data_loaded = true ;
                 // code from here : http://stackoverflow.com/a/7364307 :
-                data_para =  $.grep(data, function(e){ return e.annotation[0] == 'P'; });
+                data_para =  $.grep(received_data, function(e){ return e.annotation[0] == 'P'; });
                 data = data_para // set the global var
                 console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
                 console.log(data);
@@ -260,7 +240,14 @@
                 // add the layer to the stage
                 view_stage.add(view_stage_anno_layer);
 
+                // trigger every where
+                view_stage.on('contentClick', function() {
+                  console.log('click on ' + JSON.stringify(view_stage.getPointerPosition()));
+                  error = ++error  ;
+                  $('#error').html(error);
 
+
+                });
                 Flash.success('The annotations were added on the view canvas. Everything is ready.', 3000);
             }
         }
