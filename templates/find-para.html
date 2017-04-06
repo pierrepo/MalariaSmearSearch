@@ -249,6 +249,7 @@
                         if (typeof data !== 'undefined' && data.length == 0) {
                         // the array is defined and has no element left :
                             alert( "the end")
+                            handle_end_game()
                         }
                     }
                 });
@@ -256,6 +257,17 @@
             }
         }
 
+
+
+        function handle_end_game(){
+            if(confirm("Replay ? ")){
+                location.reload();
+            }else {
+                window.location.href = "{{url_for('index')}}";
+                // href or replace ?
+                //http://stackoverflow.com/a/506004
+            }
+        }
 
     </script>
 
