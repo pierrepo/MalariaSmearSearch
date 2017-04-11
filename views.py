@@ -515,7 +515,7 @@ def update_anno_text(sample_id, col, row, anno_id) :
     anno = model.Annotation.query.get(anno_id)
     anno.annotation = request.form['new_value']
     print (anno.annotation)
-    anno.date_update = datetime.datetime.utcnow().isoformat()
+    anno.date_update = datetime.datetime.utcnow()
     anno.username_update=current_user.username
     #TODO : make the date update automatically when setting a field -> use setter decorator
 
