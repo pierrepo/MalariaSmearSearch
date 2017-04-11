@@ -477,10 +477,10 @@ class Annotation(db.Model) :
             the description of the annotation picked in the taxonomy
         """
 
-        self.username = user.username
+        self.username_creation = user.username
         self.sample_id = sample.id
         self.col, self.row = chunk_numerotation
-        self.date = datetime.datetime.utcnow()
+        self.date_creation = datetime.datetime.utcnow()
         self.x = x
         self.y = y
         self.width = width
