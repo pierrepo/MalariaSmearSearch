@@ -224,24 +224,21 @@ def index():
 def find_para_activity():
     """
     """
-    # inspired from "SQLAlchemy many to many filter rows by number of children"
-    #http://stackoverflow.com/a/34183819
+    # select random chunk :
 
-    # eligible sample are samples that have at least 3 annotations
-    eligible_samples = model.Sample.query.\
-                                join(model.Sample.annotations).\
-                                group_by(model.Sample).\
-                                having(func.count(model.Annotation.id) > 1).\
-                                all()
+    # eligible chunks are chunks that have at least 1 parasite annotations
+    eligible_chunks = model.Annotation.query.\
+                                       with_entities( model.Annotation.sample_id, model.Annotation.row,model.Annotation.col).\
+                                       distinct().\
+                                       filter( model.Annotation.annotation.startswith('P')).\
+                                       all()
+    # Get distinct chunk coord of parasite annnotation = Annotation instance where annotation attribut starts with 'P'
 
-    if (eligible_samples ) :
-        print (eligible_samples)
-        print (len(eligible_samples))
-        random_sample = random.choice(eligible_samples)
-        random_sample.init_on_load()
-        # select random chunk :
-        random_col, random_row = random.choice( random_sample.chunks_numerotation  )
-        return render_template('find-para.html', sample_id = random_sample.id,  col = random_col, row = random_row)
+    if (eligible_chunks ) :
+        print (eligible_chunks)
+        print (len(eligible_chunks))
+        random_sample_id, random_col, random_row = random.choice(eligible_chunks)
+        return render_template('find-para.html', sample_id = random_sample_id,  col = random_col, row = random_row)
     else :
         flash ("There is no sample on which to train.")
         return redirect( url_for('index'))
