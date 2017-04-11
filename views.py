@@ -56,26 +56,21 @@ def test():
 def elearning_yn():
     """
     """
-    # select random sample id :
+    # select random chunk :
 
-    # inspired from "SQLAlchemy many to many filter rows by number of children"
-    #http://stackoverflow.com/a/34183819
+    # eligible chunks are chunks that have at least 1 parasite annotations
+    eligible_chunk = model.Annotation.query.\
+					with_entities( model.Annotation.sample_id, model.Annotation.row,model.Annotation.col).\
+					distinct().\
+					filter( model.Annotation.annotation.startswith('P')).\
+					all()
+    # Get distinct chunk coord of parasite annnotation = Annotation instance where annotation attribut starts with 'P'
 
-    # eligible sample are samples that have at least 3 annotations
-    eligible_samples = model.Sample.query.\
-                                join(model.Sample.annotations).\
-                                group_by(model.Sample).\
-                                having(func.count(model.Annotation.id) > 1).\
-                                all()
-
-    if (eligible_samples ) :
-        print (eligible_samples)
-        print (len(eligible_samples))
-        random_sample = random.choice(eligible_samples)
-        random_sample.init_on_load()
-        # select random chunk :
-        random_col, random_row = random.choice( random_sample.chunks_numerotation  )
-        return render_template('y-n-activity.html', sample_id = random_sample.id,  col = random_col, row = random_row)
+    if (eligible_chunk ) :
+        print (eligible_chunk)
+        print (len(eligible_chunk))
+        random_sample_id, random_col, random_row = random.choice(eligible_chunk)
+        return render_template('y-n-activity.html', sample_id = random_sample_id,  col = random_col, row = random_row)
     else :
         flash ("There is no sample on which to train.")
         return redirect( url_for('index'))
