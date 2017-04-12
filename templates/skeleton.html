@@ -83,7 +83,7 @@
                                 <a href="{{url_for('account')}}">
                                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                                 {{current_user.username}} / {{current_user.primary_institution_name}}
-                                </a> 
+                                </a>
                             </li>
                             <li>
                                 <a href="{{url_for('logout')}}">
@@ -91,10 +91,10 @@
                                 </a>
                             </li>
                             {% else %}
-                            <li> 
+                            <li>
                                 <a href="{{url_for('login')}}">
                                 <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Login
-                                </a> 
+                                </a>
                             </li>
                             {% endif %}
 
