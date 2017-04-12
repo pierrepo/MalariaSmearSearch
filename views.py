@@ -248,7 +248,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/find-para")
+@app.route("/e-learning/find-para")
 def find_para_activity():
     """
     """
