@@ -160,6 +160,33 @@ class User_auth(db.Model, UserMixin):
             self.password
         )
 
+    def share_institution(self, another_user):
+        """
+        Argument :
+        ----------
+        another_user : instance of UserMixin
+
+        Return :
+        --------
+        response : boolean
+            True if the User_auth (self) has rights on content provided by
+            another user. False otherwise.
+        """
+
+        # build complete list of institution of self :
+        try :
+            institutions_list = [self.primary_institution_name] \
+                + [m.secondary_institution_name for m in self.secondary_institutions.all()]
+            # Remember : list methods operate in-place for the most part, and return None
+            # so i_l = [].extend([]) doesn't work
+        except TypeError : # TypeError: 'NoneType' object is not iterable
+                institutions_list = [self.primary_institution_name]
+                # it is mandatory for the user to have a primary innstitution_name
+
+        print (institutions_list)
+        return another_user.primary_institution_name in institutions_list
+
+
     #UserMixin inheritance provide basic implementation for
     #   is_authenticated
     #   is_active
