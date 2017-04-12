@@ -448,6 +448,23 @@ $(document).ready(function(){
         the same handler. Killer.
     */
 
+    // span hover :
+
+
+   $('#annotations-list').on("mouseover", "span", function() {
+       // Each time your mouse enters or leaves a child element,
+       // mouseover is triggered
+       handleHoverAnno(true,  $(this).parent().attr("name"), view_stage);
+       view_stage_anno_layer.draw();
+
+   }).on('mouseleave', 'span', function() {
+       handleHoverAnno(false,  $(this).parent().attr("name"), view_stage);
+       view_stage_anno_layer.draw();
+   });
+
+
+
+
     // del button :
     $('#annotations-list').on('click', '.glyphicon-trash', function(){
         /*
