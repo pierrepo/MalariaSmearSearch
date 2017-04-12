@@ -68,7 +68,7 @@ def elearning_yn():
 
     # eligible chunks are chunks that have at least 1 parasite annotations
     eligible_chunk = model.Annotation.query.\
-					with_entities( model.Annotation.sample_id, model.Annotation.row,model.Annotation.col).\
+					with_entities( model.Annotation.sample_id, model.Annotation.col,model.Annotation.row).\
 					distinct().\
 					filter( model.Annotation.annotation.startswith('P')).\
 					all()
@@ -305,7 +305,7 @@ def find_para_activity():
 
     # eligible chunks are chunks that have at least 1 parasite annotations
     eligible_chunks = model.Annotation.query.\
-                                       with_entities( model.Annotation.sample_id, model.Annotation.row,model.Annotation.col).\
+                                       with_entities( model.Annotation.sample_id, model.Annotation.col,model.Annotation.row).\
                                        distinct().\
                                        filter( model.Annotation.annotation.startswith('P')).\
                                        all()
