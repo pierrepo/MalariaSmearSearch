@@ -9,6 +9,7 @@ from flask import render_template, request, redirect, url_for, Response, send_fi
 from flask_login import login_required, login_user, logout_user, current_user
 import hashlib
 import pathlib
+import random
 from PIL import Image
 import os
 
@@ -18,6 +19,7 @@ import model
 from flask_sqlalchemy import sqlalchemy
 from sqlalchemy import func
 import random
+
 # the route() decorator tells Flask what URL should trigger the function.
 # the functions render associated template stored in templates folder.
 
@@ -48,6 +50,32 @@ def test():
     View test for a page restricted to logged in users.
     """
     return "here you are ! in a restricted area, oh my gosh"
+
+
+
+@app.route('/e-learning/y-n', methods=['GET'])
+def elearning_yn():
+    """
+    """
+    # select random chunk :
+
+    # eligible chunks are chunks that have at least 1 parasite annotations
+    eligible_chunk = model.Annotation.query.\
+					with_entities( model.Annotation.sample_id, model.Annotation.row,model.Annotation.col).\
+					distinct().\
+					filter( model.Annotation.annotation.startswith('P')).\
+					all()
+    # Get distinct chunk coord of parasite annnotation = Annotation instance where annotation attribut starts with 'P'
+
+    if (eligible_chunk ) :
+        print (eligible_chunk)
+        print (len(eligible_chunk))
+        random_sample_id, random_col, random_row = random.choice(eligible_chunk)
+        return render_template('y-n-activity.html', sample_id = random_sample_id,  col = random_col, row = random_row)
+    else :
+        flash ("There is no sample on which to train.")
+        return redirect( url_for('index'))
+
 
 @app.route('/samples/upload', methods=['GET', 'POST'])
 @login_required
