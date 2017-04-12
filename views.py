@@ -52,6 +52,13 @@ def test():
     return "here you are ! in a restricted area, oh my gosh"
 
 
+@app.route('/e-learning/')
+def elearning():
+    """
+    """
+    return render_template('choice-e-learning.html')
+
+
 
 @app.route('/e-learning/y-n', methods=['GET'])
 def elearning_yn():
