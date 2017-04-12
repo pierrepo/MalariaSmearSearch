@@ -15,7 +15,9 @@ import os
 from app import app, db, login_manager, samples_set
 from forms import RegisterForm, LoginForm, UploadForm
 import model
-
+from flask_sqlalchemy import sqlalchemy
+from sqlalchemy import func
+import random
 # the route() decorator tells Flask what URL should trigger the function.
 # the functions render associated template stored in templates folder.
 
@@ -216,6 +218,31 @@ def index():
     View of the index page.
     """
     return render_template('index.html')
+
+
+@app.route("/find-para")
+def find_para_activity():
+    """
+    """
+    # select random chunk :
+
+    # eligible chunks are chunks that have at least 1 parasite annotations
+    eligible_chunks = model.Annotation.query.\
+                                       with_entities( model.Annotation.sample_id, model.Annotation.row,model.Annotation.col).\
+                                       distinct().\
+                                       filter( model.Annotation.annotation.startswith('P')).\
+                                       all()
+    # Get distinct chunk coord of parasite annnotation = Annotation instance where annotation attribut starts with 'P'
+
+    if (eligible_chunks ) :
+        print (eligible_chunks)
+        print (len(eligible_chunks))
+        random_sample_id, random_col, random_row = random.choice(eligible_chunks)
+        return render_template('find-para.html', sample_id = random_sample_id,  col = random_col, row = random_row)
+    else :
+        flash ("There is no sample on which to train.")
+        return redirect( url_for('index'))
+
 
 @app.route("/signup", methods = ['GET', 'POST'])
 def signup():
