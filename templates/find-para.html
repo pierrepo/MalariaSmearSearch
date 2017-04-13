@@ -176,8 +176,8 @@
                 for(var i = 0; i < received_data.length; i++) {
                     var obj = received_data[i];
 
-                    obj.stroke = 'black';
-                    obj.strokeWidth = 4;
+                    obj.stroke = null;
+                    obj.strokeWidth = 3;
                     obj.name = obj.id.toString(); // TODO : Change the code to use id directly.
 
                     console.log(obj);
@@ -243,8 +243,8 @@
                             //splice modifies the array in place and
                             // returns a new array containing the elements that have been removed
                         }
-                        // remove from the konva :
-                        evt.target.destroy() ;
+                        // redraw annotation:
+                        evt.target.stroke("green");
                         view_stage_anno_layer.draw()
                         if (typeof data !== 'undefined' && data.length == 0) {
                         // the array is defined and has no element left :
