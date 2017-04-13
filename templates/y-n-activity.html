@@ -12,7 +12,7 @@
     </section>
 
     <section class="row">
-        score : <span id ='score'>0</span>  ; error(s) : <span id = 'error'>0</span>
+        <span class="btn btn-default btn-md"> score : <span id ='score'>0 </span></span> <span class="btn btn-default btn-md"> error(s) : <span id = 'error'>0</span> </span>
     </section>
 
     <section class="row">
@@ -191,7 +191,7 @@
 
 
         function handle_end_game(){
-            if(confirm("Replay ? ")){
+            if(confirm("score : "+score+" error : "+error+" Replay ? ")){
                 location.reload();
             }else {
                 window.location.href = "{{url_for('index')}}";
@@ -265,7 +265,7 @@
                         i = i + 1 ;
                         play_round(i)
                     }else{
-                        handle_end_game(); 
+                        handle_end_game();
                     }
                 });
             }

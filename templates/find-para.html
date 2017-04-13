@@ -16,7 +16,7 @@
 
 
     <section class="row">
-        score : <span id ='score'>0</span>  ; error(s) : <span id = 'error'>0</span>
+        <span class="btn btn-default btn-md"> score : <span id ='score'>0 </span></span> <span class="btn btn-default btn-md"> error(s) : <span id = 'error'>0</span> </span>
     </section>
 
 {%endblock%}
@@ -176,8 +176,8 @@
                 for(var i = 0; i < received_data.length; i++) {
                     var obj = received_data[i];
 
-                    obj.stroke = 'black';
-                    obj.strokeWidth = 4;
+                    obj.stroke = null;
+                    obj.strokeWidth = 3;
                     obj.name = obj.id.toString(); // TODO : Change the code to use id directly.
 
                     console.log(obj);
@@ -219,6 +219,22 @@
                     // the user have not cliked on a parasite annotation
                     error = ++error  ;
                     $('#error').html(error);
+                    PointerPosition = view_stage.getPointerPosition() ;
+                    console.log(PointerPosition);
+                    x = PointerPosition.x ;
+                    y = PointerPosition.y ;
+
+                    var circle = new Konva.Circle({
+                      x: x,
+                      y: y,
+                      radius: 3,
+                      fill: 'red',
+                      stroke: 'red',
+                      strokeWidth: 1
+                    });
+                    // add the shape to the layer
+                    view_stage_anno_layer.add(circle);
+                    view_stage_anno_layer.draw()
                   }else if (evt.target.className == "Rect"){
                         // the user has cliked on a para annotation
 
@@ -243,12 +259,11 @@
                             //splice modifies the array in place and
                             // returns a new array containing the elements that have been removed
                         }
-                        // remove from the konva :
-                        evt.target.destroy() ;
+                        // redraw annotation:
+                        evt.target.stroke("green");
                         view_stage_anno_layer.draw()
                         if (typeof data !== 'undefined' && data.length == 0) {
                         // the array is defined and has no element left :
-                            alert( "the end")
                             handle_end_game()
                         }
                     }
@@ -260,7 +275,7 @@
 
 
         function handle_end_game(){
-            if(confirm("Replay ? ")){
+            if(confirm("score : "+score+" error : "+error+" Replay ? ")){
                 location.reload();
             }else {
                 window.location.href = "{{url_for('index')}}";
