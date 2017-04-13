@@ -70,9 +70,9 @@ def get_hr_datetime(dt):
 
 
 
-def get_hr_file_size(path):
+def get_hr_file_nbytes(path):
     """
-    Get human readable file size
+    Get human readable file size in bytes
 
     Argument :
     ----------
@@ -252,7 +252,7 @@ class Sample(db.Model):
     num_col = db.Column(db.Integer)
     num_row = db.Column(db.Integer)
 
-    size = db.Column(db.Float)
+    nbytes = db.Column(db.Float)
     width = db.Column(db.Integer)
     height = db.Column(db.Integer)
     sha256 = db.Column(db.Text)
@@ -294,8 +294,8 @@ class Sample(db.Model):
         self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
         self.filename = '{0}.{1}'.format(self.id, self.extension)
         self.path = samples_set.path(self.filename)
-        self.hr_size = get_hr_file_size(self.path)
-        print('Image {}: {} x {} px / {}'.format(self.path, self.width, self.height, self.hr_size))
+        self.hr_nbytes = get_hr_file_nbytes(self.path)
+        print('Image {}: {} x {} px / {}'.format(self.path, self.width, self.height, self.hr_nbytes))
 
 
     def make_chunks(self):
@@ -342,9 +342,9 @@ class Sample(db.Model):
                 # 100 disables portions of the JPEG compression algorithm,
                 # and results in large files with hardly any gain in image quality.`
 
-    def get_chunk_size(self, chunk_col, chunk_row) :
+    def get_chunk_nbytes(self, chunk_col, chunk_row) :
         path = self.get_chunk_path(chunk_col, chunk_row)
-        return get_hr_file_size(path)
+        return get_hr_file_nbytes(path)
 
     def get_chunk_pixel_size(self, chunk_col, chunk_row) :
         path = self.get_chunk_path(chunk_col, chunk_row)
