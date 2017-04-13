@@ -43,7 +43,7 @@ class UploadForm(FlaskForm):
     """
     sample = FileField('Sample image file', validators=[
         FileRequired(),
-        FileAllowed( app.samples_set, 'Images only!')
+        FileAllowed( app.samples_set, 'Not supported type : jpeg only.')
     ])
 
     smear_type = RadioField('Blood smear type', choices=[

@@ -31,7 +31,7 @@ login_manager.login_view = "login"
 login_manager.login_message_category = "error"
 
 # Configure the image uploading via Flask-Uploads
-samples_set = UploadSet('samples', IMAGES)
+samples_set = UploadSet('samples', ['jpg', 'jpeg', 'JPEG', 'JPG'])
 configure_uploads(app, samples_set)
 
 # config Flask-JSGlue
