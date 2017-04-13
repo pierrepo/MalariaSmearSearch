@@ -191,7 +191,7 @@
 
 
         function handle_end_game(){
-            if(confirm("Replay ? ")){
+            if(confirm("score : "+score+" error : "+error+" Replay ? ")){
                 location.reload();
             }else {
                 window.location.href = "{{url_for('index')}}";

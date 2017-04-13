@@ -248,7 +248,6 @@
                         view_stage_anno_layer.draw()
                         if (typeof data !== 'undefined' && data.length == 0) {
                         // the array is defined and has no element left :
-                            alert( "the end")
                             handle_end_game()
                         }
                     }
@@ -260,7 +259,7 @@
 
 
         function handle_end_game(){
-            if(confirm("Replay ? ")){
+            if(confirm("score : "+score+" error : "+error+" Replay ? ")){
                 location.reload();
             }else {
                 window.location.href = "{{url_for('index')}}";
