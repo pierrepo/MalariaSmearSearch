@@ -252,7 +252,7 @@ class Sample(db.Model):
     num_col = db.Column(db.Integer)
     num_row = db.Column(db.Integer)
 
-    nbytes = db.Column(db.Float)
+    nbytes = db.Column(db.Integer)
     width = db.Column(db.Integer)
     height = db.Column(db.Integer)
     sha256 = db.Column(db.Text)
