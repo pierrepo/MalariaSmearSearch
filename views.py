@@ -104,7 +104,7 @@ def del_conformation_sample(sample_id):
 
 
     if not current_user.share_institution (sample.user_upload) :
-        flash("You are not autorize to delete this sample")
+        flash("You are not autorized to delete this sample")
         return redirect( url_for('show_update_sample_info', sample_id = sample_id))
 
     print (len ( sample.annotations.all() ))
