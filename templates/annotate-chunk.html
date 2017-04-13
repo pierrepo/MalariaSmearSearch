@@ -128,11 +128,13 @@
           <input type="submit" id="add-new-submit" value="Add" class="button" />
       </form>
     </section>
+
     {%if current_user.is_authenticated and current_user.share_institution(sample.user_upload)%}
-        <section class="row">
+        <section class="row anno-stuff">
             <em>Double-click the annotation text to edit. Double-click the trash bin icon to delete.</em>
         </section>
     {%endif%}
+
     <section class="row">
       <ul id = "annotations-list">
       </ul>
