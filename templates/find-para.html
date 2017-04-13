@@ -219,6 +219,22 @@
                     // the user have not cliked on a parasite annotation
                     error = ++error  ;
                     $('#error').html(error);
+                    PointerPosition = view_stage.getPointerPosition() ;
+                    console.log(PointerPosition);
+                    x = PointerPosition.x ;
+                    y = PointerPosition.y ;
+
+                    var circle = new Konva.Circle({
+                      x: x,
+                      y: y,
+                      radius: 3,
+                      fill: 'red',
+                      stroke: 'red',
+                      strokeWidth: 1
+                    });
+                    // add the shape to the layer
+                    view_stage_anno_layer.add(circle);
+                    view_stage_anno_layer.draw()
                   }else if (evt.target.className == "Rect"){
                         // the user has cliked on a para annotation
 
