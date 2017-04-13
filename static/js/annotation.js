@@ -66,7 +66,7 @@ $(document).ready(function(){
         /*
         $("#annotations-list")
             .append("<li name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span>");
-        if (user_auth) {
+        if (user_has_right) {
             $("#annotations-list")
                 .append("<button class='glyphicon glyphicon-trash'></button>");
         }
@@ -75,7 +75,7 @@ $(document).ready(function(){
         */
         // Instead, we put the html in an string then append that string to the dom :
          var html="<li name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span>"
-         if (user_auth) {
+         if (user_has_right) {
              html+="<button class='glyphicon glyphicon-trash'></button>";
          }
          html+="</li>";
@@ -87,7 +87,7 @@ $(document).ready(function(){
         // but ensure the click-to-edit functionality is working
         // on newly appended list items even before a page refresh :
 
-        if (user_auth) {
+        if (user_has_right) {
             makeEditable("#annotations-list li[name="+new_anno.name+"] span");
         }
 

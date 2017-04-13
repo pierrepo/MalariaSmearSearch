@@ -61,7 +61,7 @@
 {% block content %}
 
     <section class="row">
-    {% if current_user.is_authenticated %}
+    {% if current_user.is_authenticated and current_user.share_institution(sample.user_upload)%}
         <div class="col-md-2 d-inline btn btn-primary" id="toggle-mode">
         	<span id="icon-annotate" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
         	<span id="icon-view" class="glyphicon glyphicon-eye-open" aria-hidden="true" style="display: none;"></span>
@@ -128,7 +128,7 @@
           <input type="submit" id="add-new-submit" value="Add" class="button" />
       </form>
     </section>
-    {%if current_user.is_authenticated%}
+    {%if current_user.is_authenticated and current_user.share_institution(sample.user_upload)%}
         <section class="row">
             <em>Double-click the annotation text to edit. Double-click the trash bin icon to delete.</em>
         </section>
@@ -150,7 +150,9 @@
     <script>
         // couldn't find a better way to pass boolean from jinja :
         var user_auth = '{{current_user.is_authenticated}}'=='True' ? true : false;
-
+        var user_share_institution = '{{current_user.share_institution(sample.user_upload)}}'=='True' ? true : false;
+        var user_has_right = user_auth && user_share_institution
+        console.log(user_auth, user_share_institution,user_has_right  )
         var sample_id = {{sample_id}}
         var col = {{col}}
         var row ={{row}}

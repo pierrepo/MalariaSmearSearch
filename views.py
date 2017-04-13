@@ -101,6 +101,12 @@ def upload():
 @login_required
 def del_conformation_sample(sample_id):
     sample = model.Sample.query.get(sample_id)
+
+
+    if not current_user.share_institution (sample.user_upload) :
+        flash("You are not autorized to delete this sample")
+        return redirect( url_for('show_update_sample_info', sample_id = sample_id))
+
     print (len ( sample.annotations.all() ))
     return render_template('confirmation-sample-deletion.html', sample = sample)
 
@@ -558,7 +564,7 @@ def annotate_chunk(sample_id, col, row):
 
     # give the URL the requested file uploaded to this set would be accessed at. It doesn’t check whether said file exists.
 
-    return render_template('annotate-chunk.html', sample_id=sample_id, col=col, row=row )
+    return render_template('annotate-chunk.html', sample=sample, sample_id=sample_id, col=col, row=row)
 
 
 @app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotations/' , methods = ['POST'])
