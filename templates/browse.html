@@ -31,13 +31,16 @@
             <tbody>
                 {%for data in rows%}
                     <tr>
-                        <td>{{data[0]}}</td> <!-- sample id / update sample infos -->
+                        <td>
+                            <a class="link-silent" href="{{ url_for('show_update_sample_info', sample_id = data[0]) }}">
+                                {{data[0]}} <span class="glyphicon glyphicon-eye-open"></span>
+                            </a>
+                        </td> <!-- sample id / update sample infos -->
                         <td>{{data[1]}}</td> <!-- date upload -->
                         <td>{{data[2]}}</td> <!-- upoaded by -->
                         <td>
-                            {{data[0]}}_{{data[4]}}_{{data[3]}}
-                            <a href="{{ url_for('annotate_chunk', sample_id = data[0], col = data[4], row = data[3] ) }}">
-                                <span class="glyphicon glyphicon-eye-open"></span>
+                            <a class="link-silent" href="{{ url_for('annotate_chunk', sample_id = data[0], col = data[4], row = data[3] ) }}">
+                                {{data[0]}}-{{data[4]}}-{{data[3]}} <span class="glyphicon glyphicon-eye-open"></span>
                             </a>
                         </td> <!-- chunk idx -> sampleidx_col_row / view (& annotate) -->
                         <td>{{data[5]}}</td> <!-- tt num of anno-->

@@ -1,0 +1,289 @@
+{% extends "skeleton.html" %}
+
+
+{% block content %}
+
+    <section class="row">
+        <div id='flash-container'>
+    </section>
+    <section class="row">
+        click on all parasites
+    </section>
+
+    <section class="row limited-height">
+      <div id="view-konvajs" class="col-xs-12"></div>
+    </section>
+
+
+    <section class="row">
+        <span class="btn btn-default btn-md"> score : <span id ='score'>0 </span></span> <span class="btn btn-default btn-md"> error(s) : <span id = 'error'>0</span> </span>
+    </section>
+
+{%endblock%}
+
+
+
+{% block imports %}
+    {{super()}}
+    <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
+
+    <script>
+
+
+        var sample_id = {{sample_id}}
+        var col = {{col}}
+        var row ={{row}}
+
+
+        /*Functions that flash messages in the flash div :
+        *
+        * @param {string} msg - the msg that have to be printed
+        * @param {int} time - the duration of the flash
+        *
+        */
+        Flash = {}
+        Flash.success = function(msg, time =1000){
+            $('#flash-container')[0].innerHTML = "<div class='success message'>" + msg + "</div>";
+            $('#flash-container').addClass('showing');
+            setTimeout(function(){
+              $('#flash-container').removeClass('showing');
+            }, time);
+          };
+        Flash.error = function(msg, time =1000){
+            $('#flash-container')[0].innerHTML = "<div class='error message'>" + msg + "</div>";
+            $('#flash-container').addClass('showing');
+            setTimeout(function(){
+                $('#flash-container').removeClass('showing');
+            }, time);
+        };
+
+
+        /* This function adds the annotation on the annotation layers
+        *   of the view Konva stage (using ratio)
+        *
+        * It doesn't refresh the layer
+        *
+        * @param {object} new_anno - the newly added annotation
+        *
+        */
+        function draw_ratio_rect_from(new_anno){
+
+            // compute the ratio annotation :
+            ratio_new_anno = {
+                x: new_anno.x * ratio,
+                y: new_anno.y * ratio,
+                width: new_anno.width * ratio,
+                height: new_anno.height * ratio,
+                stroke: new_anno.stroke,
+                strokeWidth: new_anno.strokeWidth * ratio,
+                name: new_anno.name.toString() // it has to be a string !!
+            };
+
+            // add the ration annotation as a rect on the anno layer of the view stage
+            console.log(ratio_new_anno) ;
+            var ratio_rect = new Konva.Rect({
+              x: ratio_new_anno.x,
+              y: ratio_new_anno.y,
+              width: ratio_new_anno.width,
+              height: ratio_new_anno.height,
+              fill : null,
+              stroke: ratio_new_anno.stroke,
+              strokeWidth:  ratio_new_anno.strokeWidth,
+              name: ratio_new_anno.name.toString() // it has to be a string !!
+            });
+            view_stage_anno_layer.add(ratio_rect);
+
+            console.log(ratio_rect);
+        }
+
+
+        var score = error = 0 ;
+
+
+        /*********************/
+        /* Set the crop tool */
+        /*********************/
+
+        /* create Konva instances */
+        // Konva stage
+        var view_stage = new Konva.Stage({
+          container: 'view-konvajs',   // id of container <div>
+          width: $('#view-konvajs').width()
+        });
+        // and layers added to corresponding stage from the bottom to the top :
+        // - one for the image (in the bottom):
+        var view_stage_img_layer = new Konva.Layer();
+        view_stage.add(view_stage_img_layer);
+        view_stage_img_layer.moveToBottom();
+        // - the other for the annotations :
+        var view_stage_anno_layer = new Konva.Layer();
+        view_stage.add(view_stage_anno_layer);
+
+
+        /***************/
+        /* Fetch data */
+        /*************/
+
+        //***  fetch image :
+        image_loaded = false ;
+        var imageObj = new Image();
+        imageObj.src = Flask.url_for("get_chunk_url", {"sample_id": sample_id, "col":col, "row":row});
+
+
+        // once the image is loaded :
+        var ratio = 1;
+        imageObj.onload = function() {
+            Flash.success('Image was retrieved from the server', 3000);
+            // compute ratio :
+            console.log(imageObj.naturalWidth)
+            ratio = view_stage.width()/imageObj.naturalWidth;
+            console.log(ratio);
+            var view_stage_image = new Konva.Image({
+                x: 0,
+                y: 0,
+                image: this,
+                width: imageObj.naturalWidth * ratio,
+                height: imageObj.naturalHeight * ratio
+            });
+            //adjust stage height :
+            view_stage.height( view_stage_image.height() );
+            // add the shape to the layer
+            view_stage_img_layer.add(view_stage_image);
+
+            image_loaded =true ;
+            init_anno();
+        }
+
+
+
+
+        //*** fetch corresponding annotation data :
+        var data = []; // global var
+        data_loaded = false ;
+
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
+
+        $.getJSON(
+
+            Flask.url_for("get_chunk_annotation", {"sample_id":sample_id , "col":col, "row":row}),
+
+            function(received_data){
+                console.log(received_data);
+
+                Flash.success('Annotation was retrieved from the server', 3000);
+
+
+                for(var i = 0; i < received_data.length; i++) {
+                    var obj = received_data[i];
+
+                    obj.stroke = null;
+                    obj.strokeWidth = 3;
+                    obj.name = obj.id.toString(); // TODO : Change the code to use id directly.
+
+                    console.log(obj);
+                }
+
+                data_loaded = true ;
+                // code from here : http://stackoverflow.com/a/7364307 :
+                data_para =  $.grep(received_data, function(e){ return e.annotation[0] == 'P'; });
+                data = data_para // set the global var
+                console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+                console.log(data);
+                init_anno();
+            }
+        );
+
+        /* Render the loaded annotations on the loaded chunk */
+        function init_anno(){ // use global var data
+            console.log("data_loaded", data_loaded, "image_loaded", image_loaded);
+            if(data_loaded && image_loaded) {
+            // once image is loaded
+            // AND once data are loaded
+                console.log( '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+                console.log(data)
+                // render (false) annotations = add the shape to the layer // TODO : is there a for each loop in js ?
+                for(var i = 0; i < data.length; i++) {
+                    draw_ratio_rect_from(data[i]);
+                }
+
+                // add the layer to the stage
+                view_stage.add(view_stage_anno_layer);
+
+
+                // trigger on shape -> everywhere because shape or image :
+                //https://konvajs.github.io/docs/events/Stage_Events.html
+                view_stage.on('click', function(evt) {
+                  console.log('usual click on ' + JSON.stringify(view_stage.getPointerPosition()));
+                  console.log(evt.target);
+                  if (evt.target.className == 'Image') {
+                    // the user have not cliked on a parasite annotation
+                    error = ++error  ;
+                    $('#error').html(error);
+                    PointerPosition = view_stage.getPointerPosition() ;
+                    console.log(PointerPosition);
+                    x = PointerPosition.x ;
+                    y = PointerPosition.y ;
+
+                    var circle = new Konva.Circle({
+                      x: x,
+                      y: y,
+                      radius: 3,
+                      fill: 'red',
+                      stroke: 'red',
+                      strokeWidth: 1
+                    });
+                    // add the shape to the layer
+                    view_stage_anno_layer.add(circle);
+                    view_stage_anno_layer.draw()
+                  }else if (evt.target.className == "Rect"){
+                        // the user has cliked on a para annotation
+
+                        console.log( evt.target) ;
+                        console.log('cliiiiiick on para anno');
+                        console.log(evt.target.name());
+                        // return the first ( the only one) element that have the correct name
+                        result = $.grep(data, function(e){ return e.name == evt.target.name(); });
+                        console.log(result);
+                        // there is always 1 result :
+                        anno = result[0] ;
+                        console.log(anno);
+
+                        score = ++score ;
+                        $('#score').html(score);
+
+                        // remove the found parasite from the parasite array :
+                        // index of the element you want to remove :
+                        var index = data.indexOf(anno);
+                        if (index > -1) {
+                            data.splice(index, 1); // 1 : number of elements to remove
+                            //splice modifies the array in place and
+                            // returns a new array containing the elements that have been removed
+                        }
+                        // redraw annotation:
+                        evt.target.stroke("green");
+                        view_stage_anno_layer.draw()
+                        if (typeof data !== 'undefined' && data.length == 0) {
+                        // the array is defined and has no element left :
+                            handle_end_game()
+                        }
+                    }
+                });
+                Flash.success('The annotations were added on the view canvas. Everything is ready.', 3000);
+            }
+        }
+
+
+
+        function handle_end_game(){
+            if(confirm("score : "+score+" error : "+error+" Replay ? ")){
+                location.reload();
+            }else {
+                window.location.href = "{{url_for('index')}}";
+                // href or replace ?
+                //http://stackoverflow.com/a/506004
+            }
+        }
+
+    </script>
+
+{% endblock %}

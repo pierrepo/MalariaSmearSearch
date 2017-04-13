@@ -1,0 +1,278 @@
+{% extends "skeleton.html" %}
+
+
+{% block content %}
+
+    <section class="row">
+        <div id='flash-container'>
+    </section>
+
+    <section class="row limited-height">
+      <div id="view-konvajs" class="col-xs-12"></div>
+    </section>
+
+    <section class="row">
+        <span class="btn btn-default btn-md"> score : <span id ='score'>0 </span></span> <span class="btn btn-default btn-md"> error(s) : <span id = 'error'>0</span> </span>
+    </section>
+
+    <section class="row">
+        Parasite ?
+        <button type="button" id = 'yes' value="yes">Yes !</button>
+        <button type="button" id = 'no' value="no">No !</button>
+    </section>
+{%endblock%}
+
+
+
+{% block imports %}
+    {{super()}}
+    <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
+
+    <script>
+
+
+        var sample_id = {{sample_id}}
+        var col = {{col}}
+        var row ={{row}}
+
+
+        /*Functions that flash messages in the flash div :
+        *
+        * @param {string} msg - the msg that have to be printed
+        * @param {int} time - the duration of the flash
+        *
+        */
+        Flash = {}
+        Flash.success = function(msg, time =1000){
+            $('#flash-container')[0].innerHTML = "<div class='success message'>" + msg + "</div>";
+            $('#flash-container').addClass('showing');
+            setTimeout(function(){
+              $('#flash-container').removeClass('showing');
+            }, time);
+          };
+        Flash.error = function(msg, time =1000){
+            $('#flash-container')[0].innerHTML = "<div class='error message'>" + msg + "</div>";
+            $('#flash-container').addClass('showing');
+            setTimeout(function(){
+                $('#flash-container').removeClass('showing');
+            }, time);
+        };
+
+        /* Shuffle array
+        * Fisher-Yates-Durstenfeld shuffle
+        * http://stackoverflow.com/a/3718452
+        */
+        function shuffle(sourceArray) {
+            for (var i = 0; i < sourceArray.length - 1; i++) {
+                var j = i + Math.floor(Math.random() * (sourceArray.length - i));
+
+                var temp = sourceArray[j];
+                sourceArray[j] = sourceArray[i];
+                sourceArray[i] = temp;
+            }
+            return sourceArray;
+        };
+
+
+        /*********************/
+        /* Set the crop tool */
+        /*********************/
+
+        /* create Konva instances */
+        // Konva stage
+        var view_stage = new Konva.Stage({
+          container: 'view-konvajs',   // id of container <div>
+          width: $('#view-konvajs').width()
+        });
+        // and layers added to corresponding stage from the bottom to the top :
+        // - one for the image (in the bottom):
+        var view_stage_img_layer = new Konva.Layer();
+        view_stage.add(view_stage_img_layer);
+        view_stage_img_layer.moveToBottom();
+        // - the other for the annotations :
+        var view_stage_anno_layer = new Konva.Layer();
+        view_stage.add(view_stage_anno_layer);
+
+
+        /***************/
+        /* Fetch data */
+        /*************/
+
+        //***  fetch image :
+        image_loaded = false ;
+        var imageObj = new Image();
+        imageObj.src = Flask.url_for("get_chunk_url", {"sample_id": sample_id, "col":col, "row":row});
+
+
+        // once the image is loaded :
+        var ratio = 1;
+        imageObj.onload = function() {
+            Flash.success('Image was retrieved from the server', 3000);
+            // compute ratio :
+            console.log(imageObj.naturalWidth)
+            ratio = view_stage.width()/imageObj.naturalWidth;
+            console.log(ratio);
+            var view_stage_image = new Konva.Image({
+                x: 0,
+                y: 0,
+                image: this,
+                width: imageObj.naturalWidth * ratio,
+                height: imageObj.naturalHeight * ratio
+            });
+            //adjust stage height :
+            view_stage.height( view_stage_image.height() );
+            // add the shape to the layer
+            view_stage_img_layer.add(view_stage_image);
+
+            image_loaded =true ;
+            play_game()
+        }
+
+
+
+        //*** fetch corresponding annotation data :
+        var data = []; // global var
+        data_loaded = false ;
+
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
+
+        $.getJSON(
+
+            Flask.url_for("get_chunk_annotation", {"sample_id":sample_id , "col":col, "row":row}),
+
+            function(received_data){
+                console.log(received_data);
+
+                Flash.success('Annotation was retrieved from the server', 3000);
+
+
+                for(var i = 0; i < received_data.length; i++) {
+                    var obj = received_data[i];
+
+                    obj.stroke = 'black';
+                    obj.strokeWidth = 4;
+                    obj.name = obj.id.toString(); // TODO : Change the code to use id directly.
+
+                    console.log(obj);
+                }
+
+                data_loaded = true ;
+                data = received_data; // set the global var
+                play_game() ;
+            }
+        );
+
+
+        var score = error = 0 ;
+
+        // Pass argument to event handle in jquerry
+        // when we want to keep the this bind
+        // http://stackoverflow.com/a/979344
+        // http://jsfiddle.net/Tk7yF/
+        function response_validation(){
+            /* Arguments :
+            * ------------
+            * this
+            * current annotation
+            */
+
+            console.log( anno.annotation[0], anno.annotation[0]=='P', $(this).val(),  score, error);
+            if (anno.annotation[0]=='P' && $(this).val() == 'yes' ) {
+                score = ++score ;
+                $('#score').html(score);
+            }else if (anno.annotation[0]!='P' && $(this).val() != 'yes' ) {
+                score = ++score ;
+                $('#score').html(score);
+            }else{
+                error = ++error  ;
+                $('#error').html(error);
+            }
+        }
+
+
+        function handle_end_game(){
+            if(confirm("score : "+score+" error : "+error+" Replay ? ")){
+                location.reload();
+            }else {
+                window.location.href = "{{url_for('index')}}";
+                // href or replace ?
+                //http://stackoverflow.com/a/506004
+            }
+        }
+
+        var current_ratio_rect;
+
+
+        function play_round(i){
+            anno = data[i];
+            console.log(anno);
+            // compute the ratio annotation :
+            var ratio_anno = {
+                x: anno.x * ratio,
+                y: anno.y * ratio,
+                width: anno.width * ratio,
+                height: anno.height * ratio,
+                stroke: anno.stroke,
+                strokeWidth: anno.strokeWidth * ratio,
+                name: anno.name.toString() // it has to be a string !!
+            };
+
+            // add the ration annotation as a rect on the anno layer of the view stage
+            console.log(ratio_anno) ;
+            current_ratio_rect = new Konva.Rect({
+              x: ratio_anno.x,
+              y: ratio_anno.y,
+              width: ratio_anno.width,
+              height: ratio_anno.height,
+              fill : null,
+              stroke: ratio_anno.stroke,
+              strokeWidth:  ratio_anno.strokeWidth,
+              name: ratio_anno.name.toString() // it has to be a string !!
+            });
+
+            view_stage_anno_layer.add(current_ratio_rect);
+            view_stage_anno_layer.draw();
+
+        }
+
+        function play_game(){
+            if(data_loaded && image_loaded) {
+                //shuffle the data :
+                console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                console.log(data);
+                data = shuffle(data)
+                console.log(data);
+
+                i = 0
+                play_round(i)
+
+                $("#yes").click(function() {
+                    response_validation.call(this, anno);
+                    if (i < data.length-1  ) {
+                        console.log(i);
+                        current_ratio_rect.destroy();
+                        i = i + 1 ;
+                        play_round(i)
+                    }else{
+                        handle_end_game();
+                    }
+                });
+                $("#no").click(function() {
+                    response_validation.call(this, anno);
+                    if (i < data.length-1  ) {
+                    console.log(i);
+                    current_ratio_rect.destroy();
+                        i = i + 1 ;
+                        play_round(i)
+                    }else{
+                        handle_end_game();
+                    }
+                });
+            }
+        };
+
+
+
+    </script>
+
+{% endblock %}

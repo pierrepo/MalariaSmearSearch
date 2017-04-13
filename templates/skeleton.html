@@ -4,6 +4,7 @@
         {% block head %}
         {{ JSGlue.include() }}
         <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}{{title}}{% endblock %} - Malaria Smear Search</title>
 
         <!-- Bootstrap -->
@@ -39,7 +40,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="{{url_for('index')}} ">Malaria Smear Search</a>
+                        <a class="navbar-brand" href="{{url_for('index')}} ">MalariaSmearSearch</a>
                     </div>
                     <div class="collapse navbar-collapse" id="myNavbar">
                         <ul class="nav navbar-nav">
@@ -52,36 +53,49 @@
                             {% if current_user.is_authenticated %}
                             <li>
                                 <a href="{{url_for('upload')}}">
-                                    <span class="glyphicon glyphicon-upload" aria-hidden="true">
+                                    <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
                                     Upload
                                 </a>
                             </li>
                             {% endif %}
                             <li>
                                 <a href="{{url_for('browse')}}">
-                                    <span class="glyphicon glyphicon-list" aria-hidden="true">
+                                    <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                                     Browse
                                 </a>
                             </li>
                             <li>
-                                <a href="#">
-                                    <span class="glyphicon glyphicon-play-circle" aria-hidden="true">
+                                <a href="{{url_for('elearning')}}">
+                                    <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>
                                     Test/play
                                 </a>
                             </li>
                             <li>
                                 <a href="{{url_for('about')}}">
-                                    <span class="glyphicon glyphicon-star" aria-hidden="true">
+                                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
                                     About
                                 </a>
                             </li>
                         </ul>
                         <ul class="nav navbar-nav navbar-right"> <!-- {{current_user.username}} -->
                             {% if current_user.is_authenticated %}
-                            <li>  <a href="{{url_for('account')}}">Your account</a> </li>
-                            <li>  <a href="{{url_for('logout')}}"><span class="glyphicon glyphicon-log-out"></span> Logout</a> </li>
+                            <li>
+                                <a href="{{url_for('account')}}">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                {{current_user.username}} / {{current_user.primary_institution_name}}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{url_for('logout')}}">
+                                <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Logout
+                                </a>
+                            </li>
                             {% else %}
-                            <li> <a href="{{url_for('login')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a> </li>
+                            <li>
+                                <a href="{{url_for('login')}}">
+                                <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Login
+                                </a>
+                            </li>
                             {% endif %}
 
 

@@ -7,13 +7,18 @@ HTML templates are in the templates folder.
 import datetime
 from flask import render_template, request, redirect, url_for, Response, send_file, jsonify, make_response, flash, abort
 from flask_login import login_required, login_user, logout_user, current_user
+import hashlib
 import pathlib
+import random
 from PIL import Image
 import os
 
 from app import app, db, login_manager, samples_set
 from forms import RegisterForm, LoginForm, UploadForm
 import model
+from flask_sqlalchemy import sqlalchemy
+from sqlalchemy import func
+import random
 
 # the route() decorator tells Flask what URL should trigger the function.
 # the functions render associated template stored in templates folder.
@@ -46,6 +51,39 @@ def test():
     """
     return "here you are ! in a restricted area, oh my gosh"
 
+
+@app.route('/e-learning/')
+def elearning():
+    """
+    """
+    return render_template('choice-e-learning.html')
+
+
+
+@app.route('/e-learning/y-n', methods=['GET'])
+def elearning_yn():
+    """
+    """
+    # select random chunk :
+
+    # eligible chunks are chunks that have at least 1 parasite annotations
+    eligible_chunk = model.Annotation.query.\
+					with_entities( model.Annotation.sample_id, model.Annotation.col,model.Annotation.row).\
+					distinct().\
+					filter( model.Annotation.annotation.startswith('P')).\
+					all()
+    # Get distinct chunk coord of parasite annnotation = Annotation instance where annotation attribut starts with 'P'
+
+    if (eligible_chunk ) :
+        print (eligible_chunk)
+        print (len(eligible_chunk))
+        random_sample_id, random_col, random_row = random.choice(eligible_chunk)
+        return render_template('y-n-activity.html', sample_id = random_sample_id,  col = random_col, row = random_row)
+    else :
+        flash ("There is no sample on which to train.")
+        return redirect( url_for('index'))
+
+
 @app.route('/samples/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
@@ -56,6 +94,54 @@ def upload():
     if form.validate_on_submit() :
         return redirect( url_for('add_sample'), code=307 )
     return render_template('upload.html', form = form)
+
+
+
+@app.route('/samples/<int:sample_id>/del-confirmation/')
+@login_required
+def del_conformation_sample(sample_id):
+    sample = model.Sample.query.get(sample_id)
+
+
+    if not current_user.share_institution (sample.user_upload) :
+        flash("You are not autorized to delete this sample")
+        return redirect( url_for('show_update_sample_info', sample_id = sample_id))
+
+    print (len ( sample.annotations.all() ))
+    return render_template('confirmation-sample-deletion.html', sample = sample)
+
+
+@app.route('/samples/<int:sample_id>/delete' , methods = ['GET']) # this is not REST : use DELETE method !
+def del_sample(sample_id) :
+    print(sample_id)
+
+    try :
+        sample = model.Sample.query.get(sample_id)
+        sample.init_on_load()
+
+        # delete the files :
+
+        model.delete_file(sample.path)
+        print('bim')
+        for chunk_path in sample.get_chunks_paths() :
+            model.delete_file(chunk_path)
+
+        print ('bam')
+        # delete entry in db :
+        db.session.delete(sample)
+        db.session.commit()
+        print('sample was deleted from the database')
+        flash('sample was deleted from the database', category = 'succes')
+        return redirect(url_for('index'))
+
+    except Exception as e:
+        print (e)
+        db.session.rollback()
+        print('An error occurred accessing the database.')
+        flash('An error occurred accessing the database.', category = 'error')
+        return redirect(url_for('index'), 500)
+
+
 
 @app.route('/samples/', methods=['POST'])
 @login_required
@@ -76,59 +162,83 @@ def add_sample():
         print (new_sample)
         print (form)
 
-        print('handle patient')
-        patient = model.Patient.query.filter_by(
-            ref=form.patient_ref.data,
-            institution=current_user.original_institution.name
-        ).first()
-        print (patient)
+        if (form.patient_ref):
+            print('handle patient')
+            patient = model.Patient.query.filter_by(
+                ref=form.patient_ref.data,
+                institution_name=current_user.primary_institution_name
+            ).first()
+            print (patient)
 
-        if not patient :
-            patient = model.Patient()
+            if patient :
+                patient = model.Patient()
 
-            patient.gender  = form.patient_gender.data
-            patient.ref =form.patient_ref.data
-            patient.institution  =  current_user.original_institution.name
-            patient.year_of_birth = form.patient_year_of_birth.data
-            patient.city =form.patient_city.data
-            patient.country = form.patient_country.data
+                patient.gender  = form.patient_gender.data
+                patient.ref =form.patient_ref.data
+                patient.institution_name  =  current_user.primary_institution_name
+                patient.year_of_birth = form.patient_year_of_birth.data
+                patient.city =form.patient_city.data
+                patient.country = form.patient_country.data
 
 
-        new_sample.patient = patient
+            new_sample.patient = patient
 
-        print ("!!!!!!!!!!!!!!")
-        print (patient)
+            print ("!!!!!!!!!!!!!!")
+            print (patient)
 
         try :
-            # add the sample in the database :
+            print ('try to save the new sample')
+            #------------- new_sample in db
+            # add the sample in the database with all the infos we have for now :
             db.session.add(new_sample)
             db.session.commit()
-            # call the reconstructor
-            # and thus update the fields that need sample.id
-            new_sample.init_on_load()
 
-            # upload the sample
-            # its name is the sample 00000id in the database
+            #------------- new_sample on disk
+            # now the sample is in the db, we have its auto increment id
+            # thus the filename :
+            new_sample.filename = '{0}.{1}'.format(new_sample.id, new_sample.extension)
+            #thus we can upload and save the sample image :
             samples_set.save(
-                storage = form.sample.data, # The uploaded file to save.
-                name = new_sample.filename
+                    storage = form.sample.data, # the uploaded image file
+                    name = new_sample.filename
             )
+            # and now the image is saved, we can retrieve its path :
+            new_sample.path = samples_set.path(new_sample.filename)
 
+            print('Saved {} in {}'.format(new_sample.filename, new_sample.path))
+
+            #------------- new_sample cut into chunks :
+            # now we have the path we can open the image and get its size
+            # and px width and height :
+            new_sample.size = os.path.getsize(new_sample.path)
+            new_sample.width, new_sample.height = model.get_img_pixel_size(new_sample.path)
+
+            # now the have px width and height, we can
             # get the number of pieces using integer division :
             # chunk dimensions are always BELOW Sample.MAX_CHUNK_SIZE px
-            with Image.open(new_sample.path) as img :
-                width, height = img.size
-                print (width, height)
-                new_sample.num_col = (width // model.Sample.MAX_CHUNK_SIZE) + 1
-                new_sample.num_row = (height // model.Sample.MAX_CHUNK_SIZE) + 1
-            new_sample.init_on_load()
+            new_sample.num_col = (new_sample.width // model.Sample.MAX_CHUNK_SIZE) + 1
+            new_sample.num_row = (new_sample.height // model.Sample.MAX_CHUNK_SIZE) + 1
+
+
+            #------------- sha256:
+            # /!\  pretty memory inefficient way
+            # http://stackoverflow.com/a/3431835
+            print ('sha256')
+            with open(new_sample.path, 'rb') as im :
+                new_sample.sha256 = hashlib.sha256(im.read()).hexdigest()
+            print (new_sample.sha256)
+
+
+            # these infos will be stored in the db :
             db.session.commit()
 
-            # cut the sample into chunks :
+            # know we know how many chunks will be made from the image,
+            # we can numerote them :
+            new_sample.chunks_numerotation = [(col,row) for col in  range(new_sample.num_col) for row in range(new_sample.num_row)]
+            # and cut the sample into chunks :
             new_sample.make_chunks()
 
-            print (new_sample.patient.id)
-
+            #-------------
             return redirect( url_for('uploaded', sample_id = new_sample.id) )
 
 
@@ -161,12 +271,61 @@ def uploaded(sample_id):
     return render_template('choice_after_upload.html', sample = new_sample )
 
 
+
+@app.route('/samples/<int:sample_id>/view-update', methods=['GET'])
+def show_update_sample_info(sample_id):
+
+    sample = model.Sample.query.get(sample_id)
+    sample.init_on_load()
+
+    print(sample.smear_type)
+    print(sample.license)
+    print(sample.provider)
+    print(sample.comment)
+    print(sample.magnification)
+    if (sample.patient) :
+        print(sample.patient.ref)
+        print(sample.patient.year_of_birth)
+        print(sample.patient.gender)
+        print(sample.patient.city)
+        print(sample.patient.country)
+
+    form = UploadForm()
+
+    return render_template('show-update-sample-info.html', sample = sample, form = form , get_hr_datetime = model.get_hr_datetime)
+
+
 @app.route("/")
 def index():
     """
     View of the index page.
     """
     return render_template('index.html')
+
+
+@app.route("/e-learning/find-para")
+def find_para_activity():
+    """
+    """
+    # select random chunk :
+
+    # eligible chunks are chunks that have at least 1 parasite annotations
+    eligible_chunks = model.Annotation.query.\
+                                       with_entities( model.Annotation.sample_id, model.Annotation.col,model.Annotation.row).\
+                                       distinct().\
+                                       filter( model.Annotation.annotation.startswith('P')).\
+                                       all()
+    # Get distinct chunk coord of parasite annnotation = Annotation instance where annotation attribut starts with 'P'
+
+    if (eligible_chunks ) :
+        print (eligible_chunks)
+        print (len(eligible_chunks))
+        random_sample_id, random_col, random_row = random.choice(eligible_chunks)
+        return render_template('find-para.html', sample_id = random_sample_id,  col = random_col, row = random_row)
+    else :
+        flash ("There is no sample on which to train.")
+        return redirect( url_for('index'))
+
 
 @app.route("/signup", methods = ['GET', 'POST'])
 def signup():
@@ -266,12 +425,12 @@ def account():
     #TODO
     return render_template('account-page.html')
 
-@app.route('/patients/<string:institution>/<string:patient_ref>')
-def get_patient(institution, patient_ref):
+@app.route('/patients/<string:institution_name>/<string:patient_ref>')
+def get_patient(institution_name, patient_ref):
     try :
         print ('try to get patient')
         # get the current patient :
-        patient = model.Patient.query.filter_by(ref=patient_ref, institution=institution ).first()
+        patient = model.Patient.query.filter_by(ref=patient_ref, institution_name=institution_name ).first()
         print (patient)
 
         # model is not JSON serializable
@@ -280,7 +439,7 @@ def get_patient(institution, patient_ref):
         #TODO : better way ?
         #http://stackoverflow.com/questions/5022066/how-to-serialize-sqlalchemy-result-to-json/31569287#31569287
         #http://stackoverflow.com/questions/7102754/jsonify-a-sqlalchemy-result-set-in-flask/27951648#27951648
-        serialized_patient = {key : patient.__dict__[key] for key in ['age', 'gender', 'ref', 'institution'] }
+        serialized_patient = {key : patient.__dict__[key] for key in ['institution_name', 'ref', 'year_of_birth', 'gender', 'city', 'country'] }
         print ("serialized patient :", serialized_patient )
         return jsonify(serialized_patient)
     except AttributeError as e :
@@ -328,14 +487,14 @@ def browse():
 
             row = [
                 sample.id,
-                sample.date_upload,
+                model.get_hr_datetime(sample.date_upload),
                 sample.user_upload.username,
                 chunk_row,
                 chunk_col,
                 tot_num_anno,
                 num_para,
-                first_anno_date,
-                last_anno_date
+                model.get_hr_datetime(first_anno_date),
+                model.get_hr_datetime(last_anno_date)
             ]
             print (row)
             print('=============================================')
@@ -387,7 +546,7 @@ def about() :
     return render_template ('about.html')
 
 
-@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotate/')
+@app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/view-annotate/')
 def annotate_chunk(sample_id, col, row):
     print(sample_id, col, row)
     sample = model.Sample.query.get(sample_id)
@@ -405,7 +564,7 @@ def annotate_chunk(sample_id, col, row):
 
     # give the URL the requested file uploaded to this set would be accessed at. It doesn’t check whether said file exists.
 
-    return render_template('annotate-chunk.html', sample_id=sample_id, col=col, row=row )
+    return render_template('annotate-chunk.html', sample=sample, sample_id=sample_id, col=col, row=row)
 
 
 @app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotations/' , methods = ['POST'])
@@ -434,11 +593,11 @@ def add_anno(sample_id, col, row) :
 
     print (new_anno)
 
-    print (new_anno.username)
+    print (new_anno.username_creation)
     print (new_anno.sample_id )
     print (new_anno.col)
     print (new_anno.row)
-    print (new_anno.date )
+    print (new_anno.date_creation )
     print (new_anno.x )
     print (new_anno.y )
     print (new_anno.width )
@@ -466,7 +625,8 @@ def update_anno_text(sample_id, col, row, anno_id) :
     anno = model.Annotation.query.get(anno_id)
     anno.annotation = request.form['new_value']
     print (anno.annotation)
-    anno.date = datetime.datetime.utcnow().isoformat()
+    anno.date_update = datetime.datetime.utcnow()
+    anno.username_update=current_user.username
     #TODO : make the date update automatically when setting a field -> use setter decorator
 
     try :

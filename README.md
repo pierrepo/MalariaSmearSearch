@@ -1,5 +1,8 @@
 # MalariaSmearSearch
 
+*MalariaSmearSearch* is a database of blood smears used in malaria diagnosis.
+
+
 ## Setup
 
 1. Get files

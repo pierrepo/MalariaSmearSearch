@@ -15,7 +15,38 @@
 	margin-bottom: 30px;
 }
 
+/* upload page */
+.info-msg {
+	font-style: italic;
+}
 
+fieldset dl {
+	margin-bottom: 0px;
+}
+
+fieldset.field-upload {
+	margin-bottom: 20px;
+}
+
+legend {
+	margin-bottom: 10px;
+}
+
+div #patient-msg {
+	margin-bottom: 10px;
+}
+
+/* view/annotate page */
+input.anno-coord {
+	width: 50px;	
+}
+
+/* remove link decoration */
+a.link-silent {
+	text-decoration: none;
+}
+
+/* footer */
 footer {
 	padding-top: 10px;
 }

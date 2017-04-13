@@ -4,33 +4,31 @@ import model
 db.create_all()
 db.session.commit() # create all the tables that are in model
 
-i_a = model.Institution ('up7d')
-i_b = model.Institution ('ijm')
+i_original = model.Institution ('original_institution',  'place o', 'description o', 'url o', 'comment o')
+i_a = model.Institution ('up7d',  'place a', 'description a', 'url a', 'comment a')
+i_b = model.Institution ('ijm',  'place b', 'description b', 'url b', 'comment b')
+
 
 admin = model.User_auth()
 admin.username = 'admin'
 admin.password = 'admin123'
+admin.primary_institution_name = i_original.name
 
-for institution in (i_a, i_b) :
-    admin.institutions.append(institution)
-    #  The original argument above is left at its default value of None.
+for secondary_institution in (i_a, i_b) :
+    new_membership = model.Membership()
+    new_membership.secondary_institution_name = secondary_institution.name
+    admin.secondary_institutions.append(new_membership)
 
-# For those cases where we do want special_key to have a value, we create the UserKeyword object explicitly :
-i_true = model.Membership(model.Institution('its_original'), admin, original=True)
-
-
-print(admin.institutions)
+print(admin.secondary_institutions.all())
 
 db.session.add(admin)
 db.session.commit()
 
 
-
-
 # put the User in data.db :
 dat_user = model.User()
 dat_user.username = admin.username
-dat_user.original_institution = admin.original_institution.name
+dat_user.primary_institution = i_original
 
 db.session.add(dat_user)
 db.session.commit()

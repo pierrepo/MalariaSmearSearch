@@ -66,7 +66,7 @@ $(document).ready(function(){
         /*
         $("#annotations-list")
             .append("<li name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span>");
-        if (user_auth) {
+        if (user_has_right) {
             $("#annotations-list")
                 .append("<button class='glyphicon glyphicon-trash'></button>");
         }
@@ -75,7 +75,7 @@ $(document).ready(function(){
         */
         // Instead, we put the html in an string then append that string to the dom :
          var html="<li name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span>"
-         if (user_auth) {
+         if (user_has_right) {
              html+="<button class='glyphicon glyphicon-trash'></button>";
          }
          html+="</li>";
@@ -87,7 +87,7 @@ $(document).ready(function(){
         // but ensure the click-to-edit functionality is working
         // on newly appended list items even before a page refresh :
 
-        if (user_auth) {
+        if (user_has_right) {
             makeEditable("#annotations-list li[name="+new_anno.name+"] span");
         }
 
@@ -113,7 +113,7 @@ $(document).ready(function(){
             height: new_anno.height * ratio,
             stroke: new_anno.stroke,
             strokeWidth: new_anno.strokeWidth * ratio,
-            name: new_anno.name
+            name: new_anno.name.toString() // it has to be a string !!
         };
 
         // add the ration annotation as a rect on the anno layer of the view stage
@@ -126,7 +126,7 @@ $(document).ready(function(){
           fill : null,
           stroke: ratio_new_anno.stroke,
           strokeWidth:  ratio_new_anno.strokeWidth,
-          name: ratio_new_anno.name
+          name: ratio_new_anno.name.toString() // it has to be a string !!
         });
         view_stage_anno_layer.add(ratio_rect);
 
@@ -196,14 +196,14 @@ $(document).ready(function(){
     */
     Flash = {}
     Flash.success = function(msg, time =1000){
-        $('#flash-container')[0].innerHTML = "<div class='success message'>" + msg + "</div>";
+        $('#flash-container').html ("<div class='success message'>" + msg + "</div>");
         $('#flash-container').addClass('showing');
         setTimeout(function(){
           $('#flash-container').removeClass('showing');
         }, time);
       };
     Flash.error = function(msg, time =1000){
-        $('#flash-container')[0].innerHTML = "<div class='error message'>" + msg + "</div>";
+        $('#flash-container').html("<div class='error message'>" + msg + "</div>");
         $('#flash-container').addClass('showing');
         setTimeout(function(){
             $('#flash-container').removeClass('showing');
@@ -290,13 +290,13 @@ $(document).ready(function(){
           crop: function(e) {
               // Output the result data for cropping image.
               console.log(e.x);
-              $('#add-sel-x').val( e.x)
+              $('#add-sel-x').val(Math.round(e.x))
               console.log(e.y);
-              $('#add-sel-y').val(e.y)
+              $('#add-sel-y').val(Math.round(e.y))
               console.log(e.width);
-              $('#add-sel-width').val(e.width)
+              $('#add-sel-width').val(Math.round(e.width))
               console.log(e.height);
-              $('#add-sel-height').val(e.height)
+              $('#add-sel-height').val(Math.round(e.height))
               //console.log(e.detail.rotate);
               //console.log(e.detail.scaleX);
               //console.log(e.detail.scaleY);
@@ -376,30 +376,28 @@ $(document).ready(function(){
 
     $( "#toggle-mode" ).click(function() {
 
-        value = $(this).val() ;
+        // Toggle button Annotate <-> View
+        value = $(this).text();
+        console.log(value);
 
-        console.log (value)
-
-        if ($(this).val() == 'view' ) {
-            // Change button attribute to handle reclick -> return in view mode
-            $(this).val('annotation')
-            $(this).toggleClass( 'glyphicon-plus');
-            $(this).toggleClass( 'glyphicon-eye-open');
-            $(this).text('View');
+        if ($( "#icon-text" ).text().trim() == "Annotate" ) {
+            // Change button text and icon Annotate -> View
+            $( "#icon-annotate" ).hide();
+            $( "#icon-view" ).show();
+            $( "#icon-text" ).text("View");
             // Show annotation stuff : the cropper div and the input form
-            $('.anno-stuff').show()
+            $( ".anno-stuff" ).show();
             // Hide rendered kanva :
-            $('#view-konvajs').hide()
+            $( "#view-konvajs" ).hide();
         }else{
-            // Change button attribute to handle reclick -> return in annotation mode
-            $(this).val('view');
-            $(this).toggleClass( 'glyphicon-plus');
-            $(this).toggleClass( 'glyphicon-eye-open');
-            $(this).text('Annotate');
+             // Change button text and icon View -> Annotate
+            $( "#icon-annotate" ).show();
+            $( "#icon-view" ).hide();
+            $( "#icon-text" ).text("Annotate");
             // Hide anno stuff : cropper div, the input form :
-            $('.anno-stuff').hide();
+            $( ".anno-stuff" ).hide();
             // Show rendered kanva :
-            $('#view-konvajs').show()
+            $( "#view-konvajs" ).show();
             // Destroy the cropper :
             //$('#anno-konvajs .konvajs-content canvas').cropper("destroy");
         }
@@ -450,6 +448,23 @@ $(document).ready(function(){
         the same handler. Killer.
     */
 
+    // span hover :
+
+
+   $('#annotations-list').on("mouseover", "span", function() {
+       // Each time your mouse enters or leaves a child element,
+       // mouseover is triggered
+       handleHoverAnno(true,  $(this).parent().attr("name"), view_stage);
+       view_stage_anno_layer.draw();
+
+   }).on('mouseleave', 'span', function() {
+       handleHoverAnno(false,  $(this).parent().attr("name"), view_stage);
+       view_stage_anno_layer.draw();
+   });
+
+
+
+
     // del button :
     $('#annotations-list').on('click', '.glyphicon-trash', function(){
         /*
@@ -495,7 +510,7 @@ $(document).ready(function(){
                     thiscache
                         .parent()
                             .hide(400, function(){$(this).remove()});
-                    Flash.success("The annotation was deleted");
+                    Flash.success("The annotation was deleted", 2000);
                 }
             });
         }
@@ -528,7 +543,7 @@ $(document).ready(function(){
                     height: $('#add-sel-height').val(),
                     stroke: 'red',
                     strokeWidth: 4,
-                    name: theResponse
+                    name: theResponse.toString() // it has to be a string !!
                 };
                 console.log("!!!!!!!!!!!!!!!!!!!!!!!!!");
                 addAnnoView(new_anno);
@@ -554,7 +569,7 @@ $(document).ready(function(){
                 // That makes adding a bunch of annotation items in sequence very easy and natural.
 
 
-                Flash.success("The annotation was added");
+                Flash.success("The annotation was added", 2000);
             },
             error: function(){
                 // TODO

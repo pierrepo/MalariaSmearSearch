@@ -8,7 +8,7 @@ automatically.
 from flask_wtf import FlaskForm
 from wtforms.fields import TextField, BooleanField, PasswordField, RadioField, SubmitField, TextField, IntegerField, TextAreaField
 from wtforms.validators import Optional,  Required, Email, EqualTo, Length
-from flask_wtf.html5 import NumberInput
+from wtforms.widgets.html5 import NumberInput
 from flask_uploads import UploadSet, IMAGES
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 
@@ -43,7 +43,7 @@ class UploadForm(FlaskForm):
     """
     sample = FileField('Sample image file', validators=[
         FileRequired(),
-        FileAllowed( app.samples_set, 'Images only!')
+        FileAllowed( app.samples_set, 'Not supported type : jpeg only.')
     ])
 
     smear_type = RadioField('Blood smear type', choices=[
@@ -67,7 +67,7 @@ class UploadForm(FlaskForm):
     patient_city = TextField('Patient city', validators=[Length(max=50), RequiredIf('patient_ref')], default=None)
     patient_country = TextField('Patient country', validators=[Length(max=50), RequiredIf('patient_ref')], default=None)
 
-    submit = SubmitField('Upload blood smear', render_kw={"class": "btn btn-info btn-lg", "id": "submit-button"})
+    submit = SubmitField('Upload new blood smear', render_kw={"class": "btn btn-info btn-lg", "id": "submit-button"})
 
 
 class LoginForm(FlaskForm):

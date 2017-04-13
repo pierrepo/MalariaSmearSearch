@@ -1,0 +1,99 @@
+{% extends "skeleton.html" %}
+
+{% block title %}Image infos{% endblock %}
+
+
+{% block head %}
+{{super()}}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/form.css')}}" />
+{% endblock %}
+
+
+{% block content %}
+
+
+        {% from "_formhelpers.html" import render_field %}
+        <form method="POST" onsubmit="" action="{{url_for('upload')}}"  enctype="multipart/form-data">
+
+        <fieldset>
+            <legend>Image details</legend>
+            <p>{{sample.width}} x {{sample.height}} px ({{sample.hr_size}})</p>
+            <p>Uploaded {{ get_hr_datetime(sample.date_upload) }} by  {{sample.username_upload}}</p>
+            <p> Chunk(s) related to this sample: {{sample.num_col * sample.num_row}} </p>
+
+            {% for (chunk_col, chunk_row) in sample.chunks_numerotation %}
+                {% set (chunk_width, chunk_height) = sample.get_chunk_pixel_size( chunk_col, chunk_row ) %}
+                <a href="{{url_for('annotate_chunk',sample_id=sample.id, col=chunk_col, row=chunk_row) }}"
+                   target="_self" class="link-silent">
+                <div class="btn btn-warning btn-block btn-choice">
+                    <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
+                    name: {{ sample.get_chunk_filename ( chunk_col, chunk_row ) }} --
+                    {{ chunk_width }} x {{chunk_height}} px
+                    ({{sample.get_chunk_size( chunk_col, chunk_row ) }})
+                </div>
+                </a>
+            {% endfor %}
+        </fieldset>
+
+        <fieldset class="field-upload">
+            <legend id="legend-upload-mandatory">Blood smear details</legend>
+            <p id="info-msg">Fields with <span style="color:red;">*</span> are mandatory</p>
+            <dl>
+                {{ render_field(form.smear_type) }}
+                {{ render_field(form.license) }}
+                {{ render_field(form.provider) }}
+            </dl>
+        </fieldset>
+        <fieldset class="field-upload">
+            <legend id="legend-upload-optional">Complementary details</legend>
+            {{ render_field(form.comment) }}
+            {{ render_field(form.magnification) }}
+        </fieldset>
+        <fieldset class="field-upload">
+            <legend id="legend-upload-patient">Patient details</legend>
+            {{ render_field(form.patient_ref) }}
+            <div id="patient-msg" class="info-msg"></div>
+            <div id = 'patient-infos'>
+            <dl>
+                {{ render_field(form.patient_year_of_birth) }}
+                {{ render_field(form.patient_gender) }}
+                {{ render_field(form.patient_city) }}
+                {{ render_field(form.patient_country) }}
+            </dl>
+            </div>
+        </fieldset>
+          {{ form.hidden_tag() }}
+
+
+        </form>
+
+        <a  role="button" class="btn btn-danger"  href="{{url_for('del_conformation_sample', sample_id=sample.id)}}">DELETE SAMPLES + ITS CHUNKS + ITS ANNOTATIONS</a>
+
+
+
+{% endblock %}
+
+
+
+{% block imports %}
+    {{super()}}
+
+    <script>
+        // !!! for now, every fields are readonly :
+        $('.field-upload').attr('disabled', true);
+
+        // auto-fill the fields based on the given info :
+        $(':radio[value='+ '{{sample.smear_type}}' +']').prop("checked", true);
+        $(':radio[value='+ '{{sample.license}}' +']').prop("checked", true);
+        $('#provider').val('{{sample.provider}}');
+        $('#comment').val('{{sample.comment}}');
+        $('#magnification').val('{{sample.magnification}}');
+        $('#patient_ref').val('{{sample.patient.ref}}');
+        $('#patient_year_of_birth').val('{{sample.patient.year_of_birth}}');
+        $(':radio[value='+ '{{sample.patient.gender}}' +']').prop("checked", true);
+        $('#patient_city').val('{{sample.patient.city}}');
+        $('#patient_country').val('{{sample.patient.country}}');
+
+    </script>
+
+{% endblock %}

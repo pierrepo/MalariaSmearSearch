@@ -29,6 +29,88 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from PIL import Image
 import itertools
 import datetime
+import os
+
+
+def delete_file(filepath):
+    try:
+        os.remove(filepath)
+    except OSError:
+        print ('could not del the file {}'.format(filepath))
+
+def get_hr_datetime(dt):
+    """
+    Get human readable datetime in the following format : "YY-MM-DD HH:MM:SS"
+
+    Argument :
+    ----------
+    dt : instance of datetime.datetime / None
+        the datetime you want to convert
+    Return :
+    --------
+    output : string / None
+        human readable datetime in the format "YY-MM-DD HH:MM:SS"
+        or None if the provided argument was None
+    """
+
+    #date, datetime, and time objects from datetime module all support a strftime(format) method, to create a string representing the time under the control of an explicit format string.
+    #The behavior of this function is describd here: https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
+    #For the requested format we use :
+    #|Directive|             Meaning                                   |    Example
+    #|---------|-------------------------------------------------------|----------------
+    #|   %y    | Year without century as a zero-padded decimal number. |00, 01, ..., 99
+    #|   %m    | Month as a zero-padded decimal number.                |01, 02, ..., 12
+    #|   %d    | Day of the month as a zero-padded decimal number.     |01, 02, ..., 31
+    #|   %H    | Hour (24-hour clock) as a zero-padded decimal number. |00, 01, ..., 23
+    #|   %M    | Minute as a zero-padded decimal number.               |00, 01, ..., 59
+    #|   %S    | Second as a zero-padded decimal number.               |00, 01, ..., 59
+    if dt :
+        return dt.strftime("%y-%m-%d %H:%M:%S")
+    return None
+
+
+
+def get_hr_file_nbytes(path):
+    """
+    Get human readable file size in bytes
+
+    Argument :
+    ----------
+    path : string
+        the path to the file of which you want the size
+    Return :
+    --------
+    size : string
+        value with the right unit
+        among ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+    """
+    nbytes = os.path.getsize(path)
+
+    SIZE_UNIT = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+
+    if nbytes == 0: return '0 B'
+    i = 0
+    while  nbytes >= 1024 and i < len(SIZE_UNIT)-1:
+        nbytes /= 1024.
+        i += 1
+    f = ('%.2f' %  nbytes).rstrip('0').rstrip('.')
+    return '%s %s' % (f, SIZE_UNIT[i])
+
+def get_img_pixel_size(path) :
+    """
+    Get human pixel size
+
+    Argument :
+    ----------
+    path : string
+        the path to the image of which tyou want the pixel size
+    Return :
+    ---------
+    size : tuple of 2 ints
+        (width, height) pixel values
+    """
+    with Image.open(path) as img :
+        return img.size
 
 
 # Many to many relationship
@@ -42,33 +124,8 @@ import datetime
 class Membership(db.Model):
     __bind_key__ = 'users'
     __tablename__ = 'Memberships'
-    username =  db.Column(db.String(30), db.ForeignKey('Users_auth.username'), primary_key=True) # left_id
-    institution_name = db.Column(db.String(50), db.ForeignKey('Institutions.name'), primary_key=True) #right_id
-    original = db.Column(db.Boolean()) #extra_data
-
-    # bidirectional attribute/collection of "user"/"user_keywords"
-    user = db.relationship('User_auth',
-                backref=db.backref("user_institutions")
-            )
-
-    # reference to the "Institution" object
-    institution = db.relationship("Institution")
-
-
-    def __init__(self, institution=None, user=None, original=False):
-        self.institution= institution
-        self.user = user
-        self.original = original
-
-
-
-    def __repr__(self):
-        return "{0}, {1}, {2}".format (
-            self.institution_name ,
-            self.username,
-            self.original
-        )
-
+    username =  db.Column(db.String(30), db.ForeignKey('Users_auth.username'), primary_key=True)
+    secondary_institution_name = db.Column(db.String(50), primary_key=True)
 
 
 class User_auth(db.Model, UserMixin):
@@ -83,10 +140,10 @@ class User_auth(db.Model, UserMixin):
     username = db.Column(db.String(30), primary_key=True)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(20))
+    primary_institution_name = db.Column(db.String(50))
 
-    # association proxy of "user_institutions" collection
-    # to "institution" attribute
-    institutions = association_proxy('user_institutions', 'institution')
+    secondary_institutions = db.relationship('Membership', backref='user',
+                                lazy='dynamic')
 
     def __repr__(self):
         """
@@ -103,6 +160,34 @@ class User_auth(db.Model, UserMixin):
             self.password
         )
 
+    def share_institution(self, another_user):
+        """
+        Argument :
+        ----------
+        another_user : instance of UserMixin
+
+        Return :
+        --------
+        response : boolean
+            True if the User_auth (self) has rights on content provided by
+            another user. False otherwise.
+        """
+
+        # build complete list of institution of self :
+
+        # it is mandatory for the user to have a primary innstitution_name :
+        institutions_list = [self.primary_institution_name]
+        try :
+            institutions_list += [m.secondary_institution_name for m in self.secondary_institutions.all()]
+            # Remember : list methods operate in-place for the most part, and return None
+            # so i_l = [].extend([]) doesn't work
+        except TypeError : # TypeError: 'NoneType' object is not iterable
+                pass
+
+        print (institutions_list)
+        return another_user.primary_institution_name in institutions_list
+
+
     #UserMixin inheritance provide basic implementation for
     #   is_authenticated
     #   is_active
@@ -115,36 +200,6 @@ class User_auth(db.Model, UserMixin):
     def id (self) :
         return self.username
 
-    @property
-    def original_institution (self) :
-        print (Membership.query.filter(Membership.username == self.username, Membership.original == True) )
-        print (Membership.query.filter(Membership.username == self.username, Membership.original == True).first() )
-        print ('====================')
-        original_institution = Membership.query.filter(Membership.username == self.username, Membership.original == True).first()
-        return original_institution.institution
-
-
-
-class Institution(db.Model):
-    """
-    Institution model.
-
-    Interact with the database.
-    """
-    __bind_key__ = 'users'
-    __tablename__ = 'Institutions' # tablename
-
-    name = db.Column(db.String(50), primary_key=True)
-
-    def __init__(self, name):
-        """
-
-        self.name : string
-            name of the institution
-        """
-        self.name = name
-
-
 
 class User(db.Model):
     """
@@ -156,8 +211,49 @@ class User(db.Model):
     __tablename__ = 'Users' # tablename
 
     username = db.Column(db.String(30), primary_key=True)
-    original_institution = db.Column(db.String(50))
+    primary_institution_name = db.Column(db.String(50), db.ForeignKey('Institutions.name')) # tablename
 
+
+class Institution(db.Model):
+    """
+    Institution model.
+
+    Interact with the database.
+    """
+    __bind_key__ = 'data'
+    __tablename__ = 'Institutions' # tablename
+
+    name = db.Column(db.String(50), primary_key=True)
+    place = db.Column(db.String(100))
+    description = db.Column(db.Text)
+    url= db.Column(db.String(100))
+    comment = db.Column(db.Text)
+
+    users = db.relationship('User', backref='primary_institution',
+                                lazy='dynamic')
+    patients = db.relationship('Patient', backref='institution',
+                                lazy='dynamic')
+
+    def __init__(self, name, place, description, url, comment):
+        """
+        Arguments :
+        ----------
+        name : string max 50 chars
+            name of the institution
+        place : string max 100 chars
+            place of the institution
+        description : string
+            description of the institution
+        url : string max 100 chars
+            url of the institution
+        comment : string
+            comment of the institution
+        """
+        self.name = name
+        self.place = place
+        self.description = description
+        self.url= url
+        self.comment = comment
 
 class Sample(db.Model):
     """
@@ -184,6 +280,11 @@ class Sample(db.Model):
     num_col = db.Column(db.Integer)
     num_row = db.Column(db.Integer)
 
+    nbytes = db.Column(db.Integer)
+    width = db.Column(db.Integer)
+    height = db.Column(db.Integer)
+    sha256 = db.Column(db.Text)
+
     #Defining the Foreign Key on the Child Table :
 
     # http://docs.sqlalchemy.org/en/rel_0_9/orm/join_conditions.html#handling-multiple-join-paths :
@@ -197,7 +298,7 @@ class Sample(db.Model):
     #Defining One to Many relationships with the relationship function on the Parent Table
     annotations = db.relationship('Annotation', backref="sample", cascade="all, delete-orphan" , lazy='dynamic')
     # backref="sample" : This argument adds a sample attribute on the Annotation table, so you can access a Sample via the Annotation Class as Annotation.sample.
-    # cascade ="all, delete-orphan”: This will delete all chunks of a sample when the referenced sample is deleted.
+    # cascade ="all, delete-orphan”: This will delete all annotations of a sample when the referenced sample is deleted.
     # lazy="dynamic": This will return a query object which you can refine further like if you want to add a limit etc.
 
     MAX_CHUNK_SIZE = 2000 #px
@@ -214,14 +315,15 @@ class Sample(db.Model):
     #@sqlalchemy.orm.reconstructor # do not seems to work TODO : find why
     def init_on_load(self):
         """
+        Initialize sample properties.
+
         http://docs.sqlalchemy.org/en/latest/orm/constructors.html
         """
-        try :
-            self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
-        except :
-            print ('chunk_numerotation could not be initialize. num_col and num_row missing')
-        self.filename = '{0}.{1}'.format(self.id, self.extension )
+        self.chunks_numerotation = [(col,row) for col in  range(self.num_col) for row in range(self.num_row)]
+        self.filename = '{0}.{1}'.format(self.id, self.extension)
         self.path = samples_set.path(self.filename)
+        self.hr_nbytes = get_hr_file_nbytes(self.path)
+        print('Image {}: {} x {} px / {}'.format(self.path, self.width, self.height, self.hr_nbytes))
 
 
     def make_chunks(self):
@@ -232,12 +334,11 @@ class Sample(db.Model):
         with Image.open(self.path) as img :
             #----------
             # get chunk infos (numerotation and coordinates) of desired chunks
-            width, height = img.size
 
             # compute crop properties using image measure
             # and the wanted number of pieces
-            width_crop_col = width / self.num_col
-            width_crop_row = height / self.num_row
+            width_crop_col = self.width / self.num_col
+            width_crop_row = self.height / self.num_row
 
             # values in cut_col and cut_row represent Cartesian pixel coordinates.
             # 0,0 is up left
@@ -261,8 +362,21 @@ class Sample(db.Model):
                 chunk_path = self.get_chunk_path (chunk_col, chunk_row )
                 box = list(itertools.chain.from_iterable(chunk_coords)) #(left , upper , right , lower) # pixel coords of the chunk
                 new_chunk = img.crop(box)
-                new_chunk.save (chunk_path)
+                new_chunk.save (chunk_path, quality=95)
+                #quality :
+                # The image quality, on a scale from 1 (worst) to 95 (best).
+                # The default is 75.
+                # Values above 95 should be avoided;
+                # 100 disables portions of the JPEG compression algorithm,
+                # and results in large files with hardly any gain in image quality.`
 
+    def get_chunk_nbytes(self, chunk_col, chunk_row) :
+        path = self.get_chunk_path(chunk_col, chunk_row)
+        return get_hr_file_nbytes(path)
+
+    def get_chunk_pixel_size(self, chunk_col, chunk_row) :
+        path = self.get_chunk_path(chunk_col, chunk_row)
+        return get_img_pixel_size(path)
 
     def get_chunk_filename(self, chunk_col, chunk_row) :
         #TODO : check the given row and col are okay
@@ -278,7 +392,7 @@ class Sample(db.Model):
     def get_chunks_paths(self) :
         paths_array = []
         for col in range (self.num_col) :
-            for row in range (self.num.row) :
+            for row in range (self.num_row) :
                 path_cur_chunk = self.get_chunk_path(col, row)
                 paths_array.append(path_cur_chunk)
         return paths_array
@@ -293,10 +407,9 @@ class Patient(db.Model):
     __tablename__ = 'Patients' # tablename
 
     id = db.Column(db.Integer, primary_key=True)
-    age = db.Column(db.Integer)
     gender  = db.Column(db.String(1))
     ref = db.Column(db.String(50))
-    institution  =  db.Column(db.String(50))
+    institution_name  =  db.Column(db.String(50), db.ForeignKey('Institutions.name')) # tablename
     year_of_birth = db.Column(db.Integer) #could be datetime
     city = db.Column(db.String(50))
     country = db.Column(db.String(50))
@@ -398,10 +511,10 @@ class Annotation(db.Model) :
             the description of the annotation picked in the taxonomy
         """
 
-        self.username = user.username
+        self.username_creation = user.username
         self.sample_id = sample.id
         self.col, self.row = chunk_numerotation
-        self.date = datetime.datetime.utcnow()
+        self.date_creation = datetime.datetime.utcnow()
         self.x = x
         self.y = y
         self.width = width
