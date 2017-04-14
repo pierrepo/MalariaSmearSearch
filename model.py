@@ -33,56 +33,70 @@ import os
 
 
 def delete_file(filepath):
+	"""
+	Delete file.
+
+	Parameters
+	----------
+	filepath : string
+		filename to delete
+	"""
     try:
         os.remove(filepath)
     except OSError:
         print ('could not del the file {}'.format(filepath))
 
+
 def get_hr_datetime(dt):
     """
-    Get human readable datetime in the following format : "YY-MM-DD HH:MM:SS"
+    Get human readable datetime in the following format : "YY-MM-DD HH:MM:SS".
 
-    Argument :
+    Parameters
     ----------
     dt : instance of datetime.datetime / None
         the datetime you want to convert
-    Return :
-    --------
-    output : string / None
+
+    Returns
+    -------
+    string / None
         human readable datetime in the format "YY-MM-DD HH:MM:SS"
         or None if the provided argument was None
-    """
+    
 
-    #date, datetime, and time objects from datetime module all support a strftime(format) method, to create a string representing the time under the control of an explicit format string.
-    #The behavior of this function is describd here: https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
-    #For the requested format we use :
-    #|Directive|             Meaning                                   |    Example
-    #|---------|-------------------------------------------------------|----------------
-    #|   %y    | Year without century as a zero-padded decimal number. |00, 01, ..., 99
-    #|   %m    | Month as a zero-padded decimal number.                |01, 02, ..., 12
-    #|   %d    | Day of the month as a zero-padded decimal number.     |01, 02, ..., 31
-    #|   %H    | Hour (24-hour clock) as a zero-padded decimal number. |00, 01, ..., 23
-    #|   %M    | Minute as a zero-padded decimal number.               |00, 01, ..., 59
-    #|   %S    | Second as a zero-padded decimal number.               |00, 01, ..., 59
+	Note
+	----
+    objects from datetime module support the strftime(format) method, 
+    to create a string representing the time under the control of an explicit format string.
+    The behavior of this function is described here: 
+    https://docs.python.org/2/library/datetime.html#strftime-and-strptime-behavior
+    Main format string are:
+    |Directive|             Meaning                                   |    Example
+    |---------|-------------------------------------------------------|----------------
+    |   %y    | Year without century as a zero-padded decimal number. |00, 01, ..., 99
+    |   %m    | Month as a zero-padded decimal number.                |01, 02, ..., 12
+    |   %d    | Day of the month as a zero-padded decimal number.     |01, 02, ..., 31
+    |   %H    | Hour (24-hour clock) as a zero-padded decimal number. |00, 01, ..., 23
+    |   %M    | Minute as a zero-padded decimal number.               |00, 01, ..., 59
+    |   %S    | Second as a zero-padded decimal number.               |00, 01, ..., 59
+    """
     if dt :
         return dt.strftime("%y-%m-%d %H:%M:%S")
     return None
 
 
-
 def get_hr_file_nbytes(path):
     """
-    Get human readable file size in bytes
+    Get human readable file size in bytes.
 
-    Argument :
+    Parameters
     ----------
     path : string
-        the path to the file of which you want the size
-    Return :
-    --------
-    size : string
-        value with the right unit
-        among ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+        the path to the file you want the size
+    
+    Returns
+    -------
+    string
+        value with the correct unit among ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
     """
     nbytes = os.path.getsize(path)
 
@@ -96,17 +110,19 @@ def get_hr_file_nbytes(path):
     f = ('%.2f' %  nbytes).rstrip('0').rstrip('.')
     return '%s %s' % (f, SIZE_UNIT[i])
 
+
 def get_img_pixel_size(path) :
     """
-    Get human pixel size
+    Get human pixel size.
 
-    Argument :
+    Parameters
     ----------
     path : string
         the path to the image of which tyou want the pixel size
-    Return :
-    ---------
-    size : tuple of 2 ints
+
+    Returns
+    -------
+    tuple of 2 ints
         (width, height) pixel values
     """
     with Image.open(path) as img :
@@ -145,13 +161,14 @@ class User_auth(db.Model, UserMixin):
     secondary_institutions = db.relationship('Membership', backref='user',
                                 lazy='dynamic')
 
+
     def __repr__(self):
         """
         Build a printable representation of a user.
 
-        Return :
-        --------
-        repr : string
+        Returns
+        -------
+        string
             printable representation of a user.
         """
         return 'User : %r , email = %r, password = %r' %  (
@@ -160,22 +177,25 @@ class User_auth(db.Model, UserMixin):
             self.password
         )
 
+
     def share_institution(self, another_user):
         """
-        Argument :
+        Tells if two users share a commun institution.
+
+        Parameters
         ----------
         another_user : instance of UserMixin
 
-        Return :
-        --------
-        response : boolean
+        Returns
+        -------
+        boolean
             True if the User_auth (self) has rights on content provided by
             another user. False otherwise.
         """
 
         # build complete list of institution of self :
 
-        # it is mandatory for the user to have a primary innstitution_name :
+        # a user as a primary institution_name:
         institutions_list = [self.primary_institution_name]
         try :
             institutions_list += [m.secondary_institution_name for m in self.secondary_institutions.all()]
@@ -257,7 +277,7 @@ class Institution(db.Model):
 
 class Sample(db.Model):
     """
-    Sample Model
+    Sample Model.
 
     Interact with the database.
     """
@@ -305,6 +325,7 @@ class Sample(db.Model):
 
     def __init__(self):
         """
+		Constructor.
 
         self.chunks_numerotation : list of tuples of 2 int
             (col, row) coordinates of the chunk
@@ -370,32 +391,108 @@ class Sample(db.Model):
                 # 100 disables portions of the JPEG compression algorithm,
                 # and results in large files with hardly any gain in image quality.`
 
-    def get_chunk_nbytes(self, chunk_col, chunk_row) :
+    def get_chunk_nbytes(self, chunk_col, chunk_row):
+    	"""
+		Get the size (in bytes) of a chunk.
+
+		Parameters
+		----------
+		chunk_col : int
+			column index
+		chunk_row : int
+			row index
+
+		Returns
+		-------
+		string
+			size of chunk
+    	"""
         path = self.get_chunk_path(chunk_col, chunk_row)
         return get_hr_file_nbytes(path)
 
-    def get_chunk_pixel_size(self, chunk_col, chunk_row) :
+
+    def get_chunk_pixel_size(self, chunk_col, chunk_row):
+    	"""
+		Get the pixel size width x height of a chunk.
+
+		Parameters
+		----------
+		chunk_col : int
+			column index
+		chunk_row : int
+			row index
+
+		Returns
+		-------
+		string
+			pixel size of a chunck: width x height
+    	"""
         path = self.get_chunk_path(chunk_col, chunk_row)
         return get_img_pixel_size(path)
 
-    def get_chunk_filename(self, chunk_col, chunk_row) :
+
+    def get_chunk_filename(self, chunk_col, chunk_row):
+    	"""
+		Get the chunk filename.
+
+		Parameters
+		----------
+		chunk_col : int
+			column index
+		chunk_row : int
+			row index
+
+		Returns
+		-------
+		string
+			filename of chunk
+    	"""
         #TODO : check the given row and col are okay
         return '{0}_{1}_{2}.{3}'.format(
             self.id,
             chunk_col, chunk_row,
-            self.extension # extension
+            self.extension
         )
 
-    def get_chunk_path(self, chunk_col, chunk_row) :
-        return '{0}/{1}'.format(app.config['CHUNKS_DEST'], self.get_chunk_filename(chunk_col, chunk_row))
 
-    def get_chunks_paths(self) :
+    def get_chunk_path(self, chunk_col, chunk_row):
+    	"""
+		Get the chunk path.
+
+		Parameters
+		----------
+		chunk_col : int
+			column index
+		chunk_row : int
+			row index
+
+		Returns
+		-------
+		string
+			full path of chunk
+    	"""
+        return '{0}/{1}'.format(
+        	app.config['CHUNKS_DEST'], 
+        	self.get_chunk_filename(chunk_col, chunk_row)
+        )
+
+
+    def get_chunks_paths(self):
+    	"""
+		Get the path of mutliple chunks.
+
+		Returns
+		-------
+		list of string
+			list of mutliple chunk paths
+    	"""
         paths_array = []
-        for col in range (self.num_col) :
-            for row in range (self.num_row) :
+        for col in range (self.num_col):
+            for row in range (self.num_row):
                 path_cur_chunk = self.get_chunk_path(col, row)
                 paths_array.append(path_cur_chunk)
         return paths_array
+
 
 class Patient(db.Model):
     """
@@ -422,9 +519,9 @@ class Patient(db.Model):
 
 
 
-class Annotation(db.Model) :
+class Annotation(db.Model):
     """
-    Annotation model
+    Annotation model.
 
     Interact with the database.
     """
@@ -456,27 +553,27 @@ class Annotation(db.Model) :
 
     anno_decoder = {
         "PUR":"Parasite - Unknown species - Ring",
-        "PUT":"Parasite - Unknown species - Trophzoide",
+        "PUT":"Parasite - Unknown species - Trophozoide",
         "PUS":"Parasite - Unknown species - Schizont",
         "PUG":"Parasite - Unknown species - Gametocyte",
         "PUU":"Parasite - Unknown species - Unknown",
         "PFR":"Parasite - P. Falciparum - Ring",
-        "PFT":"Parasite - P. Falciparum - Trophzoide",
+        "PFT":"Parasite - P. Falciparum - Trophozoide",
         "PFS":"Parasite - P. Falciparum - Schizont",
         "PFG":"Parasite - P. Falciparum - Gametocyte",
         "PFU":"Parasite - P. Falciparum - Unknown",
         "PMR":"Parasite - P. Malariae - Ring",
-        "PMT":"Parasite - P. Malariae - Trophzoide",
+        "PMT":"Parasite - P. Malariae - Trophozoide",
         "PMS":"Parasite - P. Malariae - Schizont",
         "PMG":"Parasite - P. Malariae - Gametocyte",
         "PMU":"Parasite - P. Malariae - Unknown",
         "POR":"Parasite - P. Ovale - Ring",
-        "POT":"Parasite - P. Ovale - Trophzoide",
+        "POT":"Parasite - P. Ovale - Trophozoide",
         "POS":"Parasite - P. Ovale - Schizont",
         "POG":"Parasite - P. Ovale - Gametocyte",
         "POU":"Parasite - P. Ovale - Unknown",
         "PVR":"Parasite - P. Vivax - Ring",
-        "PVT":"Parasite - P. Vivax - Trophzoide",
+        "PVT":"Parasite - P. Vivax - Trophozoide",
         "PVS":"Parasite - P. Vivax - Schizont",
         "PVG":"Parasite - P. Vivax - Gametocyte",
         "PVU":"Parasite - P. Vivax - Unknowns",
@@ -486,19 +583,19 @@ class Annotation(db.Model) :
         "ART":"Artefact"
      }
 
+
     def __init__(self, user, sample, chunk_numerotation, x, y, width, height, annotation):
         """
-        Constructor of an instance of the Annotation class
+        Constructor of an instance of the Annotation class.
 
-        Arguments :
-        -----------
+        Parameters
+        ----------
         user : instance of user
             user that added the annotation
         sample : instance of Sample
             the sample on which the annotation is made
         chunk_numerotation : tuple of 2 int
-            the chunk localisation on the image as
-            (col, row)
+            the chunk localisation on the image as (col, row)
         x : int
             col coord of the rectangle area
         y : int

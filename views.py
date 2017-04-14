@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Define views of the application.
+"""
+Define views of the application.
 
 URLs are define without trailing slashes.
 HTML templates are in the templates folder.
@@ -55,17 +56,25 @@ def load_user(username):
 @app.route('/restrictedarea')
 @login_required
 def test():
-    """View test for a page restricted to logged in users."""
-    return "here you are ! in a restricted area, oh my gosh"
+    """
+    View test for a page restricted to logged in users.
+
+	Returns
+	-------
+	string
+		Message in restricted area
+    """
+    return "Here you are! In a restricted area, oh my gosh!"
 
 
 @app.route('/e-learning/')
 def elearning():
-    """View where the user can choose between elearning activities.
+    """
+    View where the user can choose between elearning activities.
 
     Returns
     -------
-    string:
+    string
         the code of the landing page
     """
     return render_template('choice-e-learning.html')
@@ -73,19 +82,19 @@ def elearning():
 
 @app.route('/e-learning/y-n', methods=['GET'])
 def elearning_yn():
-    """View where the user can play the 'parasite : yes ou no' activity.
+    """
+    View where the user can play the 'parasite : yes ou no' activity.
 
     If there is no sample on which to train, the user is redirected to
     the index.
 
     Returns
     -------
-    string:
+    string
         the code of the page
     """
-    # select random chunk :
-
-    # eligible chunks are chunks that have at least 1 parasite annotations
+    # select random chunk:
+    # eligible chunks are those that have at least 1 parasite annotations
     eligible_chunk = model.Annotation.query.\
         with_entities(
                       model.Annotation.sample_id,
@@ -94,9 +103,9 @@ def elearning_yn():
         distinct().\
         filter(model.Annotation.annotation.startswith('P')).\
         all()
-    # Get distinct chunk coord of parasite annnotation = Annotation instance
-    # where annotation attribut starts with 'P'
 
+    # get distinct chunk coord of parasite annnotation = Annotation instance
+    # where annotation attribut starts with 'P'
     if (eligible_chunk):
         print(eligible_chunk)
         print(len(eligible_chunk))
@@ -114,7 +123,8 @@ def elearning_yn():
 @app.route('/samples/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
-    """View to upload samples.
+    """
+    View to upload samples.
 
     Note
     ----
@@ -122,7 +132,7 @@ def upload():
 
     Returns
     -------
-    string:
+    string
         the code of the page
     """
     form = UploadForm()
@@ -134,7 +144,8 @@ def upload():
 @app.route('/samples/<int:sample_id>/del-confirmation/')
 @login_required
 def del_conformation_sample(sample_id):
-    """View where sample deletion has to be confirmed.
+    """
+    View where sample deletion has to be confirmed.
 
     Parameters
     ----------
@@ -144,7 +155,7 @@ def del_conformation_sample(sample_id):
 
     Returns
     -------
-    string:
+    string
         the code of the page
     """
     sample = model.Sample.query.get(sample_id)
@@ -161,7 +172,8 @@ def del_conformation_sample(sample_id):
 # this is not REST : use DELETE method !
 @app.route('/samples/<int:sample_id>/delete', methods=['GET'])
 def del_sample(sample_id):
-    """View where the sample + its chunks + its annotations are deleted.
+    """
+    View where the sample + its chunks + its annotations are deleted.
 
     Parameters
     ----------
@@ -171,7 +183,7 @@ def del_sample(sample_id):
 
     Returns
     -------
-    string:
+    string
         the code of the page
     """
     print(sample_id)
@@ -206,11 +218,12 @@ def del_sample(sample_id):
 @app.route('/samples/', methods=['POST'])
 @login_required
 def add_sample():
-    """View where a new sample is added to the database.
+    """
+    View where a new sample is added to the database.
 
     Returns
     -------
-    string:
+    string
         the code of the page
     """
     form = UploadForm()
@@ -325,7 +338,8 @@ def add_sample():
 @app.route('/samples/<int:sample_id>/uploaded', methods=['GET'])
 @login_required
 def uploaded(sample_id):
-    """View to chose the action once a new sample was added to the database.
+    """
+    View to chose the action once a new sample was added to the database.
 
     Parameters
     ----------
@@ -342,13 +356,13 @@ def uploaded(sample_id):
     new_sample = model.Sample.query.get(sample_id)
     new_sample.init_on_load()
 
-    msg = 'New sample was uploaded and store to the database. ID: {0}'.format(
+    msg = 'New sample (id {0}) was uploaded and stored in the database.'.format(
         new_sample.id
     )
     print(msg)
     flash(msg, category='succes')
 
-    msg = 'The input blood smear image was quite large and has been split into {0} chunk(s).'.format(new_sample.num_col * new_sample.num_row)
+    msg = 'The input blood smear image was too large and has been split into {0} chunk(s).'.format(new_sample.num_col * new_sample.num_row)
     print(msg)
     flash(msg, category='succes')
 
@@ -383,7 +397,8 @@ def show_update_sample_info(sample_id):
 
 @app.route("/")
 def index():
-    """View of the index page.
+    """
+    View of the index page.
 
     Returns
     -------
@@ -395,7 +410,8 @@ def index():
 
 @app.route("/e-learning/find-para")
 def find_para_activity():
-    """View where the user can play the 'find parasite' activity.
+    """
+    View where the user can play the 'find parasite' activity.
 
     Returns
     -------
@@ -489,7 +505,7 @@ def login():
     View of the login page.
 
     A user can log in if the provided username and password match.
-    Else, the authentification fails.
+    If not, the authentification fails.
 
     Returns
     -------
@@ -542,7 +558,8 @@ def logout():
 
 @app.route("/account")
 def account():
-    """View of the account page.
+    """
+    View of the account page.
 
     Returns
     -------
@@ -555,7 +572,8 @@ def account():
 
 @app.route('/patients/<string:institution_name>/<string:patient_ref>')
 def get_patient(institution_name, patient_ref):
-    """View to get patient information
+    """
+    View to get patient information
 
     Parameters
     ----------
@@ -595,7 +613,8 @@ def get_patient(institution_name, patient_ref):
 
 @app.route('/samples/')
 def browse():
-    """View for the user to browse available samples in the database.
+    """
+    View for the user to browse available samples in the database.
 
     Returns
     -------
@@ -678,7 +697,8 @@ def browse():
 
 @app.route('/samples/<int:sample_id>')
 def download(sample_id):
-    """View to download a sample.
+    """
+    View to download a sample.
 
     Parameters
     ----------
@@ -851,12 +871,16 @@ def update_anno_text(sample_id, col, row, anno_id):
 
 @app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>/annotations/<int:anno_id>' , methods = ['DELETE'])
 def del_anno(sample_id, col, row, anno_id):
-    print(anno_id)
+	"""
+	Delete annotation.
+
+	"""
+    print("Deleting annotation id {0}".format(anno_id))
 
     try:
         model.Annotation.query.filter_by(id=anno_id).delete()
         db.session.commit()
-        print('anno was deleted drom the database')
+        print('Annotation was deleted from the database.')
         return '', 200
 
     except Exception as e:
