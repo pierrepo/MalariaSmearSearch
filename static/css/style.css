@@ -46,6 +46,33 @@ a.link-silent {
 	text-decoration: none;
 }
 
+/**********************************************************************
+ Flash Flask messages
+**********************************************************************/
+
+#flashes{
+    border: 1px solid #9D9D9D;
+    border-radius: 5px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+#flashes li {
+    padding: 0.2em;
+    list-style: none;
+}
+
+#flashes li.succes {
+    color: green;
+}
+
+#flashes li.error {
+    color: red;
+}
+
+#flashes ul {
+	list-style: none;
+}
 
 /**********************************************************************
  Flash JS messages
