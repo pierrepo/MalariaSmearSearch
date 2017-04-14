@@ -5,7 +5,18 @@ URLs are define without trailing slashes.
 HTML templates are in the templates folder.
 """
 import datetime
-from flask import render_template, request, redirect, url_for, Response, send_file, jsonify, make_response, flash, abort
+from flask import (
+    render_template,
+    request,
+    redirect,
+    url_for,
+    Response,
+    send_file,
+    jsonify,
+    make_response,
+    flash,
+    abort
+)
 from flask_login import login_required, login_user, logout_user, current_user
 import hashlib
 import pathlib
@@ -39,8 +50,12 @@ def load_user(username):
     user : None / User
         the corresponding user object.
     """
-    print(model.User_auth.query.filter(model.User_auth.username == username).first())
-    return model.User_auth.query.filter(model.User_auth.username == username).first()
+    print(model.User_auth.query.
+          filter(model.User_auth.username == username).
+          first())
+    return model.User_auth.query.\
+        filter(model.User_auth.username == username).\
+        first()
 
 
 @app.route('/restrictedarea')
@@ -65,17 +80,25 @@ def elearning_yn():
 
     # eligible chunks are chunks that have at least 1 parasite annotations
     eligible_chunk = model.Annotation.query.\
-        with_entities(model.Annotation.sample_id, model.Annotation.col, model.Annotation.row).\
+        with_entities(
+                      model.Annotation.sample_id,
+                      model.Annotation.col,
+                      model.Annotation.row).\
         distinct().\
         filter(model.Annotation.annotation.startswith('P')).\
         all()
-    # Get distinct chunk coord of parasite annnotation = Annotation instance where annotation attribut starts with 'P'
+    # Get distinct chunk coord of parasite annnotation = Annotation instance
+    # where annotation attribut starts with 'P'
 
     if (eligible_chunk):
         print(eligible_chunk)
         print(len(eligible_chunk))
         random_sample_id, random_col, random_row = random.choice(eligible_chunk)
-        return render_template('y-n-activity.html', sample_id=random_sample_id,  col=random_col, row=random_row)
+        return render_template(
+            'y-n-activity.html',
+            sample_id=random_sample_id,
+            col=random_col,
+            row=random_row)
     else:
         flash("There is no sample on which to train.")
         return redirect(url_for('index'))
@@ -84,7 +107,10 @@ def elearning_yn():
 @app.route('/samples/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
-    """View of the page where logged in users can access the form to upload samples."""
+    """
+    View of the page where logged in users
+    can access the form to upload samples.
+    """
     form = UploadForm()
     if form.validate_on_submit():
         return redirect(url_for('add_sample'), code=307)
@@ -98,13 +124,15 @@ def del_conformation_sample(sample_id):
 
     if not current_user.share_institution(sample.user_upload):
         flash("You are not autorized to delete this sample")
-        return redirect(url_for('show_update_sample_info', sample_id=sample_id))
+        return redirect(
+            url_for('show_update_sample_info', sample_id=sample_id))
 
     print(len(sample.annotations.all()))
     return render_template('confirmation-sample-deletion.html', sample=sample)
 
 
-@app.route('/samples/<int:sample_id>/delete', methods=['GET'])  # this is not REST : use DELETE method !
+# this is not REST : use DELETE method !
+@app.route('/samples/<int:sample_id>/delete', methods=['GET'])
 def del_sample(sample_id):
     print(sample_id)
 
@@ -187,7 +215,10 @@ def add_sample():
             # ------------- new_sample on disk
             # now the sample is in the db, we have its auto increment id
             # thus the filename :
-            new_sample.filename = '{0}.{1}'.format(new_sample.id, new_sample.extension)
+            new_sample.filename = '{0}.{1}'.format(
+                new_sample.id,
+                new_sample.extension
+            )
             # thus we can upload and save the sample image :
             samples_set.save(
                     storage=form.sample.data,  # the uploaded image file
@@ -196,7 +227,10 @@ def add_sample():
             # and now the image is saved, we can retrieve its path :
             new_sample.path = samples_set.path(new_sample.filename)
 
-            print('Saved {} in {}'.format(new_sample.filename, new_sample.path))
+            print('Saved {} in {}'.format(
+                new_sample.filename,
+                new_sample.path)
+            )
 
             # ------------- new_sample cut into chunks :
             # now we have the path we can open the image and get its size
@@ -248,7 +282,9 @@ def uploaded(sample_id):
     new_sample = model.Sample.query.get(sample_id)
     new_sample.init_on_load()
 
-    msg = 'New sample was uploaded and store to the database. ID: {0}'.format(new_sample.id)
+    msg = 'New sample was uploaded and store to the database. ID: {0}'.format(
+        new_sample.id
+    )
     print(msg)
     flash(msg, category='succes')
 
@@ -299,17 +335,26 @@ def find_para_activity():
 
     # eligible chunks are chunks that have at least 1 parasite annotations
     eligible_chunks = model.Annotation.query.\
-        with_entities(model.Annotation.sample_id, model.Annotation.col, model.Annotation.row).\
+        with_entities(
+            model.Annotation.sample_id,
+            model.Annotation.col,
+            model.Annotation.row).\
         distinct().\
         filter(model.Annotation.annotation.startswith('P')).\
         all()
-    # Get distinct chunk coord of parasite annnotation = Annotation instance where annotation attribut starts with 'P'
+    # Get distinct chunk coord of parasite annnotation = Annotation instance
+    # where annotation attribut starts with 'P'
 
     if (eligible_chunks):
         print(eligible_chunks)
         print(len(eligible_chunks))
         random_sample_id, random_col, random_row = random.choice(eligible_chunks)
-        return render_template('find-para.html', sample_id=random_sample_id, col=random_col, row=random_row)
+        return render_template(
+            'find-para.html',
+            sample_id=random_sample_id,
+            col=random_col,
+            row=random_row
+        )
     else:
         flash("There is no sample on which to train.")
         return redirect(url_for('index'))
@@ -376,7 +421,9 @@ def login():
         print(form.password)
         print(form.username.data, form.password.data)
         # validate the user then log the user
-        user = model.User_auth.query.filter_by(username=form.username.data).first()
+        user = model.User_auth.query.\
+            filter_by(username=form.username.data).\
+            first()
         if user and user.password == form.password.data:
             login_user(user)
             flash('Logged in successfully.', category='succes')
@@ -419,7 +466,9 @@ def get_patient(institution_name, patient_ref):
     try:
         print('try to get patient')
         # get the current patient :
-        patient = model.Patient.query.filter_by(ref=patient_ref, institution_name=institution_name).first()
+        patient = model.Patient.query.\
+            filter_by(ref=patient_ref, institution_name=institution_name).\
+            first()
         print(patient)
 
         # model is not JSON serializable
@@ -473,7 +522,11 @@ def browse():
 
         for (chunk_col, chunk_row) in sample.chunks_numerotation:
 
-            chunk_anno = sample.annotations.filter(model.Annotation.col == chunk_col, model.Annotation.row == chunk_row)
+            chunk_anno = sample.annotations.\
+                filter(
+                    model.Annotation.col == chunk_col,
+                    model.Annotation.row == chunk_row
+                )
             tot_num_anno = chunk_anno.count()
             num_para = sum(anno.annotation.startswith("P") for anno in chunk_anno)
             try:
@@ -538,8 +591,11 @@ def get_chunk_url(sample_id, col, row):
 def get_chunk_annotation(sample_id, col, row):
 
     # get all the annotation that are made on current chunk :
-    annotations = model.Annotation.query.filter_by(sample_id=sample_id, col=col, row=row).all()
-    #query.with_entities(SomeModel.col1, SomeModel.col2) #select colum for the return
+    annotations = model.Annotation.query.\
+        filter_by(sample_id=sample_id, col=col, row=row).\
+        all()
+    #query.with_entities(SomeModel.col1, SomeModel.col2)
+    #select colum for the return
 
     # model is not JSON serializable
     # so we do it by the hand : #TODO : better way ?
@@ -583,7 +639,8 @@ def annotate_chunk(sample_id, col, row):
 
     print(url_for('get_chunk_url', sample_id=sample_id, col=col, row=row))
 
-    # give the URL the requested file uploaded to this set would be accessed at. It doesn’t check whether said file exists.
+    # give the URL the requested file uploaded to this set would be accessed at.
+    # It doesn’t check whether said file exists.
 
     return render_template('annotate-chunk.html', sample=sample, sample_id=sample_id, col=col, row=row)
 
