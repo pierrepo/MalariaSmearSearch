@@ -46,7 +46,79 @@ a.link-silent {
 	text-decoration: none;
 }
 
-/* footer */
+
+/**********************************************************************
+ Flash JS messages
+**********************************************************************/
+
+#flash-container {
+    display: inline;
+    opacity: 0;
+    vertical-align: middle;
+    text-align: center;
+
+    /* Set the transitions up. */
+    transition: opacity 2s ease-out;
+}
+
+#flash-container.showing {
+    opacity: 1;
+    transition: opacity 1s ease-in;
+}
+
+.message {
+    border-radius: 0 0 4px 4px;
+}
+
+.message.success {
+    color: green;
+}
+
+.message.error {
+    color: red;
+}
+
+
+/**********************************************************************
+ footer 
+**********************************************************************/
+/* Sticky footer:
+ https://www.codementor.io/tips/4292721368/twitter-bootstrap-3-sticky-footer
+*/
+
+html {
+  position: relative;
+  min-height: 100%;
+  /* The html and body elements cannot have any padding or margin. */
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+
 footer {
-	padding-top: 10px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the (fixed) height of the footer here */
+  height: auto; /*60px ;*/
+  background-color: #222222; /*same as navbar*/
+  color: #9d9d9d; /*same as unhovered navbar*/
+  padding-top: 10px;
+}
+
+footer .list-inline li {
+    text-align: center;
+    padding: 3px 16px;
+}
+
+footer a {
+    color: inherit;
+    text-decoration: none;
+}
+
+footer a:hover{
+    color: #fff;
+    text-decoration: none;
 }

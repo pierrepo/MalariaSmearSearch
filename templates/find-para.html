@@ -2,12 +2,11 @@
 
 
 {% block content %}
-
     <section class="row">
         <div id='flash-container'>
     </section>
     <section class="row">
-        click on all parasites
+        <h3>Find and click on all parasites on the blood smear.</h3>
     </section>
 
     <section class="row limited-height">
@@ -16,9 +15,11 @@
 
 
     <section class="row">
-        <span class="btn btn-default btn-md"> score : <span id ='score'>0 </span></span> <span class="btn btn-default btn-md"> error(s) : <span id = 'error'>0</span> </span>
+        <span class="btn btn-default btn-md">
+            Correct: <span id ='score'>0 </span>
+            Error(s): <span id = 'error'>0</span>
+        </span>
     </section>
-
 {%endblock%}
 
 
@@ -28,11 +29,9 @@
     <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
 
     <script>
-
-
         var sample_id = {{sample_id}}
         var col = {{col}}
-        var row ={{row}}
+        var row = {{row}}
 
 
         /*Functions that flash messages in the flash div :
@@ -133,7 +132,7 @@
         // once the image is loaded :
         var ratio = 1;
         imageObj.onload = function() {
-            Flash.success('Image was retrieved from the server', 3000);
+            Flash.success('Image was retrieved from the server', 2000);
             // compute ratio :
             console.log(imageObj.naturalWidth)
             ratio = view_stage.width()/imageObj.naturalWidth;
@@ -268,14 +267,14 @@
                         }
                     }
                 });
-                Flash.success('The annotations were added on the view canvas. Everything is ready.', 3000);
+                Flash.success('Annotations were added on the view canvas. Everything is ready.', 2000);
             }
         }
 
 
 
         function handle_end_game(){
-            if(confirm("score : "+score+" error : "+error+" Replay ? ")){
+            if(confirm("Correct parasites: "+score+"   Errors: "+error+" Replay ? ")){
                 location.reload();
             }else {
                 window.location.href = "{{url_for('index')}}";

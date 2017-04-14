@@ -1,11 +1,8 @@
 {% extends "skeleton.html" %}
 
 {% block head %}
-
     {{super()}}
-
     <style>
-
         #anno-konvajs{
             /* According to Cropperjs documentation :
              "Limit image width to avoid overflow the container
@@ -25,36 +22,6 @@
         #annotations-list li span.hover{
             background-color: yellow;
         }
-
-
-
-        /* Flashed message by js :  */
-
-        #flash-container {
-            display: inline;
-            opacity: 0;
-            vertical-align: middle;
-            text-align: center;
-
-            /* Set the transitions up. */
-            transition: opacity 2s ease-out;
-        }
-
-        #flash-container.showing {
-            opacity: 1;
-            transition: opacity 1s ease-in;
-        }
-        .message {
-            padding-top: 10px;
-            border-radius: 0 0 4px 4px;
-        }
-        .message.success {
-            color: green;
-        }
-        .message.error {
-            color: red;
-        }
-
     </style>
 {% endblock %}
 
