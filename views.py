@@ -10,7 +10,6 @@ from flask import (
     request,
     redirect,
     url_for,
-    Response,
     send_file,
     jsonify,
     make_response,
@@ -19,17 +18,12 @@ from flask import (
 )
 from flask_login import login_required, login_user, logout_user, current_user
 import hashlib
-import pathlib
 import random
-from PIL import Image
 import os
 
 from app import app, db, login_manager, samples_set
 from forms import RegisterForm, LoginForm, UploadForm
 import model
-from flask_sqlalchemy import sqlalchemy
-from sqlalchemy import func
-import random
 
 # the route() decorator tells Flask what URL should trigger the function.
 # the functions render associated template stored in templates folder.
