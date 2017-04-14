@@ -34,14 +34,14 @@ def load_user(username):
     """
     Callback used to reload the user object associated to a given username.
 
-    Argument :
+    Parameters
     ----------
     username : string
         a possible username of a user.
 
-    Return :
-    --------
-    user : None / User
+    Returns
+    -------
+    None / instance of model.User
         the corresponding user object.
     """
     print(model.User_auth.query.
@@ -61,14 +61,27 @@ def test():
 
 @app.route('/e-learning/')
 def elearning():
-    """
+    """View where the user can choose between elearning activities.
+
+    Returns
+    -------
+    string:
+        the code of the landing page
     """
     return render_template('choice-e-learning.html')
 
 
 @app.route('/e-learning/y-n', methods=['GET'])
 def elearning_yn():
-    """
+    """View where the user can play the 'parasite : yes ou no' activity.
+
+    If there is no sample on which to train, the user is redirected to
+    the index.
+
+    Returns
+    -------
+    string:
+        the code of the page
     """
     # select random chunk :
 
@@ -101,9 +114,16 @@ def elearning_yn():
 @app.route('/samples/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
-    """
-    View of the page where logged in users
-    can access the form to upload samples.
+    """View to upload samples.
+
+    Note
+    ----
+    This page requires to the user to be logged in.
+
+    Returns
+    -------
+    string:
+        the code of the page
     """
     form = UploadForm()
     if form.validate_on_submit():
@@ -114,6 +134,19 @@ def upload():
 @app.route('/samples/<int:sample_id>/del-confirmation/')
 @login_required
 def del_conformation_sample(sample_id):
+    """View where sample deletion has to be confirmed.
+
+    Parameters
+    ----------
+    sample_id: int
+        the id of the sample the user want to delete.
+        This id have to be in the database.
+
+    Returns
+    -------
+    string:
+        the code of the page
+    """
     sample = model.Sample.query.get(sample_id)
 
     if not current_user.share_institution(sample.user_upload):
@@ -128,6 +161,19 @@ def del_conformation_sample(sample_id):
 # this is not REST : use DELETE method !
 @app.route('/samples/<int:sample_id>/delete', methods=['GET'])
 def del_sample(sample_id):
+    """View where the sample + its chunks + its annotations are deleted.
+
+    Parameters
+    ----------
+    sample_id: int
+        the id of the sample the user want to delete.
+        This id have to be in the database.
+
+    Returns
+    -------
+    string:
+        the code of the page
+    """
     print(sample_id)
 
     try:
@@ -160,6 +206,13 @@ def del_sample(sample_id):
 @app.route('/samples/', methods=['POST'])
 @login_required
 def add_sample():
+    """View where a new sample is added to the database.
+
+    Returns
+    -------
+    string:
+        the code of the page
+    """
     form = UploadForm()
 
     if form.validate_on_submit():  # -> it is a POST request and it is valid
@@ -272,6 +325,19 @@ def add_sample():
 @app.route('/samples/<int:sample_id>/uploaded', methods=['GET'])
 @login_required
 def uploaded(sample_id):
+    """View to chose the action once a new sample was added to the database.
+
+    Parameters
+    ----------
+    sample_id : int
+        The newly added sample.
+
+    Returns
+    -------
+    string
+        the code of the page
+
+    """
 
     new_sample = model.Sample.query.get(sample_id)
     new_sample.init_on_load()
@@ -317,13 +383,24 @@ def show_update_sample_info(sample_id):
 
 @app.route("/")
 def index():
-    """View of the index page."""
+    """View of the index page.
+
+    Returns
+    -------
+    string
+        the code of the index page.
+    """
     return render_template('index.html')
 
 
 @app.route("/e-learning/find-para")
 def find_para_activity():
-    """
+    """View where the user can play the 'find parasite' activity.
+
+    Returns
+    -------
+    string
+        the code of the index page.
     """
     # select random chunk :
 
@@ -364,6 +441,11 @@ def signup():
 
     If an error occured accessing the database, there is a redirection to the
     index page.
+
+    Returns
+    -------
+    string
+        the code of the page.
     """
     form = RegisterForm()
 
@@ -408,6 +490,11 @@ def login():
 
     A user can log in if the provided username and password match.
     Else, the authentification fails.
+
+    Returns
+    -------
+    string
+        the code of the page.
     """
     form = LoginForm()
     if form.validate_on_submit():  # -> it is a POST request and it is valid
@@ -441,6 +528,11 @@ def logout():
     View of the logout page.
 
     A logged in user accessing this page is logged out.
+
+    Returns
+    -------
+    string
+        the code of the index page.
     """
     # TODO : what happen if a logout user access logout page ?
     logout_user()
@@ -450,13 +542,33 @@ def logout():
 
 @app.route("/account")
 def account():
-    """View of the account page."""
+    """View of the account page.
+
+    Returns
+    -------
+    string
+        the code of the account page.
+    """
     # TODO
     return render_template('account-page.html')
 
 
 @app.route('/patients/<string:institution_name>/<string:patient_ref>')
 def get_patient(institution_name, patient_ref):
+    """View to get patient information
+
+    Parameters
+    ----------
+    institution_name : string
+        name of the institution of which the patient belong
+    patient_ref : string
+        the reference of the patient
+
+    Returns
+    -------
+    string
+        jsonity string of the serialized patient
+    """
     try:
         print('try to get patient')
         # get the current patient :
@@ -483,6 +595,13 @@ def get_patient(institution_name, patient_ref):
 
 @app.route('/samples/')
 def browse():
+    """View for the user to browse available samples in the database.
+
+    Returns
+    -------
+    string
+        the code of the browse page.
+    """
     # list uploaded sample in db :
     samples = model.Sample.query.all()
     [sample.init_on_load() for sample in samples]
@@ -559,6 +678,18 @@ def browse():
 
 @app.route('/samples/<int:sample_id>')
 def download(sample_id):
+    """View to download a sample.
+
+    Parameters
+    ----------
+    sample_id : int
+        The newly added sample.
+
+    Returns
+    -------
+    string
+        the code of the index page.
+    """
     # sample_id = secure_filename(sample_id)
     sample = model.Sample.query.get(sample_id)  # Primary Key
     sample.init_on_load()
@@ -573,6 +704,9 @@ def download(sample_id):
 
 @app.route('/samples/<int:sample_id>/chunks/<int:col>/<int:row>')
 def get_chunk_url(sample_id, col, row):
+    """
+
+    """
     sample = model.Sample.query.get(sample_id)  # Primary Key
     sample.init_on_load()
     chunk_path = sample.get_chunk_path(col, row)
