@@ -11,14 +11,24 @@
       <div id="view-konvajs" class="col-xs-12"></div>
     </section>
 
-    <section class="row">
-        <span class="btn btn-default btn-md"> score : <span id ='score'>0 </span></span> <span class="btn btn-default btn-md"> error(s) : <span id = 'error'>0</span> </span>
-    </section>
+    <section class="row top-margin">
+        <span class="col-md-4 text-left">
+            <span class="btn btn-info btn-lg"> 
+                Success 
+                <span class="badge" id='score'>0</span>
+            </span>
+            <span class="btn btn-info btn-lg">
+                Errors
+                <span class="badge" id='error'>0</span>
+            </span>
+        </span>
 
-    <section class="row">
-        Parasite ?
-        <button type="button" id = 'yes' value="yes">Yes !</button>
-        <button type="button" id = 'no' value="no">No !</button>
+        <button type="button" class="btn btn-success btn-lg col-md-4" id="yes" value="yes">
+            <strong>Parasite!</strong>
+        </button>
+        <button type="button" class="btn btn-warning btn-lg col-md-4" id="no" value="no">
+            <strong>Not a parasite!</strong>
+        </button>
     </section>
 {%endblock%}
 

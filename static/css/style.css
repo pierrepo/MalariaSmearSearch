@@ -1,3 +1,4 @@
+
 .thumbnail .caption {
     font-size: 2rem;
 }
@@ -12,6 +13,10 @@
 
 .btn-right-space {
     margin-right: 5px;
+}
+
+.top-margin { 
+    margin-top: 5px; 
 }
 
 .big-text {
@@ -48,6 +53,10 @@ input.anno-coord {
 /* remove link decoration */
 a.link-silent {
     text-decoration: none;
+}
+
+#view-konvajs {
+    padding: 0px;
 }
 
 /**********************************************************************

@@ -14,10 +14,12 @@
     </section>
 
 
-    <section class="row">
-        <span class="btn btn-default btn-md">
-            Correct: <span id ='score'>0 </span>
-            Error(s): <span id = 'error'>0</span>
+    <section class="row top-margin">
+        <span class="btn btn-success btn-lg">
+            Correct parasites: <span class="badge" id="score">0</span>
+        </span>
+        <span class="btn btn-danger btn-lg">
+            Errors: <span class="badge" id="error">0</span>
         </span>
     </section>
 {%endblock%}
@@ -226,9 +228,9 @@
                     var circle = new Konva.Circle({
                       x: x,
                       y: y,
-                      radius: 3,
-                      fill: 'red',
-                      stroke: 'red',
+                      radius: 4,
+                      fill: '#D43F3A', //red
+                      stroke: '#D43F3A', //red
                       strokeWidth: 1
                     });
                     // add the shape to the layer
@@ -259,7 +261,7 @@
                             // returns a new array containing the elements that have been removed
                         }
                         // redraw annotation:
-                        evt.target.stroke("green");
+                        evt.target.stroke("#4CAE4C"); //green
                         view_stage_anno_layer.draw()
                         if (typeof data !== 'undefined' && data.length == 0) {
                         // the array is defined and has no element left :
