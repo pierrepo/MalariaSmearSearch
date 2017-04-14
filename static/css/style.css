@@ -1,49 +1,53 @@
 .thumbnail .caption {
-	font-size: 2rem;
+    font-size: 2rem;
 }
 
 .thumbnail img {
-	width: 60%;
+    width: 60%;
 }
 
 .btn-choice {
-	margin-top: 10px;
+    margin-top: 10px;
+}
+
+.btn-right-space {
+    margin-right: 5px;
 }
 
 .big-text {
-	font-size: 2rem;
-	margin-bottom: 30px;
+    font-size: 2rem;
+    margin-bottom: 30px;
 }
 
 /* upload page */
 .info-msg {
-	font-style: italic;
+    font-style: italic;
 }
 
 fieldset dl {
-	margin-bottom: 0px;
+    margin-bottom: 0px;
 }
 
 fieldset.field-upload {
-	margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 legend {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 div #patient-msg {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 /* view/annotate page */
 input.anno-coord {
-	width: 50px;
+    width: 50px;
 }
 
 /* remove link decoration */
 a.link-silent {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 /**********************************************************************
@@ -71,7 +75,7 @@ a.link-silent {
 }
 
 #flashes ul {
-	list-style: none;
+    list-style: none;
 }
 
 /**********************************************************************

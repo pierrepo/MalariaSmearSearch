@@ -1,26 +1,22 @@
 {% extends "skeleton.html" %}
 
-{% block title %}E-learning : Activities{% endblock %}
+{% block title %}E-learning and training{% endblock %}
 
 {% block content %}
     <div class="row">
-        <div div class="col-sm-4">
-            <a href="{{url_for('find_para_activity')}}" target="_self" class="thumbnail link-silent" >
-                <img  src="{{ url_for('static', filename='img/logo-find-para.svg')}}" alt="find parasites icon" style="width:100%">
-                <div class="caption">
-                find parasites
-                </div>
+        <h3>Select a training activity</h3>
+
+            <a class="col-sm-4 btn btn-info btn-lg btn-right-space link-silent" 
+               href="{{url_for('find_para_activity')}}" 
+               target="_self">
+                Find parasites
             </a>
 
-        </div>
-        <div div class="col-sm-4">
-            <a href="{{url_for('elearning_yn')}}" target="_self" class="thumbnail link-silent" >
-                <img  src="{{ url_for('static', filename='img/logo-para-YorN.svg')}}" alt="parasite or not icon" style="width:100%">
-                <div class="caption">
-                parasite or not
-                </div>
+            <a class="col-sm-4 btn btn-info btn-lg btn-right-space link-silent" 
+               href="{{url_for('elearning_yn')}}" 
+               target="_self">
+                Parasite or not?
             </a>
-        </div>
     </div>
-
 {% endblock %}
+
