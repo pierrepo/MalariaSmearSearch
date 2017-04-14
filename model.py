@@ -33,14 +33,14 @@ import os
 
 
 def delete_file(filepath):
-	"""
-	Delete file.
+    """
+    Delete file.
 
-	Parameters
-	----------
-	filepath : string
-		filename to delete
-	"""
+    Parameters
+    ----------
+    filepath : string
+        filename to delete
+    """
     try:
         os.remove(filepath)
     except OSError:
@@ -63,8 +63,8 @@ def get_hr_datetime(dt):
         or None if the provided argument was None
     
 
-	Note
-	----
+    Note
+    ----
     objects from datetime module support the strftime(format) method, 
     to create a string representing the time under the control of an explicit format string.
     The behavior of this function is described here: 
@@ -325,7 +325,7 @@ class Sample(db.Model):
 
     def __init__(self):
         """
-		Constructor.
+        Constructor.
 
         self.chunks_numerotation : list of tuples of 2 int
             (col, row) coordinates of the chunk
@@ -392,61 +392,61 @@ class Sample(db.Model):
                 # and results in large files with hardly any gain in image quality.`
 
     def get_chunk_nbytes(self, chunk_col, chunk_row):
-    	"""
-		Get the size (in bytes) of a chunk.
+        """
+        Get the size (in bytes) of a chunk.
 
-		Parameters
-		----------
-		chunk_col : int
-			column index
-		chunk_row : int
-			row index
+        Parameters
+        ----------
+        chunk_col : int
+            column index
+        chunk_row : int
+            row index
 
-		Returns
-		-------
-		string
-			size of chunk
-    	"""
+        Returns
+        -------
+        string
+            size of chunk
+        """
         path = self.get_chunk_path(chunk_col, chunk_row)
         return get_hr_file_nbytes(path)
 
 
     def get_chunk_pixel_size(self, chunk_col, chunk_row):
-    	"""
-		Get the pixel size width x height of a chunk.
+        """
+        Get the pixel size width x height of a chunk.
 
-		Parameters
-		----------
-		chunk_col : int
-			column index
-		chunk_row : int
-			row index
+        Parameters
+        ----------
+        chunk_col : int
+            column index
+        chunk_row : int
+            row index
 
-		Returns
-		-------
-		string
-			pixel size of a chunck: width x height
-    	"""
+        Returns
+        -------
+        string
+            pixel size of a chunck: width x height
+        """
         path = self.get_chunk_path(chunk_col, chunk_row)
         return get_img_pixel_size(path)
 
 
     def get_chunk_filename(self, chunk_col, chunk_row):
-    	"""
-		Get the chunk filename.
+        """
+        Get the chunk filename.
 
-		Parameters
-		----------
-		chunk_col : int
-			column index
-		chunk_row : int
-			row index
+        Parameters
+        ----------
+        chunk_col : int
+            column index
+        chunk_row : int
+            row index
 
-		Returns
-		-------
-		string
-			filename of chunk
-    	"""
+        Returns
+        -------
+        string
+            filename of chunk
+        """
         #TODO : check the given row and col are okay
         return '{0}_{1}_{2}.{3}'.format(
             self.id,
@@ -456,36 +456,36 @@ class Sample(db.Model):
 
 
     def get_chunk_path(self, chunk_col, chunk_row):
-    	"""
-		Get the chunk path.
+        """
+        Get the chunk path.
 
-		Parameters
-		----------
-		chunk_col : int
-			column index
-		chunk_row : int
-			row index
+        Parameters
+        ----------
+        chunk_col : int
+            column index
+        chunk_row : int
+            row index
 
-		Returns
-		-------
-		string
-			full path of chunk
-    	"""
+        Returns
+        -------
+        string
+            full path of chunk
+        """
         return '{0}/{1}'.format(
-        	app.config['CHUNKS_DEST'], 
-        	self.get_chunk_filename(chunk_col, chunk_row)
+            app.config['CHUNKS_DEST'], 
+            self.get_chunk_filename(chunk_col, chunk_row)
         )
 
 
     def get_chunks_paths(self):
-    	"""
-		Get the path of mutliple chunks.
+        """
+        Get the path of mutliple chunks.
 
-		Returns
-		-------
-		list of string
-			list of mutliple chunk paths
-    	"""
+        Returns
+        -------
+        list of string
+            list of mutliple chunk paths
+        """
         paths_array = []
         for col in range (self.num_col):
             for row in range (self.num_row):
