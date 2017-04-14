@@ -74,7 +74,7 @@ $(document).ready(function(){
             .append("</li>");
         */
         // Instead, we put the html in an string then append that string to the dom :
-         var html="<li name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span>"
+         var html="<li class='list-group-item' name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span>"
          if (user_has_right) {
              html+="<button class='glyphicon glyphicon-trash'></button>";
          }

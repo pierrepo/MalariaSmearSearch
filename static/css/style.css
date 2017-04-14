@@ -47,7 +47,7 @@ div #patient-msg {
 
 /* view/annotate page */
 input.anno-coord {
-    width: 50px;
+    width: 75px;
 }
 
 /* remove link decoration */
@@ -55,8 +55,9 @@ a.link-silent {
     text-decoration: none;
 }
 
-#view-konvajs {
-    padding: 0px;
+#view-konvajsTEST {
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 /**********************************************************************

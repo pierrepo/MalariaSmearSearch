@@ -30,7 +30,7 @@
     <section class="row">
     {% if current_user.is_authenticated and current_user.share_institution(sample.user_upload)%}
         <div class="col-md-2 d-inline btn btn-primary" id="toggle-mode">
-        	<span id="icon-annotate" class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        	<span id="icon-annotate" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
         	<span id="icon-view" class="glyphicon glyphicon-eye-open" aria-hidden="true" style="display: none;"></span>
         	<span id="icon-text">Annotate</span>
         </div>
@@ -103,7 +103,7 @@
     {%endif%}
 
     <section class="row">
-      <ul id = "annotations-list">
+      <ul id="annotations-list" class="list-group">
       </ul>
     </section>
 
