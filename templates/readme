@@ -1,4 +1,4 @@
 Flask looks for template files inside the templates folder.
 
-The templates are made Jinja2 templates using Template Inheritance pattern. 
+The templates are made Jinja2 templates using Template Inheritance pattern.
 The skeleton is provided in skeleton.html, then, every pages inherit this skeleton and just modify some parts. 

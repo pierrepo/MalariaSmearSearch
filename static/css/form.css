@@ -4,6 +4,5 @@ ul {
 
 label.required::before {
 	content: '* ' ;
-	color: red; 
+	color: red;
 }
-
