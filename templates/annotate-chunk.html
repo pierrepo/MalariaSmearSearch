@@ -12,17 +12,15 @@
             overflow: auto;
         }
         .row.limited-height{
-          max-height: 500px;
-          overflow: auto;
+            max-height: 500px;
+            overflow: auto;
         }
 
         .anno-stuff{
             display: none;
         }
         #annotations-list li span:hover,
-        #annotations-list li span.hover{
-            background-color: yellow;
-        }
+        #annotations-list li span.hover{background-color: yellow;}
     </style>
 {% endblock %}
 
@@ -30,19 +28,18 @@
 {% block content %}
     <div class="row">
     {% if current_user.is_authenticated and current_user.share_institution(sample.user_upload) %}
-        <div class="col-md-2 d-inline btn btn-primary" id="toggle-mode">
+        <span class="col-md-2 d-inline btn btn-primary" id="toggle-mode">
         	<span id="icon-annotate" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
         	<span id="icon-view" class="glyphicon glyphicon-eye-open" aria-hidden="true" style="display: none;"></span>
         	<span id="icon-text">Annotate</span>
-        </div>
+        </span>
     {% endif %}
-        <div class="col-md-10 d-inline" id='flash-container'></div>
+        <span class="col-md-10 d-inline" id="flash-container"></span>
     </div>
 
-    <section class="row top-margin limited-height">
-      <div id="view-konvajs" class="col-xs-12"></div>
-
-      <div id="anno-konvajs" class='col-xs-12 anno-stuff'></div>
+    <section class="row col-xs-12 top-margin limited-height">
+      <div id="view-konvajs"></div>
+      <div id="anno-konvajs" class="anno-stuff"></div>
     </section>
 
     <section class="row">
@@ -107,8 +104,8 @@
       <ul id="annotations-list" class="list-group">
       </ul>
     </section>
-
 {% endblock %}
+
 
 {% block imports %}
     {{super()}}
@@ -129,5 +126,4 @@
 
     </script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}"></script>
-
 {% endblock %}
