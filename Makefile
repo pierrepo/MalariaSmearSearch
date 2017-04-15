@@ -1,8 +1,7 @@
 .PHONY: run reset-all 
 
-# run the upadted web server in the virtual environnement
+# run the web server in the virtual environnement
 run:
-	git pull
 	. ./venv/bin/activate; \
 	python __init__.py; \ 
 
@@ -21,3 +20,6 @@ reset-all:
 	python3 setup-db.py
 
 
+backup-data:
+	tar zcvf data-backup.tgz samples/ chunks/ data.db users.db
+	
