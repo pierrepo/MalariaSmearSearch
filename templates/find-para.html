@@ -2,62 +2,42 @@
 
 
 {% block content %}
-    <section class="row">
-        <div id='flash-container'>
-    </section>
-    <section class="row">
-        <h3>Find and click on all parasites on the blood smear.</h3>
-    </section>
+    <div class="row no-gutters">
+        <span class="large-text">
+        Find and click on all parasites on the blood smear
+        </span>
+    </div>
 
-    <section class="row limited-height">
-      <div id="view-konvajs" class="col-xs-12"></div>
-    </section>
-
-
-    <section class="row top-margin">
-        <span class="btn btn-success btn-lg">
+    <div class="row no-gutters top-margin">
+        <span class="btn btn-success btn-lg text-align-right">
             Correct parasites: <span class="badge" id="score">0</span>
         </span>
         <span class="btn btn-danger btn-lg">
             Errors: <span class="badge" id="error">0</span>
         </span>
-    </section>
-{%endblock%}
+        <span id="flash-container"></span>
+    </div>
 
+    <div class="row no-gutters limited-height top-margin">
+      <div id="view-konvajs" class="col-xs-12 no-side-padding"></div>
+    </div>
+
+    <div class="row top-margin">
+
+    </div>
+{%endblock%}
 
 
 {% block imports %}
     {{super()}}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/flash-messages.js') }}"></script>
+
     <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
 
     <script>
-        var sample_id = {{sample_id}}
-        var col = {{col}}
-        var row = {{row}}
-
-
-        /*Functions that flash messages in the flash div :
-        *
-        * @param {string} msg - the msg that have to be printed
-        * @param {int} time - the duration of the flash
-        *
-        */
-        Flash = {}
-        Flash.success = function(msg, time =1000){
-            $('#flash-container')[0].innerHTML = "<div class='success message'>" + msg + "</div>";
-            $('#flash-container').addClass('showing');
-            setTimeout(function(){
-              $('#flash-container').removeClass('showing');
-            }, time);
-          };
-        Flash.error = function(msg, time =1000){
-            $('#flash-container')[0].innerHTML = "<div class='error message'>" + msg + "</div>";
-            $('#flash-container').addClass('showing');
-            setTimeout(function(){
-                $('#flash-container').removeClass('showing');
-            }, time);
-        };
-
+        var sample_id = {{sample_id}};
+        var col = {{col}};
+        var row = {{row}};
 
         /* This function adds the annotation on the annotation layers
         *   of the view Konva stage (using ratio)
@@ -81,7 +61,7 @@
             };
 
             // add the ration annotation as a rect on the anno layer of the view stage
-            console.log(ratio_new_anno) ;
+            console.log(ratio_new_anno);
             var ratio_rect = new Konva.Rect({
               x: ratio_new_anno.x,
               y: ratio_new_anno.y,
@@ -98,7 +78,8 @@
         }
 
 
-        var score = error = 0 ;
+        var score = 0;
+        var error = 0;
 
 
         /*********************/
@@ -160,12 +141,11 @@
 
         //*** fetch corresponding annotation data :
         var data = []; // global var
-        data_loaded = false ;
+        data_loaded = false;
 
         console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
 
         $.getJSON(
-
             Flask.url_for("get_chunk_annotation", {"sample_id":sample_id , "col":col, "row":row}),
 
             function(received_data){
@@ -276,7 +256,7 @@
 
 
         function handle_end_game(){
-            if(confirm("Correct parasites: "+score+"   Errors: "+error+" Replay ? ")){
+            if(confirm("Correct parasites: "+score+"   Errors: "+error+".\nReplay?")){
                 location.reload();
             }else {
                 window.location.href = "{{url_for('index')}}";
@@ -284,7 +264,5 @@
                 //http://stackoverflow.com/a/506004
             }
         }
-
     </script>
-
 {% endblock %}

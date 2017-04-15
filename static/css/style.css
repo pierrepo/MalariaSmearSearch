@@ -24,6 +24,11 @@
     margin-bottom: 30px;
 }
 
+.large-text {
+    /*font-size: 18px;*/
+    font-size: 1.8vw;
+}
+
 /* upload page */
 .info-msg {
     font-style: italic;
@@ -55,7 +60,7 @@ a.link-silent {
     text-decoration: none;
 }
 
-#view-konvajsTEST {
+.no-side-padding {
     padding-left: 0px;
     padding-right: 0px;
 }
@@ -93,11 +98,10 @@ a.link-silent {
 **********************************************************************/
 
 #flash-container {
-    display: inline;
     opacity: 0;
     vertical-align: middle;
-    text-align: center;
-
+    padding-left: 5px;
+    text-align: left;
     /* Set the transitions up. */
     transition: opacity 2s ease-out;
 }
@@ -108,7 +112,7 @@ a.link-silent {
 }
 
 .message {
-    border-radius: 0 0 4px 4px;
+    border-radius: 4px;
 }
 
 .message.success {

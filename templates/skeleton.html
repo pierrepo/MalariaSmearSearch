@@ -105,7 +105,7 @@
                 {% block header %}
                     {% with messages = get_flashed_messages(with_categories=true) %}
                         {% if messages %}
-                        <ul id=flashes>
+                        <ul id="flashes">
                         {% for category, message in messages %}
                           <li class="{{ category }}">{{ message }}</li>
                         {% endfor %}
@@ -121,7 +121,8 @@
                 {% endblock %}
             </div>
             <footer>
-                <div class="container">
+            
+            <div class="container">
                     {% block footer %}
                         <ul class="list-inline text-center">
                             <li><a href="http://www.univ-paris-diderot.fr/">Université Paris Diderot</a></li>
