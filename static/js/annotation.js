@@ -1,10 +1,7 @@
-console.log("pouet");
-
-
+console.log("Load annotation engine");
 
 
 $(document).ready(function(){
-
 
     anno_decoder = {
         "PUR":"Parasite - Unknown species - Ring",
@@ -38,7 +35,6 @@ $(document).ready(function(){
         "ART":"Artefact"
      }
 
-
     /**************************************************************************/
     // util functions :
 
@@ -57,7 +53,7 @@ $(document).ready(function(){
     *
     */
     function addAnnoView(new_anno){
-        console.log("================================");
+        console.log("Display annotations");
         // the new anno is appended in the anno list :
 
         // http://stackoverflow.com/a/12949050
@@ -76,11 +72,11 @@ $(document).ready(function(){
         // Instead, we put the html in an string then append that string to the dom :
          var html="<li class='list-group-item' name='"+new_anno.name+"'><span>" + anno_decoder[new_anno.annotation] + "</span>"
          if (user_has_right) {
-             html+="<button class='glyphicon glyphicon-trash'></button>";
+             html+=" <button class='glyphicon glyphicon-trash'></button>";
          }
          html+="</li>";
 
-         $("#annotations-list").append(html)
+         $("#annotations-list").append(html);
 
         // TODO : do not use the annotation code
         // the action button events are bind automatically,
@@ -92,7 +88,7 @@ $(document).ready(function(){
         }
 
         // add the annotation as a rect on the anno layer of the anno stage
-        console.log(new_anno) ;
+        console.log(new_anno);
         var rect = new Konva.Rect({
           x: new_anno.x,
           y: new_anno.y,
@@ -188,28 +184,6 @@ $(document).ready(function(){
     }
 
 
-    /*Functions that flash messages in the flash div :
-    *
-    * @param {string} msg - the msg that have to be printed
-    * @param {int} time - the duration of the flash
-    *
-    */
-    Flash = {}
-    Flash.success = function(msg, time =1000){
-        $('#flash-container').html ("<div class='success message'>" + msg + "</div>");
-        $('#flash-container').addClass('showing');
-        setTimeout(function(){
-          $('#flash-container').removeClass('showing');
-        }, time);
-      };
-    Flash.error = function(msg, time =1000){
-        $('#flash-container').html("<div class='error message'>" + msg + "</div>");
-        $('#flash-container').addClass('showing');
-        setTimeout(function(){
-            $('#flash-container').removeClass('showing');
-        }, time);
-    };
-
     /**************************************************************************/
 
     /*************************************************************************/
@@ -251,7 +225,7 @@ $(document).ready(function(){
 
     // once the image is loaded :
     imageObj.onload = function() {
-      Flash.success('Image was retrieved from the server', 3000);
+      Flash.success('Image was retrieved from the server', 2000);
       // compute ratio :
       console.log(imageObj.naturalWidth)
       ratio = view_stage.width()/imageObj.naturalWidth;
@@ -302,7 +276,7 @@ $(document).ready(function(){
               //console.log(e.detail.scaleY);
           }
       });
-      Flash.success('The cropper was setted successfully', 3000);
+      Flash.success('The cropper was created successfully', 3000);
 
 
       image_loaded =true ;
@@ -322,7 +296,7 @@ $(document).ready(function(){
         function(received_data){
             console.log(received_data);
 
-            Flash.success('Annotation was retrieved from the server', 3000);
+            Flash.success('Annotations were retrieved from the server', 2000);
             for(var i = 0; i < received_data.length; i++) {
                 var obj = received_data[i];
 
@@ -367,7 +341,7 @@ $(document).ready(function(){
                 true
             );
 
-            Flash.success('The annotations were added on both the view and the annotation canvas. Everything is ready.', 3000);
+            Flash.success('Annotations were added on both the view and the annotation canvas. Everything is ready.', 3000);
         }
     }
 

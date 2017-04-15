@@ -28,13 +28,13 @@
 {% block content %}
     <div class="row">
     {% if current_user.is_authenticated and current_user.share_institution(sample.user_upload) %}
-        <span class="col-md-2 d-inline btn btn-primary" id="toggle-mode">
+        <span class="col-md-2 btn btn-primary" id="toggle-mode">
         	<span id="icon-annotate" class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
         	<span id="icon-view" class="glyphicon glyphicon-eye-open" aria-hidden="true" style="display: none;"></span>
         	<span id="icon-text">Annotate</span>
         </span>
     {% endif %}
-        <span class="col-md-10 d-inline" id="flash-container"></span>
+        <span class="col-md-10" id="flash-container"></span>
     </div>
 
     <section class="row col-xs-12 top-margin limited-height">
@@ -125,5 +125,9 @@
         var row ={{row}}
 
     </script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/flash-messages.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}">
+    </script>
 {% endblock %}
