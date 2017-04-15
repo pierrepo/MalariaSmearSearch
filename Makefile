@@ -1,4 +1,4 @@
-.PHONY: run reset-all backup_data
+.PHONY: run reset-all backup-data
 
 DATE=$(shell date +"%Y-%m-%d")
 
@@ -13,10 +13,10 @@ reset-all:
 	rm -f data.db users.db
 
 	@echo "clean samples"
-	rm -f samples/*{.jpg,.jpeg,.png}
+	rm -f samples/*.jpg samples/*.jpeg samples/*.png
 
 	@echo "clean chunks"
-	rm -f chunks/*{.jpg,.jpeg,.png}
+	rm -f chunks/*.jpg chunks/*.jpeg chunks/*.png
 
 	@echo "build databases"
 	. ./venv/bin/activate; \
