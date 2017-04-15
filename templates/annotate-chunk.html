@@ -97,11 +97,11 @@
       </form>
     </section>
 
-    {%if current_user.is_authenticated and current_user.share_institution(sample.user_upload)%}
-        <section class="row anno-stuff">
-            <em>Double-click the annotation text to edit. Double-click the trash bin icon to delete.</em>
-        </section>
-    {%endif%}
+    {% if current_user.is_authenticated and current_user.share_institution(sample.user_upload) %}
+    <section class="row">
+        <em>Double-click the annotation text to edit. Double-click the trash bin icon to delete.</em>
+    </section>
+    {% endif %}
 
     <section class="row">
       <ul id="annotations-list" class="list-group">
@@ -120,7 +120,7 @@
     <script>
         // couldn't find a better way to pass boolean from jinja :
         var user_auth = '{{current_user.is_authenticated}}'=='True' ? true : false;
-        var user_share_institution = '{{current_user.share_institution(sample.user_upload)}}'=='True' ? true : false;
+        var user_share_institution = '{{ current_user.is_authenticated and current_user.share_institution(sample.user_upload) }}'=='True' ? true : false;
         var user_has_right = user_auth && user_share_institution
         console.log(user_auth, user_share_institution,user_has_right  )
         var sample_id = {{sample_id}}
