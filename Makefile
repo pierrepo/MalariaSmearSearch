@@ -1,11 +1,11 @@
-.PHONY: run reset-all 
+.PHONY: run reset-all backup_data
 
 DATE=$(shell date +"%Y-%m-%d")
 
 # run the web server in the virtual environnement
 run:
 	. ./venv/bin/activate; \
-	python __init__.py; \ 
+	python __init__.py
 
 # clean all data and reset database
 reset-all:
@@ -19,7 +19,9 @@ reset-all:
 	rm -f chunks/*{.jpg,.jpeg,.png}
 
 	@echo "build databases"
-	python3 setup-db.py
+	. ./venv/bin/activate; \
+	python3 setup-db.py; \
+	deactivate
 
 
 backup-data:
