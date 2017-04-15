@@ -15,10 +15,6 @@
     margin-right: 5px;
 }
 
-.top-margin { 
-    margin-top: 5px; 
-}
-
 .big-text {
     font-size: 2rem;
     margin-bottom: 30px;
@@ -60,9 +56,11 @@ a.link-silent {
     text-decoration: none;
 }
 
-.no-side-padding {
-    padding-left: 0px;
-    padding-right: 0px;
+.no-side {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 /**********************************************************************

@@ -1,35 +1,31 @@
 {% extends "skeleton.html" %}
 
-
 {% block content %}
-    <section class="container">
-        <div class="row">
-            <div id='flash-container'></div>
-        </div>
+    <div class="row no-side" id="flash-container">
+    </div>
 
-        <div class="row limited-height">
-          <div id="view-konvajs" class="col-xs-12"></div>
+    <div class="row col-xs-12 no-side limited-height">
+        <div id="view-konvajs"></div>
+    </div>
+
+    <div class="row no-side">
+        <div class="col-md-6 no-side text-left">
+            <span class="btn btn-info btn-lg"> 
+                Success 
+                <span class="badge" id="success">0</span>
+            </span>
+            <span class="btn btn-info btn-lg">
+                Errors
+                <span class="badge" id="errors">0</span>
+            </span>
         </div>
-        <div class="row top-margin">
-            <div class="col-md-4 text-left">
-                <span class="btn btn-info btn-lg"> 
-                    Success 
-                    <span class="badge" id="success">0</span>
-                </span>
-                <span class="btn btn-info btn-lg">
-                    Errors
-                    <span class="badge" id="errors">0</span>
-                </span>
-            </div>
-            <div class="col-md-2"></div>
-            <div class="col-md-3 inline btn btn-success btn-lg" id="yes">
-                <strong>Parasite!</strong>
-            </div>
-            <div class="col-md-3 inline btn btn-warning btn-lg" id="no">
-                <strong>Not a parasite!</strong>
-            </div>
+        <div class="col-md-3 inline btn btn-success btn-lg" id="yes">
+            <strong>Parasite!</strong>
         </div>
-    </section>
+        <div class="col-md-3 inline btn btn-warning btn-lg" id="no">
+            <strong>Not a parasite!</strong>
+        </div>
+    </div>
 {%endblock%}
 
 
