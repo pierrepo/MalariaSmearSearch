@@ -8,23 +8,24 @@
         <div id="view-konvajs"></div>
     </div>
 
-    <div class="row no-side">
-        <div class="col-md-6 no-side text-left">
-            <span class="btn btn-info btn-lg"> 
+    <div class="row no-side top-margin">
+            <button type="button" class="col-sm-2 btn btn-info btn-lg btn-right-space"> 
                 Success 
                 <span class="badge" id="success">0</span>
-            </span>
-            <span class="btn btn-info btn-lg">
+            </button>
+            <button type="button" class="col-sm-2 btn btn-info btn-lg btn-right-space">
                 Errors
                 <span class="badge" id="errors">0</span>
-            </span>
-        </div>
-        <div class="col-md-3 inline btn btn-success btn-lg" id="yes">
-            <strong>Parasite!</strong>
-        </div>
-        <div class="col-md-3 inline btn btn-warning btn-lg" id="no">
+            </button>
+
+
+        <button type="button" class="col-sm-3 btn btn-warning btn-lg pull-right" id="no">
             <strong>Not a parasite!</strong>
-        </div>
+        </button>
+        <button type="button" class="col-sm-3 btn btn-success btn-lg pull-right btn-right-space" id="yes">
+            <strong>Parasite!</strong>
+        </button>
+
     </div>
 {%endblock%}
 
