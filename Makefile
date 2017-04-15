@@ -1,5 +1,7 @@
 .PHONY: run reset-all 
 
+DATE=$(shell date +"%Y-%m-%d")
+
 # run the web server in the virtual environnement
 run:
 	. ./venv/bin/activate; \
@@ -21,5 +23,4 @@ reset-all:
 
 
 backup-data:
-	tar zcvf data-backup.tgz samples/ chunks/ data.db users.db
-	
+	tar zcvf data-backup-${DATE}.tgz samples/ chunks/ data.db users.db
