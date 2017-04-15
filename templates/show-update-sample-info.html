@@ -25,7 +25,7 @@
                 {% set (chunk_width, chunk_height) = sample.get_chunk_pixel_size( chunk_col, chunk_row ) %}
                 <a href="{{url_for('annotate_chunk',sample_id=sample.id, col=chunk_col, row=chunk_row) }}"
                    target="_self" class="link-silent">
-                <div class="btn btn-warning btn-block btn-choice btn-lg">
+                <div class="btn btn-info btn-block btn-choice btn-lg">
                     <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
                     chunk {{ sample.id }}-{{ chunk_col }}-{{ chunk_row }} --
                     {{ chunk_width }} x {{chunk_height}} px
