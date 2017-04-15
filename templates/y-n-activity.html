@@ -2,33 +2,33 @@
 
 
 {% block content %}
+    <section class="container">
+        <div class="row">
+            <div id='flash-container'></div>
+        </div>
 
-    <section class="row">
-        <div id='flash-container'>
-    </section>
-
-    <section class="row limited-height">
-      <div id="view-konvajs" class="col-xs-12"></div>
-    </section>
-
-    <section class="row top-margin">
-        <span class="col-md-4 text-left">
-            <span class="btn btn-info btn-lg"> 
-                Success 
-                <span class="badge" id='score'>0</span>
-            </span>
-            <span class="btn btn-info btn-lg">
-                Errors
-                <span class="badge" id='error'>0</span>
-            </span>
-        </span>
-
-        <button type="button" class="btn btn-success btn-lg col-md-4" id="yes" value="yes">
-            <strong>Parasite!</strong>
-        </button>
-        <button type="button" class="btn btn-warning btn-lg col-md-4" id="no" value="no">
-            <strong>Not a parasite!</strong>
-        </button>
+        <div class="row limited-height">
+          <div id="view-konvajs" class="col-xs-12"></div>
+        </div>
+        <div class="row top-margin">
+            <div class="col-md-4 text-left">
+                <span class="btn btn-info btn-lg"> 
+                    Success 
+                    <span class="badge" id="success">0</span>
+                </span>
+                <span class="btn btn-info btn-lg">
+                    Errors
+                    <span class="badge" id="errors">0</span>
+                </span>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-3 inline btn btn-success btn-lg" id="yes">
+                <strong>Parasite!</strong>
+            </div>
+            <div class="col-md-3 inline btn btn-warning btn-lg" id="no">
+                <strong>Not a parasite!</strong>
+            </div>
+        </div>
     </section>
 {%endblock%}
 
@@ -36,37 +36,14 @@
 
 {% block imports %}
     {{super()}}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/flash-messages.js') }}"></script>
+
     <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
 
     <script>
-
-
         var sample_id = {{sample_id}}
         var col = {{col}}
         var row ={{row}}
-
-
-        /*Functions that flash messages in the flash div :
-        *
-        * @param {string} msg - the msg that have to be printed
-        * @param {int} time - the duration of the flash
-        *
-        */
-        Flash = {}
-        Flash.success = function(msg, time =1000){
-            $('#flash-container')[0].innerHTML = "<div class='success message'>" + msg + "</div>";
-            $('#flash-container').addClass('showing');
-            setTimeout(function(){
-              $('#flash-container').removeClass('showing');
-            }, time);
-          };
-        Flash.error = function(msg, time =1000){
-            $('#flash-container')[0].innerHTML = "<div class='error message'>" + msg + "</div>";
-            $('#flash-container').addClass('showing');
-            setTimeout(function(){
-                $('#flash-container').removeClass('showing');
-            }, time);
-        };
 
         /* Shuffle array
         * Fisher-Yates-Durstenfeld shuffle
@@ -81,7 +58,7 @@
                 sourceArray[i] = temp;
             }
             return sourceArray;
-        };
+        }
 
 
         /*********************/
@@ -109,7 +86,7 @@
         /*************/
 
         //***  fetch image :
-        image_loaded = false ;
+        image_loaded = false;
         var imageObj = new Image();
         imageObj.src = Flask.url_for("get_chunk_url", {"sample_id": sample_id, "col":col, "row":row});
 
@@ -117,7 +94,7 @@
         // once the image is loaded :
         var ratio = 1;
         imageObj.onload = function() {
-            Flash.success('Image was retrieved from the server', 3000);
+            Flash.success('Image was retrieved from the server', 2000);
             // compute ratio :
             console.log(imageObj.naturalWidth)
             ratio = view_stage.width()/imageObj.naturalWidth;
@@ -134,27 +111,24 @@
             // add the shape to the layer
             view_stage_img_layer.add(view_stage_image);
 
-            image_loaded =true ;
-            play_game()
+            image_loaded = true;
+            play_game();
         }
 
 
 
         //*** fetch corresponding annotation data :
         var data = []; // global var
-        data_loaded = false ;
+        data_loaded = false;
 
         console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
 
         $.getJSON(
-
             Flask.url_for("get_chunk_annotation", {"sample_id":sample_id , "col":col, "row":row}),
 
             function(received_data){
                 console.log(received_data);
-
                 Flash.success('Annotation was retrieved from the server', 3000);
-
 
                 for(var i = 0; i < received_data.length; i++) {
                     var obj = received_data[i];
@@ -166,44 +140,48 @@
                     console.log(obj);
                 }
 
-                data_loaded = true ;
+                data_loaded = true;
                 data = received_data; // set the global var
                 play_game() ;
             }
         );
 
 
-        var score = error = 0 ;
+        var success = 0;
+        var errors = 0;
 
         // Pass argument to event handle in jquerry
         // when we want to keep the this bind
         // http://stackoverflow.com/a/979344
         // http://jsfiddle.net/Tk7yF/
-        function response_validation(){
+        function response_validation(answer, anno){
             /* Arguments :
             * ------------
             * this
             * current annotation
             */
 
-            console.log( anno.annotation[0], anno.annotation[0]=='P', $(this).val(),  score, error);
-            if (anno.annotation[0]=='P' && $(this).val() == 'yes' ) {
-                score = ++score ;
-                $('#score').html(score);
-            }else if (anno.annotation[0]!='P' && $(this).val() != 'yes' ) {
-                score = ++score ;
-                $('#score').html(score);
-            }else{
-                error = ++error  ;
-                $('#error').html(error);
+            console.log(anno.annotation[0], anno.annotation[0]=='P', answer, success, errors);
+            if (anno.annotation[0]=='P' && answer == 'yes') {
+                // success = ++success;
+                success++;
+                $('#success').html(success);
+            } else if (anno.annotation[0]!='P' && answer == 'no') {
+                //success = ++success;
+                success++;
+                $('#success').html(success);
+            } else{
+                //errors = ++errors;
+                errors++;
+                $('#errors').html(errors);
             }
         }
 
 
         function handle_end_game(){
-            if(confirm("score : "+score+" error : "+error+" Replay ? ")){
+            if(confirm("Success: "+success+"  errors: "+errors+".\nDo you want to replay?")){
                 location.reload();
-            }else {
+            } else {
                 window.location.href = "{{url_for('index')}}";
                 // href or replace ?
                 //http://stackoverflow.com/a/506004
@@ -211,7 +189,6 @@
         }
 
         var current_ratio_rect;
-
 
         function play_round(i){
             anno = data[i];
@@ -248,41 +225,41 @@
         function play_game(){
             if(data_loaded && image_loaded) {
                 //shuffle the data :
-                console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                console.log("starting the game");
                 console.log(data);
-                data = shuffle(data)
+                console.log("shuffling data");
+                data = shuffle(data);
                 console.log(data);
 
-                i = 0
-                play_round(i)
+                var i = 0;
+                play_round(i);
 
+                // check if answer is correct
+                // and increment success and errors
                 $("#yes").click(function() {
-                    response_validation.call(this, anno);
-                    if (i < data.length-1  ) {
-                        console.log(i);
-                        current_ratio_rect.destroy();
-                        i = i + 1 ;
-                        play_round(i)
-                    }else{
-                        handle_end_game();
-                    }
+                    console.log("click on the 'yes' button");
+                    response_validation("yes", anno);
+                    next_round();
                 });
                 $("#no").click(function() {
-                    response_validation.call(this, anno);
-                    if (i < data.length-1  ) {
-                    console.log(i);
-                    current_ratio_rect.destroy();
-                        i = i + 1 ;
-                        play_round(i)
-                    }else{
+                    console.log("click on the 'no' button");
+                    response_validation("no", anno);
+                    next_round();
+                });
+
+                // go to next annotation or end the game
+                function next_round() {
+                    if (i < data.length-1 ) {
+                        console.log('round', i);
+                        current_ratio_rect.destroy();
+                        i++;
+                        play_round(i);
+                    } else {
                         handle_end_game();
                     }
-                });
+                }
             }
-        };
-
-
-
+        }
     </script>
 
 {% endblock %}
