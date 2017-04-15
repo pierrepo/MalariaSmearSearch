@@ -7,14 +7,14 @@
         <h3>Select a training activity</h3>
 
             <a class="col-sm-4 btn btn-info btn-lg btn-right-space link-silent" 
-               href="{{url_for('find_para_activity')}}" 
+               href="{{ url_for('elearning_para_find') }}" 
                target="_self">
                <span class="glyphicon glyphicon-screenshot" aria-hidden="true"></span>
                 Find parasites
             </a>
 
             <a class="col-sm-4 btn btn-info btn-lg btn-right-space link-silent" 
-               href="{{url_for('elearning_yn')}}" 
+               href="{{ url_for('elearning_para_yes_no') }}" 
                target="_self">
                <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
                 Parasite or not?

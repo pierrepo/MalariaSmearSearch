@@ -77,11 +77,11 @@ def elearning():
     string
         the code of the landing page
     """
-    return render_template('choice-e-learning.html')
+    return render_template('e-learning-menu.html')
 
 
-@app.route('/e-learning/y-n', methods=['GET'])
-def elearning_yn():
+@app.route('/e-learning/para-yes-no', methods=['GET'])
+def elearning_para_yes_no():
     """
     View where the user can play the 'parasite : yes ou no' activity.
 
@@ -111,7 +111,7 @@ def elearning_yn():
         print(len(eligible_chunk))
         random_sample_id, random_col, random_row = random.choice(eligible_chunk)
         return render_template(
-            'y-n-activity.html',
+            'e-learning-para-yes-no.html',
             sample_id=random_sample_id,
             col=random_col,
             row=random_row)
@@ -408,8 +408,8 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/e-learning/find-para")
-def find_para_activity():
+@app.route("/e-learning/para-find")
+def elearning_para_find():
     """
     View where the user can play the 'find parasite' activity.
 
@@ -437,7 +437,7 @@ def find_para_activity():
         print(len(eligible_chunks))
         random_sample_id, random_col, random_row = random.choice(eligible_chunks)
         return render_template(
-            'find-para.html',
+            'e-learning-para-find.html',
             sample_id=random_sample_id,
             col=random_col,
             row=random_row
