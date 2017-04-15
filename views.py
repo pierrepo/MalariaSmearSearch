@@ -643,10 +643,10 @@ def browse():
         'date upload',
         'uploaded by',
         'sample',
-        'total number of annnotations',
-        'number of annotated parasites',
-        'date of the first annotation',
-        'date of the last annotation'
+        'number of annotations',
+        'number of parasites',
+        'first annotation',
+        'lastest annotation'
     ]
 
     rows = []
@@ -661,12 +661,19 @@ def browse():
                 )
             tot_num_anno = chunk_anno.count()
             num_para = sum(anno.annotation.startswith("P") for anno in chunk_anno)
+
+            # find the oldest annotation
             try:
                 first_anno_date = min(anno.date_creation for anno in chunk_anno)
-                last_anno_date = max(anno.date_update for anno in chunk_anno)
             except (ValueError, TypeError):
-                print('empty datetime list')
+                print('Cannot get oldest annotation')
                 first_anno_date = None
+            
+            #find the most recent annotation
+            try:
+                last_anno_date = max(anno.date_creation for anno in chunk_anno)
+            except (ValueError, TypeError):
+                print('Cannot get most recent annotation')
                 last_anno_date = None
 
             row = [
