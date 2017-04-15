@@ -189,8 +189,8 @@
 
                 // trigger on shape -> everywhere because shape or image :
                 //https://konvajs.github.io/docs/events/Stage_Events.html
-                view_stage.on('click', function(evt) {
-                  console.log('usual click on ' + JSON.stringify(view_stage.getPointerPosition()));
+                view_stage.on('touchstart click', function(evt) {
+                  console.log('click outside annotation at ' + JSON.stringify(view_stage.getPointerPosition()));
                   console.log(evt.target);
                   if (evt.target.className == 'Image') {
                     // the user have not cliked on a parasite annotation
@@ -211,12 +211,12 @@
                     });
                     // add the shape to the layer
                     view_stage_anno_layer.add(circle);
-                    view_stage_anno_layer.draw()
+                    view_stage_anno_layer.draw();
                   }else if (evt.target.className == "Rect"){
                         // the user has cliked on a para annotation
 
                         console.log( evt.target) ;
-                        console.log('cliiiiiick on para anno');
+                        console.log('click inside annotation at ' + JSON.stringify(view_stage.getPointerPosition()));
                         console.log(evt.target.name());
                         // return the first ( the only one) element that have the correct name
                         result = $.grep(data, function(e){ return e.name == evt.target.name(); });
