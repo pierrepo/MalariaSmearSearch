@@ -2,13 +2,13 @@
 
 
 {% block content %}
-    <div class="row no-gutters">
+    <div class="row no-side">
         <span class="large-text">
         Find and click on all parasites on the blood smear
         </span>
     </div>
 
-    <div class="row no-gutters top-margin">
+    <div class="row no-side top-margin">
         <span class="btn btn-success btn-lg">
             Correct parasites <span class="badge" id="score">0</span>
         </span>
@@ -18,8 +18,8 @@
         <span id="flash-container"></span>
     </div>
 
-    <div class="row no-gutters limited-height top-margin no-side-padding">
-      <div id="view-konvajs" class="col-xs-12 no-side-padding"></div>
+    <div class="row no-side col-xs-12 limited-height top-margin">
+        <div id="view-konvajs"></div>
     </div>
 {%endblock%}
 

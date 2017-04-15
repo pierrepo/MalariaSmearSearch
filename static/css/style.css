@@ -56,6 +56,10 @@ a.link-silent {
     text-decoration: none;
 }
 
+.top-margin {
+  margin-top: 5px;
+}
+
 .no-side {
     padding-left: 0;
     padding-right: 0;
