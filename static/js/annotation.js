@@ -128,25 +128,16 @@ $(document).ready(function(){
 
         // bind the new ratio rect to mouse events :
 
-        ratio_rect.on('mouseover', function(evt) {
+        ratio_rect.on('click', function(evt) {
             var annotation = evt.target;
             if (annotation) {
                 console.log('mouseover');
                 console.log(annotation, true);
-                handleHoverAnno(true, this.name(), view_stage);
+                handleClickAnno(this.name(), view_stage);
                 view_stage_anno_layer.draw();
             }
         });
 
-        ratio_rect.on('mouseout', function(evt) {
-            var annotation = evt.target;
-            if (annotation) {
-                console.log('mouseover');
-                console.log(annotation, false);
-                handleHoverAnno(false, this.name(), view_stage);
-                view_stage_anno_layer.draw();
-            }
-        });
 
         ratio_rect.on('mousedown', function(evt) {
             var annotation = evt.target;
@@ -160,7 +151,7 @@ $(document).ready(function(){
     }
 
     /*
-    * This function handles the event 'hover annotations'.
+    * This function handles the event 'click annotations'.
     * If the mouse is on a rect or on an annotation item in the anotation list,
     * the corresponding rect and annotation item are filled in yellow
     * (with transparency of 0.5).
@@ -174,13 +165,15 @@ $(document).ready(function(){
     * @param {Konva.stage} stage - stage where the annotations will be colored
     *
     */
-    function handleHoverAnno(activate, name, stage){
-        console.log('in handleHoverAnno');
+    function handleClickAnno(name, stage){
+        console.log('in handleClickAnno');
+        activate = ! $("#annotations-list li[name="+name+"] span").hasClass( "click" );
         transparency = (activate ? 0.5 : 0).toString();
         console.log (activate * 0.5) ;
         rect = stage.findOne('.'+name);
         rect.setFill('rgba(255,255,0,'+0.5 * activate+')'); // 'rgba(255,255,0,'+transparency+')'
-        $("#annotations-list li[name="+name+"] span").toggleClass('hover');
+        $("#annotations-list li[name="+name+"] span").toggleClass('click');
+
     }
 
 
@@ -425,17 +418,12 @@ $(document).ready(function(){
     // span hover :
 
 
-   $('#annotations-list').on("mouseover", "span", function() {
+   $('#annotations-list').on("click", "span", function() {
        // Each time your mouse enters or leaves a child element,
        // mouseover is triggered
-       handleHoverAnno(true,  $(this).parent().attr("name"), view_stage);
+       handleClickAnno($(this).parent().attr("name"), view_stage);
        view_stage_anno_layer.draw();
-
-   }).on('mouseleave', 'span', function() {
-       handleHoverAnno(false,  $(this).parent().attr("name"), view_stage);
-       view_stage_anno_layer.draw();
-   });
-
+   })
 
 
 
