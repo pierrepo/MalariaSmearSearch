@@ -34,3 +34,95 @@ var ANNO_DECODER = {
     "THR":"Platelet",
     "ART":"Artefact"
 };
+
+
+
+class Annotation {
+    constructor(name, annotation, x, y, width, height) {
+        this.name = name ;
+        this.annotation = annotation ;
+        this.x = x ;
+        this.y = y ;
+        this.width = width ;
+        this.height = height ;
+        this.stroke_color = undefined ;
+        this.stroke_width = undefined ;
+        this.fill_color = undefined ;
+        this.rect = undefined ;
+        this.data = undefined ;
+    }
+
+}
+
+
+class DatArray {
+    constructor() {
+    }
+
+    shuffle() {
+    }
+
+    find(){
+    }
+
+    fetch(){
+    }
+}
+
+
+
+
+
+class SessionCore {
+    constructor() {
+        this.view_stage = undefined ;
+        this.image = undefined ;
+        this.data = undefined ;
+    }
+
+    setup() {
+    }
+
+    add_annotation(){
+    }
+
+    rm_annotation(){
+    }
+}
+
+
+class AnnotationCore extends SessionCore {
+    constructor() {
+        super();
+        this.anno_stage = undefined ;
+    }
+
+    setup() {
+        super.setup();
+    }
+}
+
+
+class GameCore extends SessionCore {
+    constructor() {
+        super();
+    }
+
+    handle_end_game() {
+    }
+}
+
+
+class FindParaActivity extends GameCore {
+    constructor() {
+        super();
+    }
+
+}
+
+class YesNoActivity extends GameCore {
+    constructor() {
+        super();
+    }
+
+}
