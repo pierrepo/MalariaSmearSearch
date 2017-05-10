@@ -218,6 +218,7 @@
                         console.log( evt.target) ;
                         console.log('click inside annotation at ' + JSON.stringify(view_stage.getPointerPosition()));
                         console.log(evt.target.name());
+
                         // return the first ( the only one) element that have the correct name
                         result = $.grep(data, function(e){ return e.name == evt.target.name(); });
                         console.log(result);
@@ -225,23 +226,30 @@
                         anno = result[0] ;
                         console.log(anno);
 
-                        score = ++score ;
-                        $('#score').html(score);
-
-                        // remove the found parasite from the parasite array :
-                        // index of the element you want to remove :
                         var index = data.indexOf(anno);
+
+                        // if the para was not already found :
                         if (index > -1) {
+
+                            // remove the found parasite from the parasite array :
                             data.splice(index, 1); // 1 : number of elements to remove
                             //splice modifies the array in place and
                             // returns a new array containing the elements that have been removed
-                        }
-                        // redraw annotation:
-                        evt.target.stroke("#4CAE4C"); //green
-                        view_stage_anno_layer.draw()
-                        if (typeof data !== 'undefined' && data.length == 0) {
-                        // the array is defined and has no element left :
-                            handle_end_game()
+
+                            // increase the score :
+                            score = ++score ;
+                            $('#score').html(score);
+
+
+                            // redraw annotation:
+                            evt.target.stroke("#4CAE4C"); //green
+                            view_stage_anno_layer.draw()
+                            if (typeof data !== 'undefined' && data.length == 0) {
+                            // the array is defined and has no element left :
+                                handle_end_game()
+                            }
+                        }else{
+                            console.log ('this one was already found ! ')
                         }
                     }
                 });
