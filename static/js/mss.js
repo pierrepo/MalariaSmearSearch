@@ -76,7 +76,9 @@ class DatArray {
 class SessionCore {
     constructor() {
         this.view_stage = undefined ;
-        this.image = undefined ;
+        // fetch image :
+        this.image = new Image();
+        this.image.src = Flask.url_for("get_chunk_url", {"sample_id": sample_id, "col":col, "row":row});
         this.data = undefined ;
     }
 
