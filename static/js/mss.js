@@ -1,7 +1,9 @@
+"use strict";
+
 console.log("Load annotation engine");
 
 /* Global var */
-ANNO_DECODER = {
+var ANNO_DECODER = {
     "PUR":"Parasite - Unknown species - Ring",
     "PUT":"Parasite - Unknown species - Trophzoide",
     "PUS":"Parasite - Unknown species - Schizont",
