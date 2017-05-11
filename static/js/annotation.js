@@ -155,6 +155,8 @@ $(document).ready(function(){
     */
     function addAnnoView(new_anno){
         console.log("Display annotations");
+        console.log(new_anno);
+
         // the new anno is appended in the anno list :
         append_to_dom_anno_list(new_anno);
 
@@ -164,46 +166,12 @@ $(document).ready(function(){
         // on newly appended list items even before a page refresh :
 
         // add the annotation as a rect on the anno layer of the anno stage
-        console.log(new_anno);
-        var rect = new Konva.Rect({
-          x: new_anno.x,
-          y: new_anno.y,
-          width: new_anno.width,
-          height: new_anno.height,
-          fill : null,
-          stroke: new_anno.stroke,
-          strokeWidth:  new_anno.strokeWidth,
-          name: new_anno.name
-        });
-        anno_stage_anno_layer.add(rect);
-
-        // compute the ration annotation :
-        var ratio_new_anno = {
-            x: new_anno.x * ratio,
-            y: new_anno.y * ratio,
-            width: new_anno.width * ratio,
-            height: new_anno.height * ratio,
-            stroke: new_anno.stroke,
-            strokeWidth: new_anno.strokeWidth * ratio,
-            name: new_anno.name.toString() // it has to be a string !!
-        };
-
-        // add the ration annotation as a rect on the anno layer of the view stage
-        console.log(ratio_new_anno) ;
-        var ratio_rect = new Konva.Rect({
-          x: ratio_new_anno.x,
-          y: ratio_new_anno.y,
-          width: ratio_new_anno.width,
-          height: ratio_new_anno.height,
-          fill : null,
-          stroke: ratio_new_anno.stroke,
-          strokeWidth:  ratio_new_anno.strokeWidth,
-          name: ratio_new_anno.name.toString() // it has to be a string !!
-        });
+        anno_stage_anno_layer.add(new_anno.get_rect());
+        // add the ratio annotation as a rect on the anno layer of the view stage
+        ratio_rect = new_anno.get_ratio_rect()
         view_stage_anno_layer.add(ratio_rect);
 
         // bind the new ratio rect to mouse events :
-
         ratio_rect.on('click', function(evt) {
             var annotation = evt.target;
             if (annotation) {
