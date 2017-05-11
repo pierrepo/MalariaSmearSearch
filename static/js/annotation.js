@@ -49,6 +49,53 @@ var anno_stage_anno_layer = anno_stage_img_layer; // for anno stage : image and 
 
 
 
+// class definition : ---------------------------------------------------------
+
+class Annotation {
+    constructor(name, annotation, x, y, width, height, ratio) {
+        this.name = name.toString(); // TODO : Change the code to use id directly.
+        this.annotation = annotation ;
+        this.x = x ;
+        this.y = y ;
+        this.width = width ;
+        this.height = height ;
+        this.stroke_color = 'black' ;
+        this.stroke_width = 4 ;
+        this.fill_color = null ;
+        this.rect = undefined ;
+        this.data = undefined ;
+    }
+
+    get_rect(){
+        return new Konva.Rect({
+            x: this.x,
+            y: this.y,
+            width: this.width,
+            height: this.height,
+            fill : this.fill_color,
+            stroke: this.stroke_color,
+            strokeWidth:  this.stroke_width,
+            name: this.name
+        })
+    }
+    get_ratio_rect(ratio){
+        return new Konva.Rect({
+            x: this.x * ratio,
+            y: this.y * ratio,
+            width: this.width * ratio,
+            height: this.height * ratio,
+            fill : this.fill_color,
+            stroke: this.stroke_color,
+            strokeWidth:  this.stroke_width * ratio,
+            name: this.name
+        })
+
+    }
+
+}
+
+
+
 $(document).ready(function(){
 
     /**************************************************************************/
