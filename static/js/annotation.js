@@ -4,7 +4,7 @@ console.log("Load annotation engine");
 
 $(document).ready(function(){
 
-    anno_decoder = {
+    var anno_decoder = {
         "PUR":"Parasite - Unknown species - Ring",
         "PUT":"Parasite - Unknown species - Trophzoide",
         "PUS":"Parasite - Unknown species - Schizont",
@@ -35,6 +35,8 @@ $(document).ready(function(){
         "THR":"Platelet",
         "ART":"Artefact"
      }
+
+     var ratio ;
 
     /**************************************************************************/
     // util functions :
@@ -103,7 +105,7 @@ $(document).ready(function(){
         anno_stage_anno_layer.add(rect);
 
         // compute the ration annotation :
-        ratio_new_anno = {
+        var ratio_new_anno = {
             x: new_anno.x * ratio,
             y: new_anno.y * ratio,
             width: new_anno.width * ratio,
@@ -213,7 +215,7 @@ $(document).ready(function(){
     /* Fetch data */
 
     //***  fetch image :
-    image_loaded = false ;
+    var image_loaded = false ;
     var imageObj = new Image();
     imageObj.src = Flask.url_for("get_chunk_url", {"sample_id": sample_id, "col":col, "row":row});
 
@@ -280,7 +282,7 @@ $(document).ready(function(){
 
     //*** fetch corresponding annotation data :
     var data = []; // global var
-    data_loaded = false ;
+    var data_loaded = false ;
 
     console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
     $.getJSON(
@@ -326,7 +328,7 @@ $(document).ready(function(){
             anno_stage.add(anno_stage_anno_layer);
 
             //Resource the cropper to take the annotations into account
-            new_url = $('#anno-konvajs .konvajs-content canvas')[0].toDataURL();
+            var new_url = $('#anno-konvajs .konvajs-content canvas')[0].toDataURL();
             //the first (and the only one) canvas selected here corresponds both to the image and annotation layer of the annotation stage.
             console.log (new_url);
             $('#anno-konvajs .konvajs-content canvas').cropper(
