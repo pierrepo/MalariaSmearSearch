@@ -125,6 +125,25 @@ class Annotation {
 
 
 
+class DatArray {
+    constructor(fetched_data, ratio){
+
+        this.data = [] ;
+
+        for(var i = 0; i < fetched_data.length; i++) {
+            anno = new Annotation(
+                fetched_data[i].name,
+                fetched_data[i].annotation,
+                fetched_data[i].x,
+                fetched_data[i].y,
+                fetched_data[i].width,
+                fetched_data[i].height,
+                ratio
+            );
+            this.data.push(anno);
+        }
+    }
+}
 
 
 class SessionCore {
