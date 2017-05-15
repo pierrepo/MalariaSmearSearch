@@ -202,7 +202,40 @@ class SessionCore {
         )
     }
 
-    
+
+    set_img_on_stages(){
+        //-----
+        // img for scale stage :
+        var scale_img = new Konva.Image({
+          x: 0,
+          y: 0,
+          image: this.img,
+          width: this.img.naturalWidth,
+          height: this.img.naturalHeight,
+        });
+        // adjust stage dimention = the same of the original image
+        this.scale_stage.height(scale_img.height());
+        this.scale_stage.width(scale_img.width());
+        // add the img to the img layer :
+        this.scale_stage.findOne('.img_layer').add(scale_img);
+
+        //-----
+        // ratio img for ratio stage :
+        var ratio_img = new Konva.Image({
+          x: 0,
+          y: 0,
+          image: this,
+          width: imageObj.naturalWidth * this.ratio,
+          height: imageObj.naturalHeight * this.ratio
+        });
+        //adjust stage height (the width is already fixed):
+        this.ratio_stage.height(ratio_img.height());
+        // add the shape to the img layer
+        this.ratio_stage.findOne('.img_layer').add(ratio_img);
+
+    }
+
+
 }
 class AnnotationCore extends SessionCore {
     constructor(scale_stage_container_id, ratio_stage_container_id, url_for_img, url_for_data) {
