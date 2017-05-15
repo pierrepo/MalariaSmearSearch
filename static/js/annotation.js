@@ -245,6 +245,100 @@ class AnnotationCore extends SessionCore {
     }
 
 
+    init(){
+        super();
+        for(var i = 0; i < this.data.length; i++) {
+            this.add_annotation(this.data[i]);
+        }
+        this.refreash_cropper();
+        Flash.success('Annotations were added on both the view and the annotation canvas. Everything is ready.', 3000);
+
+    }
+
+
+
+    /* This function adds a new annotation to the session
+    * - It wraps the new annotation in action buttons (delete and edit)
+    * - It puts the new anno in the annotations list
+    * - It make the new item editable
+    * - It adds the annotation on the annotation layers
+    *   of both the anno (to scale) and the view Konva stages (using ratio)
+    *
+    * NB :
+    * It doesn't store the new annotation in the db !
+    * It doesn't refresh the layers
+    *
+    * @param {object} Annotation - the newly added annotation
+    *
+    */
+    add_annotation(anno){
+        console.log(new_anno);
+
+        // the new anno is appended in the anno list :
+        append_to_dom_anno_list(new_anno);
+
+        // TODO : do not use the annotation code
+        // the action button events are bind automatically,
+        // but ensure the click-to-edit functionality is working
+        // on newly appended list items even before a page refresh :
+
+        // add the annotation as a rect on the anno layer of the anno stage
+        anno_stage_anno_layer.add(new_anno.get_rect());
+        // add the ratio annotation as a rect on the anno layer of the view stage
+        view_stage_anno_layer.add( new_anno.get_ratio_rect());
+    }
+
+
+
+    refreash_cropper(){
+        new_content = this.cropper_container.toDataURL();
+        this.cropper_container.cropper(
+            'replace',
+            new_content,
+            true
+        );
+
+    }
+
+
+    /* This function add an annotation in the anno list
+    *
+    * - It wraps the new annotation in action buttons (delete and edit)
+    * - It puts the new anno in the annotations list
+    * - It make the new item editable
+    *
+    * @param {object} Annotation - the annotaiton to add
+    *
+    */
+    append_to_dom_anno_list(anno){
+
+        // http://stackoverflow.com/a/12949050
+        // jQuery append function close tags automatically.
+        // that is why why cannot use :
+        /*
+        $("#annotations-list")
+            .append("<li name='"+new_anno.name+"'><span>" + ANNO_DECODER[new_anno.annotation] + "</span>");
+        if (user_has_right) {
+            $("#annotations-list")
+                .append("<button class='glyphicon glyphicon-trash'></button>");
+        }
+        $("#annotations-list")
+            .append("</li>");
+        */
+        // Instead, we put the html in an string then append that string to the dom :
+         var html="<li class='list-group-item' name='"+anno.name+"'><span>" + ANNO_DECODER[anno.annotation] + "</span>"
+         if (user_has_right) {
+             html+=" <button class='glyphicon glyphicon-trash'></button>";
+         }
+         html+="</li>";
+
+         $("#annotations-list").append(html);
+
+         if (user_has_right) {
+             makeEditable("#annotations-list li[name="+new_anno.name+"] span");
+         }
+    }
+
     set_cropper(){
         this.cropper_container.cropper({
             viewMode :1, //   0: the crop box is just within the container  ;     1: the crop box should be within the canvas -> zoom / dezoom as you want but do not select out the image ;     2: the canvas should not be within the container ;    3: the container should be within the canvas
@@ -393,43 +487,6 @@ $(document).ready(function(){
 
 
 
-      image_loaded =true ;
-      init_anno() ;
-    };
-
-
-
-    /* Render the loaded annotations on the loaded chunk */
-
-    function init_anno(){ // use global var data
-        console.log("data_loaded", data_loaded, "image_loaded", image_loaded);
-        if(data_loaded && image_loaded) {
-        // once image is loaded
-        // AND once data are loaded
-            console.log( '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-            console.log(data)
-            // render (false) annotations = add the shape to the layer // TODO : is there a for each loop in js ?
-            for(var i = 0; i < data.length; i++) {
-                addAnnoView(data[i]);
-            }
-
-            // add the layer to the stage
-            view_stage.add(view_stage_anno_layer);
-            anno_stage.add(anno_stage_anno_layer);
-
-            //Resource the cropper to take the annotations into account
-            var new_url = $('#anno-konvajs .konvajs-content canvas')[0].toDataURL();
-            //the first (and the only one) canvas selected here corresponds both to the image and annotation layer of the annotation stage.
-            console.log (new_url);
-            $('#anno-konvajs .konvajs-content canvas').cropper(
-                'replace',
-                new_url,
-                true
-            );
-
-            Flash.success('Annotations were added on both the view and the annotation canvas. Everything is ready.', 3000);
-        }
-    }
 
 
 
