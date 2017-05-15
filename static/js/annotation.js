@@ -138,6 +138,20 @@ class Annotation {
 
 
 
+
+
+class SessionCore {
+    constructor(scale_stage_container_id, ratio_stage_container_id, url_for_img, url_for_data) {
+    }
+}
+class AnnotationCore extends SessionCore {
+    constructor(scale_stage_container_id, ratio_stage_container_id, url_for_img, url_for_data) {
+        super(scale_stage_container_id, ratio_stage_container_id, url_for_img, url_for_data);
+    }
+}
+
+
+
 $(document).ready(function(){
 
     /**************************************************************************/
@@ -242,6 +256,12 @@ $(document).ready(function(){
     /**************************************************************************/
 
     /*************************************************************************/
+    session = new AnnotationCore(
+        scale_stage_container_id,
+        ratio_stage_container_id,
+        url_for_img,
+        url_for_data
+    )
 
     /*********************/
     /* Set the crop tool */
