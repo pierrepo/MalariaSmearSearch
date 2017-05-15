@@ -275,7 +275,7 @@ class AnnotationCore extends SessionCore {
         console.log(new_anno);
 
         // the new anno is appended in the anno list :
-        append_to_dom_anno_list(new_anno);
+        this.append_to_dom_anno_list(new_anno);
 
         // TODO : do not use the annotation code
         // the action button events are bind automatically,
@@ -370,38 +370,6 @@ $(document).ready(function(){
 
     /**************************************************************************/
     // util functions :
-
-    /* This function adds a new annotation to the session
-    * - It wraps the new annotation in action buttons (delete and edit)
-    * - It puts the new anno in the annotations list
-    * - It make the new item editable
-    * - It adds the annotation on the annotation layers
-    *   of both the anno (to scale) and the view Konva stages (using ratio)
-    *
-    * NB :
-    * It doesn't store the new annotation in the db !
-    * It doesn't refresh the layers
-    *
-    * @param {object} new_anno - the newly added annotation
-    *
-    */
-    function addAnnoView(new_anno){
-        console.log("Display annotations");
-        console.log(new_anno);
-
-        // the new anno is appended in the anno list :
-        append_to_dom_anno_list(new_anno);
-
-        // TODO : do not use the annotation code
-        // the action button events are bind automatically,
-        // but ensure the click-to-edit functionality is working
-        // on newly appended list items even before a page refresh :
-
-        // add the annotation as a rect on the anno layer of the anno stage
-        anno_stage_anno_layer.add(new_anno.get_rect());
-        // add the ratio annotation as a rect on the anno layer of the view stage
-        view_stage_anno_layer.add( new_anno.get_ratio_rect());
-    }
 
     /*
     * This function handles the event 'click annotations'.
