@@ -240,6 +240,33 @@ class SessionCore {
 class AnnotationCore extends SessionCore {
     constructor(scale_stage_container_id, ratio_stage_container_id, url_for_img, url_for_data) {
         super(scale_stage_container_id, ratio_stage_container_id, url_for_img, url_for_data);
+        this.cropper_container = $('#'+scale_stage_container_id+' .konvajs-content canvas');
+        this.set_cropper();
+    }
+
+
+    set_cropper(){
+        this.cropper_container.cropper({
+            viewMode :1, //   0: the crop box is just within the container  ;     1: the crop box should be within the canvas -> zoom / dezoom as you want but do not select out the image ;     2: the canvas should not be within the container ;    3: the container should be within the canvas
+            dragMode : 'crop', // 'crop': create a new crop box ; 'move': move the canvas  ;  'none': do nothing
+            autoCrop : true, //enable / disable the default image crop when initialize.
+            autoCropArea : 0.1,
+            crop: function(e) {
+                // Output the result data for cropping image.
+                console.log(e.x);
+                $('#'+add_form_field_baseid+'x').val(Math.round(e.x))
+                console.log(e.y);
+                $('#'+add_form_field_baseid+'y').val(Math.round(e.y))
+                console.log(e.width);
+                $('#'+add_form_field_baseid+'width').val(Math.round(e.width))
+                console.log(e.height);
+                $('#'+add_form_field_baseid+'height').val(Math.round(e.height))
+                //console.log(e.detail.rotate);
+                //console.log(e.detail.scaleX);
+                //console.log(e.detail.scaleY);
+            }
+        });
+        Flash.success('The cropper was created successfully', 3000);
     }
 }
 
@@ -364,28 +391,6 @@ $(document).ready(function(){
     /* Fetch data */
 
 
-      // Set the cropper :
-      $('#anno-konvajs .konvajs-content canvas').cropper({
-          viewMode :1, //   0: the crop box is just within the container  ;     1: the crop box should be within the canvas -> zoom / dezoom as you want but do not select out the image ;     2: the canvas should not be within the container ;    3: the container should be within the canvas
-          dragMode : 'crop', // 'crop': create a new crop box ; 'move': move the canvas  ;  'none': do nothing
-          autoCrop : true, //enable / disable the default image crop when initialize.
-          autoCropArea : 0.1,
-          crop: function(e) {
-              // Output the result data for cropping image.
-              console.log(e.x);
-              $('#add-sel-x').val(Math.round(e.x))
-              console.log(e.y);
-              $('#add-sel-y').val(Math.round(e.y))
-              console.log(e.width);
-              $('#add-sel-width').val(Math.round(e.width))
-              console.log(e.height);
-              $('#add-sel-height').val(Math.round(e.height))
-              //console.log(e.detail.rotate);
-              //console.log(e.detail.scaleX);
-              //console.log(e.detail.scaleY);
-          }
-      });
-      Flash.success('The cropper was created successfully', 3000);
 
 
       image_loaded =true ;
