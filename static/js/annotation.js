@@ -153,6 +153,26 @@ class SessionCore {
         var ratio_stage_anno_layer = new Konva.Layer(name = 'anno_layer');
         this.ratio_stage.add(ratio_stage_anno_layer);
 
+
+
+        //
+        var img_loaded = false ;
+
+        // fetch image :
+        this.img = new Image();
+        this.img.src = url_for_image;
+        // once the image is loaded :
+        this.img.onload = function() {
+            Flash.success('Image was retrieved from the server', 2000);
+            this.ratio = ratio_stage.width()/this.img.naturalWidth;
+            set_img_on_stages()
+            img_loaded = true ;
+            if(img_loaded && data_loaded){
+                init(fetched_data) ;
+            }
+        };
+
+
     }
 }
 class AnnotationCore extends SessionCore {
@@ -280,42 +300,6 @@ $(document).ready(function(){
 
 
     /* Fetch data */
-
-    //***  fetch image :
-    var image_loaded = false ;
-    var imageObj = new Image();
-    imageObj.src = Flask.url_for("get_chunk_url", {"sample_id": sample_id, "col":col, "row":row});
-
-    // once the image is loaded :
-    imageObj.onload = function() {
-      Flash.success('Image was retrieved from the server', 2000);
-      // compute ratio :
-      console.log(imageObj.naturalWidth)
-      ratio = view_stage.width()/imageObj.naturalWidth;
-      console.log(ratio);
-      var view_stage_image = new Konva.Image({
-        x: 0,
-        y: 0,
-        image: this,
-        width: imageObj.naturalWidth * ratio,
-        height: imageObj.naturalHeight * ratio
-      });
-      var anno_stage_image = new Konva.Image({
-        x: 0,
-        y: 0,
-        image: this,
-        width: imageObj.naturalWidth,
-        height: imageObj.naturalHeight
-      });
-      //adjust stage height :
-      view_stage.height( view_stage_image.height() );
-      // and the anno stage dimention :
-      anno_stage.height( anno_stage_image.height() );
-      anno_stage.width( anno_stage_image.width() );
-      // add the shape to the layer
-      view_stage_img_layer.add(view_stage_image);
-      anno_stage_img_layer.add(anno_stage_image);
-
 
 
       // Set the cropper :
