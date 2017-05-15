@@ -185,6 +185,24 @@ class SessionCore {
         }
 
     }
+
+
+    fetch_data(url_for_data){
+        return $.getJSON(
+            url_for_data,
+            function(fetched_data){
+                Flash.success('Annotations were fetched from the server', 2000);
+                for(var i = 0; i < fetched_data.length; i++) {
+                    fetched_data[i].stroke = 'black';
+                    fetched_data[i].strokeWidth = 4;
+                    fetched_data[i].name = fetched_data[i].id.toString(); // TODO : Change the code to use id directly.
+                    console.log(fetched_data[i]);
+                }
+            }
+        )
+    }
+
+    
 }
 class AnnotationCore extends SessionCore {
     constructor(scale_stage_container_id, ratio_stage_container_id, url_for_img, url_for_data) {
@@ -342,34 +360,6 @@ $(document).ready(function(){
     };
 
 
-    //*** fetch corresponding annotation data :
-    var data = []; // global var
-    var data_loaded = false ;
-
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
-    $.getJSON(
-
-        Flask.url_for("get_chunk_annotation", {"sample_id":sample_id , "col":col, "row":row}),
-
-        function(received_data){
-            console.log(received_data);
-
-            Flash.success('Annotations were retrieved from the server', 2000);
-            for(var i = 0; i < received_data.length; i++) {
-                var obj = received_data[i];
-
-                obj.stroke = 'black';
-                obj.strokeWidth = 4;
-                obj.name = obj.id.toString(); // TODO : Change the code to use id directly.
-
-                console.log(obj);
-            }
-
-            data_loaded = true ;
-            data = received_data; // set the global var
-            init_anno() ;
-        }
-    );
 
     /* Render the loaded annotations on the loaded chunk */
 
