@@ -194,7 +194,6 @@ $(document).ready(function(){
     * after using this function, you have to refreash the layer containing the rect annotations
     * using the draw() function.
     *
-    * @param {bool} activate - tells if the mouse is on a annotation (True) or not (False).
     * @param {string} name - the name of a konva rect annotation and of an annotation item in the annotation list.
     * @param {Konva.stage} stage - stage where the annotations will be colored
     *
