@@ -63,7 +63,9 @@ class Annotation {
         this.stroke_width = 4 ;
         this.fill_color = null ;
         this.rect = undefined ;
+        this.ratio_rect = undefined ;
         this.data = undefined ;
+        this.ratio = ratio ;
     }
 
     get_rect(){
@@ -71,6 +73,17 @@ class Annotation {
             this.rect = this.get_new_rect() ;
         }
         return this.rect
+    }
+
+    get_ratio_rect(ratio = undefined ){
+        if (ratio !== undefined && this.ratio !== ratio) {
+            this.ratio = ratio;
+            this.ratio_rect = this.get_new_ratio_rect(ratio);
+        }
+        if (this.ratio_rect === undefined) {
+            this.ratio_rect = this.get_new_ratio_rect(this.ratio);
+        }
+        return this.ratio_rect
     }
 
     get_new_rect(){
@@ -86,6 +99,8 @@ class Annotation {
         })
     }
     get_new_ratio_rect(ratio){
+        this.ratio = ratio;
+
         ratio_rect = new Konva.Rect({
             x: this.x * ratio,
             y: this.y * ratio,
@@ -187,8 +202,7 @@ $(document).ready(function(){
         // add the annotation as a rect on the anno layer of the anno stage
         anno_stage_anno_layer.add(new_anno.get_rect());
         // add the ratio annotation as a rect on the anno layer of the view stage
-        ratio_rect = new_anno.get_new_ratio_rect()
-        view_stage_anno_layer.add(ratio_rect);
+        view_stage_anno_layer.add( new_anno.get_ratio_rect());
     }
 
     /*
