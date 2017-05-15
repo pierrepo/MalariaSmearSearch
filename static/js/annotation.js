@@ -66,7 +66,7 @@ class Annotation {
         this.data = undefined ;
     }
 
-    get_rect(){
+    get_new_rect(){
         return new Konva.Rect({
             x: this.x,
             y: this.y,
@@ -78,7 +78,7 @@ class Annotation {
             name: this.name
         })
     }
-    get_ratio_rect(ratio){
+    get_new_ratio_rect(ratio){
         ratio_rect = new Konva.Rect({
             x: this.x * ratio,
             y: this.y * ratio,
@@ -178,9 +178,9 @@ $(document).ready(function(){
         // on newly appended list items even before a page refresh :
 
         // add the annotation as a rect on the anno layer of the anno stage
-        anno_stage_anno_layer.add(new_anno.get_rect());
+        anno_stage_anno_layer.add(new_anno.get_new_rect());
         // add the ratio annotation as a rect on the anno layer of the view stage
-        ratio_rect = new_anno.get_ratio_rect()
+        ratio_rect = new_anno.get_new_ratio_rect()
         view_stage_anno_layer.add(ratio_rect);
     }
 
