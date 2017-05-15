@@ -392,6 +392,33 @@ class AnnotationCore extends SessionCore {
 
 
 
+class GameCore extends SessionCore {
+    constructor() {
+        super();
+    }
+
+    handle_end_game() {
+    }
+}
+
+
+class FindParaActivity extends GameCore {
+    constructor() {
+        super();
+    }
+
+}
+
+class YesNoActivity extends GameCore {
+    constructor() {
+        super();
+    }
+
+}
+
+
+
+
 $(document).ready(function(){
 
     /**************************************************************************/
