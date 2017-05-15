@@ -206,6 +206,13 @@ class SessionCore {
     }
 
 
+    /*
+    To run only once image AND data are loaded :
+    */
+    init(img_loaded,data_loaded){
+        this.data = new DatArray(fetched_data) ;
+    }
+
     fetch_data(url_for_data){
         return $.getJSON(
             url_for_data,
