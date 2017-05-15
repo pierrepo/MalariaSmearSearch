@@ -43,19 +43,6 @@ var url_for_data = Flask.url_for("get_chunk_annotation", {"sample_id":sample_id 
 var add_form_field_baseid = 'add-sel-';
 
 
-// global vars : --------------------------------------------------------------
-
-
-var ratio = undefined;
-
-var anno_stage = undefined; // Konva.Stage()
-var view_stage = undefined; // Konva.Stage()
-var view_stage_img_layer = new Konva.Layer();
-var anno_stage_img_layer = new Konva.Layer();
-var view_stage_anno_layer = new Konva.Layer();
-var anno_stage_anno_layer = anno_stage_img_layer; // for anno stage : image and anno on the same layer because each layer has a canvas and Cropper can handle only one canvas at a time
-
-
 
 // class definition : ---------------------------------------------------------
 
@@ -142,6 +129,30 @@ class Annotation {
 
 class SessionCore {
     constructor(scale_stage_container_id, ratio_stage_container_id, url_for_img, url_for_data) {
+
+        // create scale stage and ratio view stage ...
+        this.scale_stage = new Konva.Stage({
+            container: scale_stage_container_id  // id of container <div>
+        })
+        this.ratio_stage = new Konva.Stage({
+            container: ratio_stage_container_id,  // id of container <div>
+            width: $('#'+ratio_stage_container_id).width()
+        })
+        // ... and theirs layers :
+        // - one for the image (in the bottom):
+        var scale_stage_img_layer = new Konva.Layer(name = 'img_layer');
+        this.scale_stage.add(scale_stage_img_layer);
+        scale_stage_img_layer.moveToBottom();
+        var ratio_stage_img_layer = new Konva.Layer(name = 'img_layer');
+        this.ratio_stage.add(ratio_stage_img_layer);
+        ratio_stage_img_layer.moveToBottom();
+        // - the other for the annotations :
+        var scale_stage_anno_layer = scale_stage_img_layer; // for scale stage, image and anno on the same layer because each layer has a canvas and Cropper can handle only one canvas at a time
+        scale_stage_anno_layer.addName('anno_layer');
+        this.scale_stage.add(scale_stage_anno_layer);
+        var ratio_stage_anno_layer = new Konva.Layer(name = 'anno_layer');
+        this.ratio_stage.add(ratio_stage_anno_layer);
+
     }
 }
 class AnnotationCore extends SessionCore {
@@ -266,29 +277,6 @@ $(document).ready(function(){
     /*********************/
     /* Set the crop tool */
     /*********************/
-
-    /* create Konva instances */
-    // Konva stages
-    var anno_stage = new Konva.Stage({
-      container: 'anno-konvajs',  // id of container <div>
-      width : 1,
-      height : 1
-    });
-    var view_stage = new Konva.Stage({
-      container: 'view-konvajs',   // id of container <div>
-      width: $('#view-konvajs').width()
-    });
-    // and layers added to corresponding stages from the bottom to the top :
-    // - one for the image (in the bottom):
-    var view_stage_img_layer = new Konva.Layer();
-    view_stage.add(view_stage_img_layer);
-    view_stage_img_layer.moveToBottom();
-    var anno_stage_img_layer = new Konva.Layer();
-    anno_stage.add(anno_stage_img_layer);
-    anno_stage_img_layer.moveToBottom();
-    // - the other for the annotations :
-    var view_stage_anno_layer = new Konva.Layer();
-    var anno_stage_anno_layer = anno_stage_img_layer; // for anno stage : image and anno on the same layer because each layer has a canvas and Cropper can handle only one canvas at a time
 
 
     /* Fetch data */
