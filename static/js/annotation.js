@@ -157,6 +157,8 @@ class SessionCore {
 
         //
         var img_loaded = false ;
+        var data_loaded = false ;
+        var fetched_data = undefined ;
 
         // fetch image :
         this.img = new Image();
@@ -172,6 +174,15 @@ class SessionCore {
             }
         };
 
+        // fetch data :
+        this.data = undefined;
+        fetched_data = this.fetch_data(url_for_data).done(){
+        // once the data fetch is done :
+            data_loaded = true;
+            if(img_loaded && data_loaded){
+                init(fetched_data);
+            }
+        }
 
     }
 }
