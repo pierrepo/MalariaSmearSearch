@@ -35,6 +35,14 @@ var ANNO_DECODER = {
     "ART":"Artefact"
  }
 
+
+var scale_stage_container_id = 'anno-konvajs';
+var ratio_stage_container_id = 'view-konvajs';
+var url_for_img = Flask.url_for("get_chunk_url", {"sample_id": sample_id, "col":col, "row":row}) ;
+var url_for_data = Flask.url_for("get_chunk_annotation", {"sample_id":sample_id , "col":col, "row":row}) ;
+var add_form_field_baseid = 'add-sel-';
+
+
 // global vars : --------------------------------------------------------------
 
 
