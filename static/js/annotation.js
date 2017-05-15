@@ -79,7 +79,7 @@ class Annotation {
         })
     }
     get_ratio_rect(ratio){
-        return new Konva.Rect({
+        ratio_rect = new Konva.Rect({
             x: this.x * ratio,
             y: this.y * ratio,
             width: this.width * ratio,
@@ -88,7 +88,19 @@ class Annotation {
             stroke: this.stroke_color,
             strokeWidth:  this.stroke_width * ratio,
             name: this.name
-        })
+        });
+
+        // bind the new ratio rect to mouse events :
+        ratio_rect.on('click', function(evt) {
+            var annotation = evt.target;
+            if (annotation) {
+                handleClickAnno(this.name(), view_stage);
+                view_stage_anno_layer.draw();
+            }
+        });
+
+
+        return ratio_rect;
 
     }
 
@@ -170,28 +182,6 @@ $(document).ready(function(){
         // add the ratio annotation as a rect on the anno layer of the view stage
         ratio_rect = new_anno.get_ratio_rect()
         view_stage_anno_layer.add(ratio_rect);
-
-        // bind the new ratio rect to mouse events :
-        ratio_rect.on('click', function(evt) {
-            var annotation = evt.target;
-            if (annotation) {
-                console.log('mouseover');
-                console.log(annotation, true);
-                handleClickAnno(this.name(), view_stage);
-                view_stage_anno_layer.draw();
-            }
-        });
-
-
-        ratio_rect.on('mousedown', function(evt) {
-            var annotation = evt.target;
-            if (annotation) {
-                console.log('mousedown');
-                console.log(annotation);
-            }
-        });
-
-
     }
 
     /*
