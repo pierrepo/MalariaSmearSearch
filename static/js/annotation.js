@@ -371,44 +371,6 @@ $(document).ready(function(){
     /**************************************************************************/
     // util functions :
 
-    /* This function add an annotation in the anno list
-    *
-    * - It wraps the new annotation in action buttons (delete and edit)
-    * - It puts the new anno in the annotations list
-    * - It make the new item editable
-    *
-    * @param {object} anno - the annotaiton to add
-    *
-    */
-    function append_to_dom_anno_list(anno){
-
-        // http://stackoverflow.com/a/12949050
-        // jQuery append function close tags automatically.
-        // that is why why cannot use :
-        /*
-        $("#annotations-list")
-            .append("<li name='"+new_anno.name+"'><span>" + ANNO_DECODER[new_anno.annotation] + "</span>");
-        if (user_has_right) {
-            $("#annotations-list")
-                .append("<button class='glyphicon glyphicon-trash'></button>");
-        }
-        $("#annotations-list")
-            .append("</li>");
-        */
-        // Instead, we put the html in an string then append that string to the dom :
-         var html="<li class='list-group-item' name='"+anno.name+"'><span>" + ANNO_DECODER[anno.annotation] + "</span>"
-         if (user_has_right) {
-             html+=" <button class='glyphicon glyphicon-trash'></button>";
-         }
-         html+="</li>";
-
-         $("#annotations-list").append(html);
-
-         if (user_has_right) {
-             makeEditable("#annotations-list li[name="+new_anno.name+"] span");
-         }
-    }
-
     /* This function adds a new annotation to the session
     * - It wraps the new annotation in action buttons (delete and edit)
     * - It puts the new anno in the annotations list
