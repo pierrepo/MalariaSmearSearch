@@ -196,7 +196,7 @@ class SessionCore {
             this.set_img_on_stages();
             img_loaded = true ;
             if(img_loaded && data_loaded){
-                init(fetched_data) ;
+                this.init(fetched_data) ;
             }
         };
 
@@ -206,7 +206,7 @@ class SessionCore {
             (fetched_data) => {
                 data_loaded = true;
                 if(img_loaded && data_loaded){
-                    init(fetched_data);
+                    this.init(fetched_data);
                 }
             }
         );
@@ -217,7 +217,7 @@ class SessionCore {
     /*
     To run only once image AND data are loaded :
     */
-    init(img_loaded,data_loaded){
+    init(fetched_data){
         this.data = new DatArray(fetched_data) ;
     }
 
