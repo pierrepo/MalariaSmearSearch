@@ -183,10 +183,14 @@ class SessionCore {
         this.img = new Image();
         this.img.src = url_for_img;
         // once the image is loaded :
-        this.img.onload = function() {
+        this.img.onload = () => {
+            // arrow function from ES6, the next version of JavaScript
+            // unlike normal functions, arrow functions inherit their this value from the context in which they're defined
+            // inspired of : http://stackoverflow.com/a/30824784
+            console.log (this.ratio_stage);
             Flash.success('Image was retrieved from the server', 2000);
-            this.ratio = ratio_stage.width()/this.img.naturalWidth;
-            set_img_on_stages();
+            this.ratio = this.ratio_stage.width()/this.img.naturalWidth;
+            this.set_img_on_stages();
             img_loaded = true ;
             if(img_loaded && data_loaded){
                 init(fetched_data) ;
@@ -196,7 +200,7 @@ class SessionCore {
         // fetch data :
         this.data = undefined;
         this.fetch_data(url_for_data).done(
-            function(fetched_data){
+            (fetched_data) => {
                 data_loaded = true;
                 if(img_loaded && data_loaded){
                     init(fetched_data);
