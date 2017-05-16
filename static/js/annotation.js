@@ -178,43 +178,34 @@ class SessionCore {
 
 
 
-        //
-        var img_loaded = false ;
-        var data_loaded = false ;
-        var fetched_data = undefined ;
+        /* Fetch data
+        * inspired of :
+        * http://stackoverflow.com/a/8645155
+        * and
+        * https://zestedesavoir.com/tutoriels/446/les-promesses-en-javascript/#4-13285_gerer-des-traitement-simultanes
+        */
 
-        // fetch image :
-        this.img = new Image();
-        this.img.src = url_for_img;
-        // once the image is loaded :
-        this.img.onload = () => {
-            // arrow function from ES6, the next version of JavaScript
-            // unlike normal functions, arrow functions inherit their this value from the context in which they're defined
-            // inspired of : http://stackoverflow.com/a/30824784
-            console.log (this.ratio_stage);
-            Flash.success('Image was retrieved from the server', 2000);
-            this.ratio = this.ratio_stage.width()/this.img.naturalWidth;
-            this.set_img_on_stages();
-            img_loaded = true ;
-            if(img_loaded && data_loaded){
-                console.log('---------------', fetched_data);
-                this.init(fetched_data) ;
-            }
-        };
+        var promises = [];
+        promises.push(this.fetch_img(url_for_img));
+        promises.push(this.fetch_data(url_for_data));
+        console.log('----------------------------------');
+        console.log(promises);
 
-        // fetch data :
-        this.data = undefined;
-        this.fetch_data(url_for_data).done(
-            (fetched_data) => {
-                console.log("xxxx", fetched_data)
-                data_loaded = true;
-                if(img_loaded && data_loaded){
-                    console.log('---------------', fetched_data);
-                    this.init(fetched_data);
-                }
-                console.log("xxxx", fetched_data);
-            }
-        );
+        /* Promise.all(promesses) :
+        - returns a promise that will be resolved only if
+        promisses given in parameter (and that has to be an iterable, like an array, for instance)
+        will be resolved
+        - fails if one on them (no matter wich one) fails
+        */
+        Promise.all(promises).then( (results) => {
+            console.log('promises array all resolved', results);
+            var fetched_data = results[1] ;
+            console.log('---------------', fetched_data);
+            this.init(fetched_data) ;
+        }).catch(function (err) {
+            console.error('An error has occured.', err);
+        });
+
 
     }
 
@@ -240,6 +231,29 @@ class SessionCore {
                 }
             }
         )
+    }
+
+    fetch_img(src) {
+
+        var deferred = $.Deferred();
+        this.img = new Image();
+        this.img.src = src;
+        // once the image is loaded :
+        this.img.onload = () => {
+            // arrow function from ES6 :
+            // unlike normal functions, arrow functions
+            // inherit their this value from the context in which they're defined
+            // inspired of : http://stackoverflow.com/a/30824784
+            console.log("loaded image: "+src);
+            Flash.success('Image was retrieved from the server', 2000);
+            deferred.resolve();
+            this.ratio = this.ratio_stage.width()/this.img.naturalWidth;
+            this.set_img_on_stages();
+        };
+        this.img.onerror = function(e) {
+          console.log("error when loading the image")
+        };
+        return deferred.promise(); 
     }
 
 
