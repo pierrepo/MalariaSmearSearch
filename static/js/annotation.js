@@ -181,7 +181,7 @@ class SessionCore {
 
         // fetch image :
         this.img = new Image();
-        this.img.src = url_for_image;
+        this.img.src = url_for_img;
         // once the image is loaded :
         this.img.onload = function() {
             Flash.success('Image was retrieved from the server', 2000);
