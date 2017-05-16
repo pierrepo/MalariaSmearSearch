@@ -132,7 +132,7 @@ class DatArray {
         this.data = [] ;
 
         for(var i = 0; i < fetched_data.length; i++) {
-            anno = new Annotation(
+            var anno = new Annotation(
                 fetched_data[i].name,
                 fetched_data[i].annotation,
                 fetched_data[i].x,
@@ -253,7 +253,7 @@ class SessionCore {
         this.img.onerror = function(e) {
           console.log("error when loading the image")
         };
-        return deferred.promise(); 
+        return deferred.promise();
     }
 
 
