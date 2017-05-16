@@ -159,17 +159,20 @@ class SessionCore {
         })
         // ... and theirs layers :
         // - one for the image (in the bottom):
-        var scale_stage_img_layer = new Konva.Layer(name = 'img_layer');
+        var scale_stage_img_layer = new Konva.Layer();
+        scale_stage_img_layer.name('img_layer');
         this.scale_stage.add(scale_stage_img_layer);
         scale_stage_img_layer.moveToBottom();
         var ratio_stage_img_layer = new Konva.Layer(name = 'img_layer');
+        ratio_stage_img_layer.name('img_layer');
         this.ratio_stage.add(ratio_stage_img_layer);
         ratio_stage_img_layer.moveToBottom();
         // - the other for the annotations :
         var scale_stage_anno_layer = scale_stage_img_layer; // for scale stage, image and anno on the same layer because each layer has a canvas and Cropper can handle only one canvas at a time
         scale_stage_anno_layer.addName('anno_layer');
-        this.scale_stage.add(scale_stage_anno_layer);
+        //this.scale_stage.add(scale_stage_anno_layer);
         var ratio_stage_anno_layer = new Konva.Layer(name = 'anno_layer');
+        ratio_stage_anno_layer.name('anno_layer');
         this.ratio_stage.add(ratio_stage_anno_layer);
 
 
