@@ -127,6 +127,7 @@ class Annotation {
 
 class DatArray {
     constructor(fetched_data, ratio){
+        console.log(fetched_data);
 
         this.data = [] ;
 
@@ -196,6 +197,7 @@ class SessionCore {
             this.set_img_on_stages();
             img_loaded = true ;
             if(img_loaded && data_loaded){
+                console.log('---------------', fetched_data);
                 this.init(fetched_data) ;
             }
         };
@@ -204,10 +206,13 @@ class SessionCore {
         this.data = undefined;
         this.fetch_data(url_for_data).done(
             (fetched_data) => {
+                console.log("xxxx", fetched_data)
                 data_loaded = true;
                 if(img_loaded && data_loaded){
+                    console.log('---------------', fetched_data);
                     this.init(fetched_data);
                 }
+                console.log("xxxx", fetched_data);
             }
         );
 
@@ -218,6 +223,7 @@ class SessionCore {
     To run only once image AND data are loaded :
     */
     init(fetched_data){
+        console.log(fetched_data);
         this.data = new DatArray(fetched_data) ;
     }
 
@@ -230,7 +236,7 @@ class SessionCore {
                     fetched_data[i].stroke = 'black';
                     fetched_data[i].strokeWidth = 4;
                     fetched_data[i].name = fetched_data[i].id.toString(); // TODO : Change the code to use id directly.
-                    console.log(fetched_data[i]);
+                    console.log(i, fetched_data[i]);
                 }
             }
         )
@@ -280,6 +286,7 @@ class AnnotationCore extends SessionCore {
 
 
     init(fetched_data){
+        console.log(fetched_data);
         super.init(fetched_data);
         for(var i = 0; i < this.data.length; i++) {
             this.add_annotation(this.data[i]);
