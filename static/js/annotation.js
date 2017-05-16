@@ -279,8 +279,8 @@ class AnnotationCore extends SessionCore {
     }
 
 
-    init(){
-        super.init();
+    init(fetched_data){
+        super.init(fetched_data);
         for(var i = 0; i < this.data.length; i++) {
             this.add_annotation(this.data[i]);
         }
