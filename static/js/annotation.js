@@ -346,7 +346,7 @@ class AnnotationCore extends SessionCore {
 
 
     refreash_cropper(){
-        new_content = this.cropper_container[0].toDataURL();
+        var new_content = this.cropper_container[0].toDataURL();
         this.cropper_container.cropper(
             'replace',
             new_content,
