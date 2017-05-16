@@ -195,13 +195,14 @@ class SessionCore {
 
         // fetch data :
         this.data = undefined;
-        fetched_data = this.fetch_data(url_for_data).done(){
-        // once the data fetch is done :
-            data_loaded = true;
-            if(img_loaded && data_loaded){
-                init(fetched_data);
+        this.fetch_data(url_for_data).done(
+            function(fetched_data){
+                data_loaded = true;
+                if(img_loaded && data_loaded){
+                    init(fetched_data);
+                }
             }
-        }
+        );
 
     }
 
