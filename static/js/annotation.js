@@ -454,7 +454,7 @@ $(document).ready(function(){
     /**************************************************************************/
 
     /*************************************************************************/
-    session = new AnnotationCore(
+    var session = new AnnotationCore(
         scale_stage_container_id,
         ratio_stage_container_id,
         url_for_img,
