@@ -258,9 +258,9 @@ class SessionCore {
         var ratio_img = new Konva.Image({
           x: 0,
           y: 0,
-          image: this,
-          width: imageObj.naturalWidth * this.ratio,
-          height: imageObj.naturalHeight * this.ratio
+          image: this.img,
+          width: this.img.naturalWidth * this.ratio,
+          height: this.img.naturalHeight * this.ratio
         });
         //adjust stage height (the width is already fixed):
         this.ratio_stage.height(ratio_img.height());
