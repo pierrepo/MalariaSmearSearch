@@ -186,7 +186,7 @@ class SessionCore {
         this.img.onload = function() {
             Flash.success('Image was retrieved from the server', 2000);
             this.ratio = ratio_stage.width()/this.img.naturalWidth;
-            set_img_on_stages()
+            set_img_on_stages();
             img_loaded = true ;
             if(img_loaded && data_loaded){
                 init(fetched_data) ;
