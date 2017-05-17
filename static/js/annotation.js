@@ -295,7 +295,6 @@ class AnnotationCore extends SessionCore {
     constructor(scale_stage_container_id, ratio_stage_container_id, url_for_img, url_for_data) {
         super(scale_stage_container_id, ratio_stage_container_id, url_for_img, url_for_data);
         this.cropper_container = $('#'+scale_stage_container_id+' .konvajs-content canvas');
-        this.set_cropper();
     }
 
 
@@ -310,6 +309,10 @@ class AnnotationCore extends SessionCore {
 
     }
 
+    set_img_on_stages(){
+        super.set_img_on_stages();
+        this.set_cropper();
+    }
 
 
     /* This function adds a new annotation to the session
@@ -416,6 +419,7 @@ class AnnotationCore extends SessionCore {
             }
         });
         Flash.success('The cropper was created successfully', 3000);
+        console.log('The cropper was created successfully');
     }
 }
 
