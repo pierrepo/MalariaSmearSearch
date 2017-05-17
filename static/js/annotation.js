@@ -510,7 +510,7 @@ $(document).ready(function(){
     $( "#toggle-mode" ).click(function() {
 
         // Toggle button Annotate <-> View
-        value = $(this).text();
+        var value = $(this).text();
         console.log(value);
 
         if ($( "#icon-text" ).text().trim() == "Annotate" ) {
