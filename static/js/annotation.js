@@ -38,6 +38,7 @@ var ANNO_DECODER = {
 
 var scale_stage_container_id = 'anno-konvajs';
 var ratio_stage_container_id = 'view-konvajs';
+var annotations_list_id = 'annotations-list';
 var url_for_img = Flask.url_for("get_chunk_url", {"sample_id": sample_id, "col":col, "row":row}) ;
 var url_for_data = Flask.url_for("get_chunk_annotation", {"sample_id":sample_id , "col":col, "row":row}) ;
 var add_form_field_baseid = 'add-sel-';
@@ -285,9 +286,23 @@ class SessionCore {
 }
 
 class ViewCore extends SessionCore {
-    constructor(ratio_stage_container_id, url_for_img, url_for_data) {
+    constructor(ratio_stage_container_id, annotations_list_id, url_for_img, url_for_data) {
         super(ratio_stage_container_id, url_for_img, url_for_data);
+
+        this.set_annotation_list_events(annotations_list_id);
     }
+
+    /* handles span click :*/
+    set_annotation_list_events(annotations_list_id){
+        self = this ;
+        $('#'+annotations_list_id).on("click", "span", function() {
+            // Each time your mouse enters or leaves a child element,
+            // mouseover is triggered
+            handleClickAnno($(this).parent().attr("name"), self.ratio_stage);
+            self.ratio_stage.findOne('.anno_layer').draw();
+        })
+    }
+
     init(fetched_data){
         super.init(fetched_data);
         for(var i = 0; i < this.data.length; i++) {
@@ -346,8 +361,8 @@ class ViewCore extends SessionCore {
 }
 
 class AnnotationCore extends ViewCore {
-    constructor(scale_stage_container_id, ratio_stage_container_id, url_for_img, url_for_data) {
-        super(ratio_stage_container_id, url_for_img, url_for_data);
+    constructor(scale_stage_container_id, ratio_stage_container_id, annotations_list_id, url_for_img, url_for_data) {
+        super(ratio_stage_container_id, annotations_list_id, url_for_img, url_for_data);
 
         // we also need a scale stage for the cropper :
         this.scale_stage = new Konva.Stage({
@@ -365,6 +380,76 @@ class AnnotationCore extends ViewCore {
         this.cropper_container = $('#'+scale_stage_container_id+' .konvajs-content canvas');
     }
 
+
+    /* handle click on del button : */
+    set_annotation_list_events(){
+        /*link li item buttons to events
+
+        link li item buttons to events using the on() function because :
+        - 1) it only creates one event handler which is more efficient
+            than using the click function that creates a unique event handler for
+            every single list item on the page, each one taking up browser memory
+        - and 2) new items appended to the page are automatically bound by
+            the same handler. Killer.
+        */
+        self = this ;
+        super.set_annotation_list_events(annotations_list_id);
+
+        $('#'+annotations_list_id).on('click', '.glyphicon-trash', function(){
+            /*
+            The delete action has a little extra insurance against accidentally
+            fat-fingerings. It requires two clicks to actually delete something.
+            Not a nasty "ARE YOU SURE" modal popup dialog box, we're a little more
+            sly than that :
+            As you click the X, a little notice will pop out to the right
+            asking about sureness. If they click again then deleting may commence.
+            */
+            var thiscache = $(this);
+            console.log(thiscache);
+            if (thiscache.data("readyToDelete") == "go for it") {
+                console.log("deleeeete");
+                $.ajax({
+
+                    url : Flask.url_for("del_anno", {"sample_id":sample_id , "col":col, "row":row, "anno_id": $(this).closest("li").attr("name")}),
+                    type: "DELETE", /*TODO : REST - the DELETE method requests thant the origin server delete the resource identified by the request URI*/
+
+                    success: function(r){
+
+                        rect = self.scale_stage.findOne('.anno_layer').find( "."+ thiscache.parent().attr("name") );
+                        rect.destroy();
+                        self.scale_stage.findOne('.anno_layer').draw();
+                        //Resource the cropper to take the deletion into account
+                        new_url = $('#anno-konvajs .konvajs-content canvas')[0].toDataURL();
+                        //the first (and the only one) canvas selected here corresponds both to the image and annotation layer of the annotation stage.
+                        console.log (new_url);
+                        $('#anno-konvajs .konvajs-content canvas').cropper(
+                            'replace',
+                            new_url,
+                            true
+                        );
+
+
+                        ratio_rect = self.ratio_stage.findOne('.anno_layer').find( "."+ thiscache.parent().attr("name") );
+                        ratio_rect.off('mouseover');
+                        ratio_rect.off('mouseout');
+                        ratio_rect.off('mousedown');
+                        ratio_rect.destroy();
+                        self.ratio_stage.findOne('.anno_layer').draw();
+
+                        thiscache
+                            .parent()
+                                .hide(400, function(){$(this).remove()});
+                        Flash.success("The annotation was deleted", 2000);
+                    }
+                });
+            }
+            else {
+                thiscache.text("Click again to confirm deletion")
+                .data("readyToDelete", "go for it");
+            }
+        });
+
+    }
 
     init(fetched_data){
         console.log(fetched_data);
@@ -541,12 +626,14 @@ $(document).ready(function(){
         var session = new AnnotationCore(
             scale_stage_container_id,
             ratio_stage_container_id,
+            annotations_list_id,
             url_for_img,
             url_for_data
         )
     }else{
         var session = new ViewCore(
             ratio_stage_container_id,
+            annotations_list_id,
             url_for_img,
             url_for_data
         )
@@ -628,85 +715,6 @@ $(document).ready(function(){
 
 
 
-
-    /***********************************/
-    /* link li item buttons to events  */
-    /***********************************/
-
-    /* link li item buttons to events using the on() function because :
-    - 1) it only creates one event handler which is more efficient
-        than using the click function that creates a unique event handler for
-        every single list item on the page, each one taking up browser memory
-    - and 2) new items appended to the page are automatically bound by
-        the same handler. Killer.
-    */
-
-    // span hover :
-
-
-   $('#annotations-list').on("click", "span", function() {
-       // Each time your mouse enters or leaves a child element,
-       // mouseover is triggered
-       handleClickAnno($(this).parent().attr("name"), view_stage);
-       view_stage_anno_layer.draw();
-   })
-
-
-
-    // del button :
-    $('#annotations-list').on('click', '.glyphicon-trash', function(){
-        /*
-        The delete action has a little extra insurance against accidentally
-        fat-fingerings. It requires two clicks to actually delete something.
-        Not a nasty "ARE YOU SURE" modal popup dialog box, we're a little more
-        sly than that :
-        As you click the X, a little notice will pop out to the right
-        asking about sureness. If they click again then deleting may commence.
-        */
-        var thiscache = $(this);
-        console.log(thiscache);
-        if (thiscache.data("readyToDelete") == "go for it") {
-            console.log("deleeeete");
-            $.ajax({
-
-                url : Flask.url_for("del_anno", {"sample_id":sample_id , "col":col, "row":row, "anno_id": $(this).closest("li").attr("name")}),
-                type: "DELETE", /*TODO : REST - the DELETE method requests thant the origin server delete the resource identified by the request URI*/
-
-                success: function(r){
-
-                    rect = anno_stage_anno_layer.find( "."+ thiscache.parent().attr("name") );
-                    rect.destroy();
-                    anno_stage_anno_layer.draw();
-                    //Resource the cropper to take the deletion into account
-                    new_url = $('#anno-konvajs .konvajs-content canvas')[0].toDataURL();
-                    //the first (and the only one) canvas selected here corresponds both to the image and annotation layer of the annotation stage.
-                    console.log (new_url);
-                    $('#anno-konvajs .konvajs-content canvas').cropper(
-                        'replace',
-                        new_url,
-                        true
-                    );
-
-
-                    ratio_rect = view_stage_anno_layer.find( "."+ thiscache.parent().attr("name") );
-                    ratio_rect.off('mouseover');
-                    ratio_rect.off('mouseout');
-                    ratio_rect.off('mousedown');
-                    ratio_rect.destroy();
-                    view_stage_anno_layer.draw();
-
-                    thiscache
-                        .parent()
-                            .hide(400, function(){$(this).remove()});
-                    Flash.success("The annotation was deleted", 2000);
-                }
-            });
-        }
-        else {
-            thiscache.text("Click again to confirm deletion")
-            .data("readyToDelete", "go for it");
-        }
-    });
 
 
     $('#add-new').submit(function(){
