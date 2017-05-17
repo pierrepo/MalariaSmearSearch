@@ -255,7 +255,7 @@ class SessionCore {
             Flash.success('Image was retrieved from the server', 2000);
             deferred.resolve();
             this.ratio = this.ratio_stage.width()/this.img.naturalWidth;
-            this.set_img_on_stages();
+            this.set_img_on_stage();
         };
         this.img.onerror = function(e) {
           console.log("error when loading the image")
@@ -285,9 +285,64 @@ class SessionCore {
 }
 
 class ViewCore extends SessionCore {
-    constructor() {
+    constructor(ratio_stage_container_id, url_for_img, url_for_data) {
+        super(ratio_stage_container_id, url_for_img, url_for_data);
+    }
+    init(fetched_data){
+        super.init(fetched_data);
+        for(var i = 0; i < this.data.length; i++) {
+            this.add_annotation(this.data[i]);
+        }
+    }
+    add_annotation(anno){
+        console.log(new_anno);
+
+        // the new anno is appended in the anno list :
+        this.append_to_dom_anno_list(new_anno);
+
+        // TODO : do not use the annotation code
+        // the action button events are bind automatically,
+        // but ensure the click-to-edit functionality is working
+        // on newly appended list items even before a page refresh :
+
+
+        // add the ratio annotation as a rect on the anno layer of the view stage
+        this.ratio_stage.findOne('.anno_layer').add(new_anno.get_rect());
 
     }
+    /* This function add an annotation in the anno list
+    *
+    * - It wraps the new annotation in action buttons (delete and edit)
+    * - It puts the new anno in the annotations list
+    * - It make the new item editable
+    *
+    * @param {object} Annotation - the annotaiton to add
+    *
+    */
+    append_to_dom_anno_list(anno){
+
+        // http://stackoverflow.com/a/12949050
+        // jQuery append function close tags automatically.
+        // that is why why cannot use :
+        /*
+        $("#annotations-list")
+            .append("<li name='"+new_anno.name+"'><span>" + ANNO_DECODER[new_anno.annotation] + "</span>");
+        if (user_has_right) {
+            $("#annotations-list")
+                .append("<button class='glyphicon glyphicon-trash'></button>");
+        }
+        $("#annotations-list")
+            .append("</li>");
+        */
+        // Instead, we put the html in an string then append that string to the dom :
+         var html="<li class='list-group-item' name='"+anno.name+"'><span>" + ANNO_DECODER[anno.annotation] + "</span>"
+         if (user_has_right) {
+             html+=" <button class='glyphicon glyphicon-trash'></button>";
+         }
+         html+="</li>";
+
+         $("#annotations-list").append(html);
+     }
 }
 
 class AnnotationCore extends ViewCore {
@@ -314,15 +369,13 @@ class AnnotationCore extends ViewCore {
     init(fetched_data){
         console.log(fetched_data);
         super.init(fetched_data);
-        for(var i = 0; i < this.data.length; i++) {
-            this.add_annotation(this.data[i]);
-        }
+
         this.refreash_cropper();
         Flash.success('Annotations were added on both the view and the annotation canvas. Everything is ready.', 3000);
 
     }
 
-    set_img_on_stages(){
+    set_img_on_stage(){
 
         // for the view ratio stage :
         super.set_img_on_stage();
@@ -363,20 +416,9 @@ class AnnotationCore extends ViewCore {
     *
     */
     add_annotation(anno){
-        console.log(new_anno);
-
-        // the new anno is appended in the anno list :
-        this.append_to_dom_anno_list(new_anno);
-
-        // TODO : do not use the annotation code
-        // the action button events are bind automatically,
-        // but ensure the click-to-edit functionality is working
-        // on newly appended list items even before a page refresh :
-
+        super.add_annotation(anno);
         // add the annotation as a rect on the anno layer of the anno stage
-        anno_stage_anno_layer.add(new_anno.get_rect());
-        // add the ratio annotation as a rect on the anno layer of the view stage
-        view_stage_anno_layer.add( new_anno.get_ratio_rect());
+        this.scale_stage.findOne('.anno_layer').add(new_anno.get_rect());
     }
 
 
@@ -402,32 +444,8 @@ class AnnotationCore extends ViewCore {
     *
     */
     append_to_dom_anno_list(anno){
-
-        // http://stackoverflow.com/a/12949050
-        // jQuery append function close tags automatically.
-        // that is why why cannot use :
-        /*
-        $("#annotations-list")
-            .append("<li name='"+new_anno.name+"'><span>" + ANNO_DECODER[new_anno.annotation] + "</span>");
-        if (user_has_right) {
-            $("#annotations-list")
-                .append("<button class='glyphicon glyphicon-trash'></button>");
-        }
-        $("#annotations-list")
-            .append("</li>");
-        */
-        // Instead, we put the html in an string then append that string to the dom :
-         var html="<li class='list-group-item' name='"+anno.name+"'><span>" + ANNO_DECODER[anno.annotation] + "</span>"
-         if (user_has_right) {
-             html+=" <button class='glyphicon glyphicon-trash'></button>";
-         }
-         html+="</li>";
-
-         $("#annotations-list").append(html);
-
-         if (user_has_right) {
-             makeEditable("#annotations-list li[name="+new_anno.name+"] span");
-         }
+         super.append_to_dom_anno_list(anno);
+         makeEditable("#annotations-list li[name="+anno.name+"] span");
     }
 
     set_cropper(){
