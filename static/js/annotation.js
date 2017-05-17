@@ -564,9 +564,28 @@ class AnnotationCore extends ViewCore {
 class GameCore extends SessionCore {
     constructor() {
         super();
+        this.success = 0 ;
+        this.errors = 0 ;
     }
 
     handle_end_game() {
+        if(confirm("Success: "+this.success+"  errors: "+this.errors+".\nDo you want to replay?")){
+            location.reload();
+        } else {
+            window.location.href = "{{url_for('index')}}";
+            // href or replace ? XXX
+            //http://stackoverflow.com/a/506004
+        }
+    }
+
+    init(fetched_data){
+        console.log(fetched_data);
+        super.init(fetched_data);
+        this.play_game()
+    }
+
+    play_game(){
+        console.log("starting the game");
     }
 }
 
@@ -575,12 +594,85 @@ class FindParaActivity extends GameCore {
     constructor() {
         super();
     }
-
+    play_game(){}
 }
 
 class YesNoActivity extends GameCore {
     constructor() {
         super();
+        this.current_i = 0 ;
+    }
+
+    play_game(){
+
+        console.log(this.data);
+        this.data = this.data.shuffle();
+        console.log(this.data);
+
+        this.set_new_round();
+
+        var click_handler = (event) => {
+            console.log("click on the 'yes' button");
+            this.update_score_based_on_answear(event.target.id, anno);
+
+            // end game because no more annotation :
+            if (this.current_i>= this.data.length-1 ){
+                this.handle_end_game();
+            }
+            // or play another round :
+            else if (this.current_i < this.data.length-1 ) {
+                console.log('round', i);
+                current_ratio_rect.destroy();
+                this.current_i++;
+                this.set_new_round();
+            }
+
+        }
+
+        $("#yes").click(click_handler);
+        $("#no").click(click_handler);
+
+    }
+
+    set_new_round(){
+        current_anno = this.data[this.current_i];
+        console.log(current_anno);
+        // add the ratio annotation as a rect on the anno layer of the view stage
+        this.add_annotation(current_anno);
+        self.ratio_stage.findOne('.anno_layer').draw();
+
+    }
+
+
+    update_score_based_on_answear(answer){
+        // check if answer is correct
+        // and increment success and errors
+        /* Arguments :
+        * ------------
+        * answer : string
+            'yes' or 'no'
+        */
+        current_anno = this.data[this.current_i];
+
+        console.log(
+            current_anno.annotation[0],
+            current_anno.annotation[0]=='P',
+            answer,
+            this.success,
+            this.errors
+        );
+        if (
+            // current anno is a para and the user has clicked yes :
+            (current_anno.annotation[0]=='P' && answer == '#yes')
+            // current anno is not a para and the user has clicked no :
+            || (current_anno.annotation[0]!='P' && answer == '#no')
+        ){
+            this.success++;
+            $('#success').html(this.success);
+        }else{
+            this.errors++;
+            $('#errors').html(this.errors);
+        }
     }
 
 }
