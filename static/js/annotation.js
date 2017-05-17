@@ -165,30 +165,20 @@ class DatArray {
 
 
 class SessionCore {
-    constructor(scale_stage_container_id, ratio_stage_container_id, url_for_img, url_for_data) {
+    constructor(ratio_stage_container_id, url_for_img, url_for_data) {
 
-        // create scale stage and ratio view stage ...
-        this.scale_stage = new Konva.Stage({
-            container: scale_stage_container_id  // id of container <div>
-        })
+        // create ratio view stage ...
         this.ratio_stage = new Konva.Stage({
             container: ratio_stage_container_id,  // id of container <div>
             width: $('#'+ratio_stage_container_id).width()
         })
-        // ... and theirs layers :
+        // ... and its layers :
         // - one for the image (in the bottom):
-        var scale_stage_img_layer = new Konva.Layer();
-        scale_stage_img_layer.name('img_layer');
-        this.scale_stage.add(scale_stage_img_layer);
-        scale_stage_img_layer.moveToBottom();
         var ratio_stage_img_layer = new Konva.Layer(name = 'img_layer');
         ratio_stage_img_layer.name('img_layer');
         this.ratio_stage.add(ratio_stage_img_layer);
         ratio_stage_img_layer.moveToBottom();
         // - the other for the annotations :
-        var scale_stage_anno_layer = scale_stage_img_layer; // for scale stage, image and anno on the same layer because each layer has a canvas and Cropper can handle only one canvas at a time
-        scale_stage_anno_layer.addName('anno_layer');
-        //this.scale_stage.add(scale_stage_anno_layer);
         var ratio_stage_anno_layer = new Konva.Layer(name = 'anno_layer');
         ratio_stage_anno_layer.name('anno_layer');
         this.ratio_stage.add(ratio_stage_anno_layer);
@@ -274,23 +264,8 @@ class SessionCore {
     }
 
 
-    set_img_on_stages(){
-        //-----
-        // img for scale stage :
-        var scale_img = new Konva.Image({
-          x: 0,
-          y: 0,
-          image: this.img,
-          width: this.img.naturalWidth,
-          height: this.img.naturalHeight,
-        });
-        // adjust stage dimention = the same of the original image
-        this.scale_stage.height(scale_img.height());
-        this.scale_stage.width(scale_img.width());
-        // add the img to the img layer :
-        this.scale_stage.findOne('.img_layer').add(scale_img);
+    set_img_on_stage(){
 
-        //-----
         // ratio img for ratio stage :
         var ratio_img = new Konva.Image({
           x: 0,
@@ -308,9 +283,25 @@ class SessionCore {
 
 
 }
+
+
 class AnnotationCore extends SessionCore {
     constructor(scale_stage_container_id, ratio_stage_container_id, url_for_img, url_for_data) {
-        super(scale_stage_container_id, ratio_stage_container_id, url_for_img, url_for_data);
+        super(ratio_stage_container_id, url_for_img, url_for_data);
+
+        // we also need a scale stage for the cropper :
+        this.scale_stage = new Konva.Stage({
+            container: scale_stage_container_id  // id of container <div>
+        })
+        var scale_stage_img_layer = new Konva.Layer();
+        scale_stage_img_layer.name('img_layer');
+        this.scale_stage.add(scale_stage_img_layer);
+        scale_stage_img_layer.moveToBottom();
+        var scale_stage_anno_layer = scale_stage_img_layer; // for scale stage, image and anno on the same layer because each layer has a canvas and Cropper can handle only one canvas at a time
+        scale_stage_anno_layer.addName('anno_layer');
+        //this.scale_stage.add(scale_stage_anno_layer);
+
+
         this.cropper_container = $('#'+scale_stage_container_id+' .konvajs-content canvas');
     }
 
@@ -327,7 +318,27 @@ class AnnotationCore extends SessionCore {
     }
 
     set_img_on_stages(){
-        super.set_img_on_stages();
+
+        // for the view ratio stage :
+        super.set_img_on_stage();
+
+        //-----
+        // img for scale stage :
+        var scale_img = new Konva.Image({
+          x: 0,
+          y: 0,
+          image: this.img,
+          width: this.img.naturalWidth,
+          height: this.img.naturalHeight,
+        });
+        // adjust stage dimention = the same of the original image
+        this.scale_stage.height(scale_img.height());
+        this.scale_stage.width(scale_img.width());
+        // add the img to the img layer :
+        this.scale_stage.findOne('.img_layer').add(scale_img);
+
+        //-----
+
         this.set_cropper();
     }
 
