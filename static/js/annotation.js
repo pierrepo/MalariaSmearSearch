@@ -240,7 +240,7 @@ class SessionCore {
     */
     init(fetched_data){
         console.log(fetched_data);
-        this.data = new DatArray(fetched_data) ;
+        this.data = new DatArray(fetched_data, this.ratio) ;
     }
 
     fetch_data(url_for_data){
@@ -625,7 +625,7 @@ class FindParaActivity extends GameCore {
                 this.data.push(anno);
             }
         }
-        this.data = new DatArray(para_data) ;
+        this.data = new DatArray(para_data, this.ratio) ;
 
         /*show all annotations*/
         for(var i = 0; i < this.data.length; i++) {
