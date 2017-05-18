@@ -641,19 +641,20 @@ class FindParaActivity extends GameCore {
     play_game(){
 
         /* The user triggers events by clicking on the konva : */
+        self = this ;
 
         // the event is link to stage -> the user can click on image or on shape
         //https://konvajs.github.io/docs/events/Stage_Events.html
         this.ratio_stage.on('touchstart click', function(evt) {
-
             if (evt.target.className == 'Image') {
+                console.log(this);
                 /* the user has not cliked on a parasite annotation :*/
-                console.log('click outside annotation at ' + JSON.stringify(this.ratio_stage.getPointerPosition()));
+                console.log('click outside annotation at ' + JSON.stringify(self.ratio_stage.getPointerPosition()));
                 console.log(evt.target);
                 /* Update score :*/
-                this.error ++ ;
+                self.error ++ ;
                 $('#error').html(error);
-                PointerPosition = this.ratio_stage.getPointerPosition() ;
+                PointerPosition = self.ratio_stage.getPointerPosition() ;
                 /* Mark the click with a small circle :*/
                 var circle = new Konva.Circle({
                     x: PointerPosition.x,
@@ -667,24 +668,24 @@ class FindParaActivity extends GameCore {
                 self.ratio_stage.findOne('.anno_layer').draw();
             }else if (evt.target.className == "Rect"){
                 /* the user has cliked on a para annotation*/
-                console.log('click inside annotation at ' + JSON.stringify(this.ratio_stage.getPointerPosition()));
+                console.log('click inside annotation at ' + JSON.stringify(self.ratio_stage.getPointerPosition()));
                 console.log(evt.target) ;
                 console.log(evt.target.name());
                 /* Update score :*/
-                this.score ++ ;
+                self.score ++ ;
                 $('#score').html(score);
                 /* Get the clicked anno :*/
                 // remove the found parasite ()= the first (the only one) element that have the correct name)
                 // from the parasite array
                 // /!\ it should have always 1 result
-                clicked_anno = this.data.splice_anno_by_name(evt.target.name());
+                clicked_anno = self.data.splice_anno_by_name(evt.target.name());
                 console.log(clicked_anno);
                 // redraw annotation:
                 evt.target.stroke("#4CAE4C"); //green
-                this.ratio_stage.findOne('.anno_layer').draw();
+                self.ratio_stage.findOne('.anno_layer').draw();
                 // the array has no element left -> end game :
-                if (this.data.length == 0) {
-                    this.handle_end_game()
+                if (self.data.length == 0) {
+                    self.handle_end_game()
                 }
             }
         });
