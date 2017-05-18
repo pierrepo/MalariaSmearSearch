@@ -507,7 +507,7 @@ class AnnotationCore extends ViewCore {
 
                     success: function(r){
 
-                        rect = self.scale_stage.findOne('.anno_layer').find( "."+ thiscache.parent().attr("name") );
+                        var rect = self.scale_stage.findOne('.anno_layer').find( "."+ thiscache.parent().attr("name") );
                         rect.destroy();
                         self.scale_stage.findOne('.anno_layer').draw();
                         //Resource the cropper to take the deletion into account
