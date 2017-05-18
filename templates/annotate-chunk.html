@@ -184,39 +184,29 @@
 
                         console.log(theResponse);
 
-                        // draw the annotation on the konvas :
-                        new_anno = {
-                            annotation :  $('#new-list-item-text').val(),
-                            x: $('#add-sel-x').val(),
-                            y: $('#add-sel-y').val(),
-                            width: $('#add-sel-width').val(),
-                            height: $('#add-sel-height').val(),
-                            stroke: 'red',
-                            strokeWidth: 4,
-                            name: theResponse.toString() // it has to be a string !!
-                        };
-                        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!");
-                        addAnnoView(new_anno);
-                        anno_stage_anno_layer.draw();
-
-                        //Resource the cropper to take the new annotation into account/
-                        new_url = $('#anno-konvajs .konvajs-content canvas')[0].toDataURL();
-                        //the first (and the only one) canvas selected here corresponds both to the image and annotation layer of the annotation stage.
-                        console.log (new_url);
-                        $('#anno-konvajs .konvajs-content canvas').cropper(
-                            'replace',
-                            new_url,
-                            true
+                        var anno = new Annotation(
+                            theResponse.toString(),
+                            $('#new-list-item-text').val(),
+                            $('#add-sel-x').val(),
+                            $('#add-sel-y').val(),
+                            $('#add-sel-width').val(),
+                            $('#add-sel-height').val(),
+                            session.ratio
                         );
 
-                        view_stage_anno_layer.draw();
+                        // Add in datarray, list dom and konvas :
+                        session.add_annotation(anno);
 
-                        console.log ("new");
-                        console.log (new_anno);
-                        console.log(ratio_new_anno);
+                        // Refreash the stages :
+
+                        session.scale_stage.findOne('.anno_layer').draw();
+                        session.refreash_cropper()
+
+                        session.ratio_stage.findOne('.anno_layer').draw();
+
                         // clear the input fields after submission :
-                        $('#add-new').get(0).reset()
                         // That makes adding a bunch of annotation items in sequence very easy and natural.
+                        $('#add-new').get(0).reset()
 
 
                         Flash.success("The annotation was added", 2000);
