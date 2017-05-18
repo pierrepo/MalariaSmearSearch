@@ -245,6 +245,10 @@ class DatArray {
         // 1 : number of elements to remove
         //splice modifies the array in place and and returns a new array containing the elements that have been removed
     }
+
+    push(anno){
+        this.data.push(anno);
+    }
 }
 
 
