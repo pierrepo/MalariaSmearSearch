@@ -174,10 +174,9 @@ class DatArray {
         anno = get_anno_by_name(name)[0]; // should always return 1 results
 
         var index = this.data.indexOf(anno); // index of the element you want to remove
-            this.data.splice(index, 1); // 1 : number of elements to remove
-            //splice modifies the array in place and
-            // returns a new array containing the elements that have been removed
-        }
+        this.data.splice(index, 1); // 1 : number of elements to remove
+        //splice modifies the array in place and
+        // returns a new array containing the elements that have been removed
     }
 }
 
