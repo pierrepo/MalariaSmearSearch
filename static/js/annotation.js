@@ -97,7 +97,7 @@ class Annotation {
     get_new_ratio_rect(ratio){
         this.ratio = ratio;
 
-        ratio_rect = new Konva.Rect({
+        var ratio_rect = new Konva.Rect({
             x: this.x * ratio,
             y: this.y * ratio,
             width: this.width * ratio,
