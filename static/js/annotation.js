@@ -192,11 +192,11 @@ class Annotation {
 
 
 
-class DatArray {
+class DatArray extends Array{
     constructor(fetched_data, ratio){
         console.log(fetched_data);
 
-        this.data = [] ;
+        super()
 
         for(var i = 0; i < fetched_data.length; i++) {
             var anno = new Annotation(
@@ -208,8 +208,10 @@ class DatArray {
                 fetched_data[i].height,
                 ratio
             );
-            this.data.push(anno);
+            this.push(anno);
         }
+
+         console.log(this);
     }
 
 
@@ -218,7 +220,7 @@ class DatArray {
     * http://stackoverflow.com/a/3718452
     */
     shuffle() {
-        var sourceArray=this.data
+        var sourceArray=this
         for (var i = 0; i < sourceArray.length - 1; i++) {
             var j = i + Math.floor(Math.random() * (sourceArray.length - i));
 
@@ -230,7 +232,7 @@ class DatArray {
     }
 
     get_anno_by_name(name){
-        return $.grep(this.data_para, function(e){ return e.name == name(); });
+        return $.grep(this, function(e){ return e.name == name(); });
     }
 
     // Remove an annotation by name
@@ -240,15 +242,12 @@ class DatArray {
     splice_anno_by_name(name){
         anno = get_anno_by_name(name)[0]; // should always return 1 results
 
-        var index = this.data.indexOf(anno); // index of the element you want to remove
-        return this.data.splice(index, 1)[0];
+        var index = this.indexOf(anno); // index of the element you want to remove
+        return this.splice(index, 1)[0];
         // 1 : number of elements to remove
         //splice modifies the array in place and and returns a new array containing the elements that have been removed
     }
 
-    push(anno){
-        this.data.push(anno);
-    }
 }
 
 
