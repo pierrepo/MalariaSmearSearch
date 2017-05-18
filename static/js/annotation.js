@@ -168,15 +168,16 @@ class DatArray {
     }
 
     // Remove an annotation by name
+    // returns the annotation that has been removed
     // NB : /!\
     // if several anno have the same name, only the first one is removed
     splice_anno_by_name(name){
         anno = get_anno_by_name(name)[0]; // should always return 1 results
 
         var index = this.data.indexOf(anno); // index of the element you want to remove
-        this.data.splice(index, 1); // 1 : number of elements to remove
-        //splice modifies the array in place and
-        // returns a new array containing the elements that have been removed
+        return this.data.splice(index, 1)[0];
+        // 1 : number of elements to remove
+        //splice modifies the array in place and and returns a new array containing the elements that have been removed
     }
 }
 
