@@ -332,13 +332,13 @@ class ViewCore extends SessionCore {
         }
     }
     add_annotation(anno){
-        console.log(new_anno);
+        console.log(anno);
 
         // add anno on ratio stage :
         super.add_annotation(anno);
 
         // the new anno is appended in the anno list :
-        this.append_to_dom_anno_list(new_anno);
+        this.append_to_dom_anno_list(anno);
 
         // TODO : do not use the annotation code
         // the action button events are bind automatically,
@@ -718,8 +718,8 @@ class YesNoActivity extends GameCore {
             }
             // or play another round :
             else if (this.current_i < this.data.length-1 ) {
-                console.log('round', i);
-                current_ratio_rect.destroy();
+                console.log('round', this.current_i);
+                this.data[this.current_i].get_ratio_rect().destroy()
                 this.current_i++;
                 this.set_new_round();
             }
@@ -736,7 +736,7 @@ class YesNoActivity extends GameCore {
         console.log(current_anno);
         // add the ratio annotation as a rect on the anno layer of the view stage
         this.add_annotation(current_anno);
-        self.ratio_stage.findOne('.anno_layer').draw();
+        this.ratio_stage.findOne('.anno_layer').draw();
 
     }
 
