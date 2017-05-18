@@ -596,7 +596,7 @@ class AnnotationCore extends ViewCore {
         session.data.push(anno);
         super.add_annotation(anno);
         // add the annotation as a rect on the anno layer of the anno stage
-        this.scale_stage.findOne('.anno_layer').add(new_anno.get_rect());
+        this.scale_stage.findOne('.anno_layer').add(anno.get_rect());
     }
 
 
