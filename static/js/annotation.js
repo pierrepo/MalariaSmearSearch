@@ -831,9 +831,9 @@ class YesNoActivity extends GameCore {
         );
         if (
             // current anno is a para and the user has clicked yes :
-            (current_anno.annotation[0]=='P' && answer == 'yes')
+            (current_anno.annotation[0]==='P' && answer === 'yes')
             // current anno is not a para and the user has clicked no :
-            || (current_anno.annotation[0]!='P' && answer == 'no')
+            || (current_anno.annotation[0]!=='P' && answer === 'no')
         ){
             this.success++;
             $('#success').html(this.success);
