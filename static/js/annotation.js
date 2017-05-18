@@ -631,10 +631,10 @@ class FindParaActivity extends GameCore {
         for(var i = 0; i < this.data.length; i++) {
             this.add_annotation(this.data[i]);
         }
-        self.ratio_stage.findOne('.anno_layer').draw();
+        this.ratio_stage.findOne('.anno_layer').draw();
         Flash.success('Annotations were added on the view canvas. Everything is ready.', 2000);
 
-        play_game();
+        this.play_game();
     }
 
 
@@ -644,16 +644,16 @@ class FindParaActivity extends GameCore {
 
         // the event is link to stage -> the user can click on image or on shape
         //https://konvajs.github.io/docs/events/Stage_Events.html
-        view_stage.on('touchstart click', function(evt) {
+        this.ratio_stage.on('touchstart click', function(evt) {
 
             if (evt.target.className == 'Image') {
                 /* the user has not cliked on a parasite annotation :*/
-                console.log('click outside annotation at ' + JSON.stringify(view_stage.getPointerPosition()));
+                console.log('click outside annotation at ' + JSON.stringify(this.ratio_stage.getPointerPosition()));
                 console.log(evt.target);
                 /* Update score :*/
                 this.error ++ ;
                 $('#error').html(error);
-                PointerPosition = view_stage.getPointerPosition() ;
+                PointerPosition = this.ratio_stage.getPointerPosition() ;
                 /* Mark the click with a small circle :*/
                 var circle = new Konva.Circle({
                     x: PointerPosition.x,
@@ -667,7 +667,7 @@ class FindParaActivity extends GameCore {
                 self.ratio_stage.findOne('.anno_layer').draw();
             }else if (evt.target.className == "Rect"){
                 /* the user has cliked on a para annotation*/
-                console.log('click inside annotation at ' + JSON.stringify(view_stage.getPointerPosition()));
+                console.log('click inside annotation at ' + JSON.stringify(this.ratio_stage.getPointerPosition()));
                 console.log(evt.target) ;
                 console.log(evt.target.name());
                 /* Update score :*/
