@@ -37,14 +37,18 @@
 
     <script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
 
-        <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}">
+
     <script>
         var sample_id = {{sample_id}}
         var col = {{col}}
         var row ={{row}}
-
-        var session = new YesNoActivity();
-
     </script>
 
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/flash-messages.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}"></script>
+
+    <script>
+        var session = new YesNoActivity();
+    </script>
 {% endblock %}
