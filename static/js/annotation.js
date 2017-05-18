@@ -299,6 +299,11 @@ class SessionCore {
 
     }
 
+    add_annotation(anno){
+        // add the ratio annotation as a rect on the anno layer of the view stage
+        this.ratio_stage.findOne('.anno_layer').add(anno.get_rect());
+    }
+
 
 }
 
@@ -329,6 +334,9 @@ class ViewCore extends SessionCore {
     add_annotation(anno){
         console.log(new_anno);
 
+        // add anno on ratio stage :
+        super.add_annotation(anno);
+
         // the new anno is appended in the anno list :
         this.append_to_dom_anno_list(new_anno);
 
@@ -337,9 +345,6 @@ class ViewCore extends SessionCore {
         // but ensure the click-to-edit functionality is working
         // on newly appended list items even before a page refresh :
 
-
-        // add the ratio annotation as a rect on the anno layer of the view stage
-        this.ratio_stage.findOne('.anno_layer').add(new_anno.get_rect());
 
     }
     /* This function add an annotation in the anno list
