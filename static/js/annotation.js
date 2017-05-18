@@ -557,6 +557,7 @@ class AnnotationCore extends ViewCore {
         console.log(fetched_data);
         super.init(fetched_data);
 
+        self.scale_stage.draw();
         this.refreash_cropper();
         Flash.success('Annotations were added on both the view and the annotation canvas. Everything is ready.', 3000);
 
