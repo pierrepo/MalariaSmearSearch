@@ -45,6 +45,72 @@ var add_form_field_baseid = 'add-sel-';
 
 
 
+
+
+
+
+
+// util functions : -----------------------------------------------------------
+
+/*
+* This function handles the event 'click annotations'.
+* If the mouse is on a rect or on an annotation item in the anotation list,
+* the corresponding rect and annotation item are filled in yellow
+* (with transparency of 0.5).
+* Else nothing happens.
+* Nota Bene :
+* after using this function, you have to refreash the layer containing the rect annotations
+* using the draw() function.
+*
+* @param {string} name - the name of a konva rect annotation and of an annotation item in the annotation list.
+* @param {Konva.stage} stage - stage where the annotations will be colored
+*
+*/
+function handleClickAnno(name, stage){
+    console.log('in handleClickAnno');
+    var activate = ! $("#annotations-list li[name="+name+"] span").hasClass( "click" );
+    var transparency = (activate ? 0.5 : 0).toString();
+    console.log (activate * 0.5) ;
+    var rect = stage.findOne('.'+name);
+    rect.setFill('rgba(255,255,0,'+0.5 * activate+')'); // 'rgba(255,255,0,'+transparency+')'
+    $("#annotations-list li[name="+name+"] span").toggleClass('click');
+
+}
+
+
+
+
+function makeEditable(editableTarget) {
+    /*
+    Target an element
+    and use the Jeditable plugin  editable() function on it
+    with some parameters :
+        callback file path,
+        list items require a double-click to edit
+        tooltip message
+        text in the saving button
+    */
+    $(editableTarget).editable(Flask.url_for("update_anno_text", {"sample_id":sample_id , "col":col, "row":row, "anno_id":$(editableTarget).closest("li").attr("name")}), {
+        event     : 'dblclick', /*event triggering the edition*/
+        tooltip   : 'Double-click to edit...', /*tooltip msg*/
+        submit    : 'Save', /*message on the submit button*/
+        indicator : 'Saving...', /*msg printed when saving*/
+
+        type      : 'select', /*to use select as input type and not free text*/
+        /*select is built from JSON encoded array.
+         - Array keys are values for <option> tag.
+         - Array values are text shown in pulldown.*/
+        data      : ANNO_DECODER,
+
+        /*NB for server side : */
+        method    : 'POST', /*the default = POST TODO : think about PUT*/
+        name      : 'new_value', /*change default name of parameter 'name' to 'value'*/
+    });
+}
+
+
+
+
 // class definition : ---------------------------------------------------------
 
 class Annotation {
@@ -775,71 +841,3 @@ class YesNoActivity extends GameCore {
     }
 
 }
-
-
-
-
-$(document).ready(function(){
-
-    /**************************************************************************/
-    // util functions :
-
-    /*
-    * This function handles the event 'click annotations'.
-    * If the mouse is on a rect or on an annotation item in the anotation list,
-    * the corresponding rect and annotation item are filled in yellow
-    * (with transparency of 0.5).
-    * Else nothing happens.
-    * Nota Bene :
-    * after using this function, you have to refreash the layer containing the rect annotations
-    * using the draw() function.
-    *
-    * @param {string} name - the name of a konva rect annotation and of an annotation item in the annotation list.
-    * @param {Konva.stage} stage - stage where the annotations will be colored
-    *
-    */
-    function handleClickAnno(name, stage){
-        console.log('in handleClickAnno');
-        var activate = ! $("#annotations-list li[name="+name+"] span").hasClass( "click" );
-        var transparency = (activate ? 0.5 : 0).toString();
-        console.log (activate * 0.5) ;
-        var rect = stage.findOne('.'+name);
-        rect.setFill('rgba(255,255,0,'+0.5 * activate+')'); // 'rgba(255,255,0,'+transparency+')'
-        $("#annotations-list li[name="+name+"] span").toggleClass('click');
-
-    }
-
-
-
-
-    function makeEditable(editableTarget) {
-        /*
-        Target an element
-        and use the Jeditable plugin  editable() function on it
-        with some parameters :
-            callback file path,
-            list items require a double-click to edit
-            tooltip message
-            text in the saving button
-        */
-        $(editableTarget).editable(Flask.url_for("update_anno_text", {"sample_id":sample_id , "col":col, "row":row, "anno_id":$(editableTarget).closest("li").attr("name")}), {
-            event     : 'dblclick', /*event triggering the edition*/
-            tooltip   : 'Double-click to edit...', /*tooltip msg*/
-            submit    : 'Save', /*message on the submit button*/
-            indicator : 'Saving...', /*msg printed when saving*/
-
-            type      : 'select', /*to use select as input type and not free text*/
-            /*select is built from JSON encoded array.
-             - Array keys are values for <option> tag.
-             - Array values are text shown in pulldown.*/
-            data      : ANNO_DECODER,
-
-            /*NB for server side : */
-            method    : 'POST', /*the default = POST TODO : think about PUT*/
-            name      : 'new_value', /*change default name of parameter 'name' to 'value'*/
-        });
-    }
-
-
-
-});
