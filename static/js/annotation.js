@@ -654,7 +654,7 @@ class FindParaActivity extends GameCore {
                 /* Update score :*/
                 self.error ++ ;
                 $('#error').html(error);
-                PointerPosition = self.ratio_stage.getPointerPosition() ;
+                var PointerPosition = self.ratio_stage.getPointerPosition() ;
                 /* Mark the click with a small circle :*/
                 var circle = new Konva.Circle({
                     x: PointerPosition.x,
