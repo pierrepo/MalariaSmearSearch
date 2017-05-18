@@ -699,7 +699,7 @@ class FindParaActivity extends GameCore {
 
         /*show all annotations*/
         for(var i = 0; i < this.data.length; i++) {
-            this.add_annotation(this.data[i]);
+            this.show_annotation(this.data[i]);
         }
         this.ratio_stage.findOne('.anno_layer').draw();
         Flash.success('Annotations were added on the view canvas. Everything is ready.', 2000);
@@ -806,7 +806,7 @@ class YesNoActivity extends GameCore {
         var current_anno = this.data[this.current_i];
         console.log(current_anno);
         // add the ratio annotation as a rect on the anno layer of the view stage
-        this.add_annotation(current_anno);
+        this.show_annotation(current_anno);
         this.ratio_stage.findOne('.anno_layer').draw();
 
     }
