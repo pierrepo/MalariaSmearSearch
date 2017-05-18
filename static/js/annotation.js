@@ -690,10 +690,11 @@ class FindParaActivity extends GameCore {
         console.log(fetched_data);
         var para_data = []
         for(var i = 0; i < fetched_data.length; i++) {
-            if (fetched_data[i].name[0] == 'P'){
-                this.data.push(anno);
+            if (fetched_data[i].annotation[0] == 'P'){
+                para_data.push(fetched_data[i]);
             }
         }
+        console.log(para_data);
         this.data = new DatArray(para_data, this.ratio) ;
 
         /*show all annotations*/
