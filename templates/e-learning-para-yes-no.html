@@ -49,6 +49,10 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}"></script>
 
     <script>
-        var session = new YesNoActivity();
+        var session = new YesNoActivity(
+            ratio_stage_container_id,
+            url_for_img,
+            url_for_data
+        );
     </script>
 {% endblock %}

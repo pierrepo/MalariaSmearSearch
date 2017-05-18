@@ -41,7 +41,11 @@
     <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}"></script>
 
     <script>
-        var session = new FindParaActivity();
+        var session = new FindParaActivity(
+            ratio_stage_container_id,
+            url_for_img,
+            url_for_data
+        );
     </script>
 
     <script>

@@ -579,8 +579,8 @@ class AnnotationCore extends ViewCore {
 
 
 class GameCore extends SessionCore {
-    constructor() {
-        super();
+    constructor(ratio_stage_container_id, url_for_img, url_for_data) {
+        super(ratio_stage_container_id, url_for_img, url_for_data);
         this.success = 0 ;
         this.errors = 0 ;
     }
@@ -608,8 +608,8 @@ class GameCore extends SessionCore {
 
 
 class FindParaActivity extends GameCore {
-    constructor() {
-        super();
+    constructor(ratio_stage_container_id, url_for_img, url_for_data) {
+        super(ratio_stage_container_id, url_for_img, url_for_data);
     }
 
     init(fetched_data){
@@ -690,8 +690,8 @@ class FindParaActivity extends GameCore {
 }
 
 class YesNoActivity extends GameCore {
-    constructor() {
-        super();
+    constructor(ratio_stage_container_id, url_for_img, url_for_data) {
+        super(ratio_stage_container_id, url_for_img, url_for_data);
         this.current_i = 0 ;
     }
 
