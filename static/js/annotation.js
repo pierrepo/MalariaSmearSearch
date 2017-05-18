@@ -710,7 +710,7 @@ class YesNoActivity extends GameCore {
 
         var click_handler = (event) => {
             console.log("click on the 'yes' button");
-            this.update_score_based_on_answear(event.target.id, anno);
+            this.update_score_based_on_answear(event.target.id);
 
             // end game because no more annotation :
             if (this.current_i>= this.data.length-1 ){
