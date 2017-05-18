@@ -369,9 +369,9 @@ class SessionCore {
 
     }
 
-    add_annotation(anno){
+    show_annotation(anno){
         // add the ratio annotation as a rect on the anno layer of the view stage
-        this.ratio_stage.findOne('.anno_layer').add(anno.get_rect());
+        this.ratio_stage.findOne('.anno_layer').add(anno.get_ratio_rect());
     }
 
 
@@ -397,15 +397,33 @@ class ViewCore extends SessionCore {
 
     init(fetched_data){
         super.init(fetched_data);
+        console.log('!!!!!!!!!!!!!!!!!!!!', fetched_data, this.data);
         for(var i = 0; i < this.data.length; i++) {
             this.add_annotation(this.data[i]);
+            console.log(this.data[i]);
         }
+        self.ratio_stage.draw();
     }
+
+
+    /* This function adds a new annotation to the session
+    * - It wraps the new annotation in action buttons (delete and edit)
+    * - It puts the new anno in the annotations list
+    * - It make the new item editable
+    * - It adds the annotation on the annotation layers of stage(s)
+    *
+    * NB :
+    * It doesn't store the new annotation in the db !
+    * It doesn't refresh the layers
+    *
+    * @param {object} Annotation - the newly added annotation
+    *
+    */
     add_annotation(anno){
         console.log(anno);
 
         // add anno on ratio stage :
-        super.add_annotation(anno);
+        this.show_annotation(anno);
 
         // the new anno is appended in the anno list :
         this.append_to_dom_anno_list(anno);
@@ -571,24 +589,11 @@ class AnnotationCore extends ViewCore {
     }
 
 
-    /* This function adds a new annotation to the session
-    * - It wraps the new annotation in action buttons (delete and edit)
-    * - It puts the new anno in the annotations list
-    * - It make the new item editable
-    * - It adds the annotation on the annotation layers
-    *   of both the anno (to scale) and the view Konva stages (using ratio)
-    *
-    * NB :
-    * It doesn't store the new annotation in the db !
-    * It doesn't refresh the layers
-    *
-    * @param {object} Annotation - the newly added annotation
-    *
-    */
-    add_annotation(anno){
-        session.data.push(anno);
-        super.add_annotation(anno);
-        // add the annotation as a rect on the anno layer of the anno stage
+    show_annotation(anno){
+        // add the ratio annotation as a rect on the anno layer of the view stage
+        super.show_annotation(anno)
+
+        // add the ratio annotation as a rect on the anno layer of the view stage
         this.scale_stage.findOne('.anno_layer').add(anno.get_rect());
     }
 
