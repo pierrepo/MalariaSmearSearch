@@ -162,6 +162,23 @@ class DatArray {
         }
         return sourceArray;
     }
+
+    get_anno_by_name(name){
+        return $.grep(this.data_para, function(e){ return e.name == name(); });
+    }
+
+    // Remove an annotation by name
+    // NB : /!\
+    // if several anno have the same name, only the first one is removed
+    splice_anno_by_name(name){
+        anno = get_anno_by_name(name)[0]; // should always return 1 results
+
+        var index = this.data.indexOf(anno); // index of the element you want to remove
+            this.data.splice(index, 1); // 1 : number of elements to remove
+            //splice modifies the array in place and
+            // returns a new array containing the elements that have been removed
+        }
+    }
 }
 
 
@@ -594,7 +611,82 @@ class FindParaActivity extends GameCore {
     constructor() {
         super();
     }
-    play_game(){}
+
+    init(fetched_data){
+        console.log(fetched_data);
+        para_data = []
+        for(var i = 0; i < fetched_data.length; i++) {
+            if (fetched_data[i].name[0] == 'P'){
+                this.data.push(anno);
+            }
+        }
+        this.data = new DatArray(para_data) ;
+
+        /*show all annotations*/
+        for(var i = 0; i < this.data.length; i++) {
+            this.add_annotation(this.data[i]);
+        }
+        self.ratio_stage.findOne('.anno_layer').draw();
+        Flash.success('Annotations were added on the view canvas. Everything is ready.', 2000);
+
+        play_game();
+    }
+
+
+    play_game(){
+
+        /* The user triggers events by clicking on the konva : */
+
+        // the event is link to stage -> the user can click on image or on shape
+        //https://konvajs.github.io/docs/events/Stage_Events.html
+        view_stage.on('touchstart click', function(evt) {
+
+            if (evt.target.className == 'Image') {
+                /* the user has not cliked on a parasite annotation :*/
+                console.log('click outside annotation at ' + JSON.stringify(view_stage.getPointerPosition()));
+                console.log(evt.target);
+                /* Update score :*/
+                this.error ++ ;
+                $('#error').html(error);
+                PointerPosition = view_stage.getPointerPosition() ;
+                /* Mark the click with a small circle :*/
+                var circle = new Konva.Circle({
+                    x: PointerPosition.x,
+                    y: PointerPosition.y,
+                    radius: 4,
+                    fill: '#D43F3A', //red
+                    stroke: '#D43F3A', //red
+                    strokeWidth: 1
+                });
+                self.ratio_stage.findOne('.anno_layer').add(circle);
+                self.ratio_stage.findOne('.anno_layer').draw();
+            }else if (evt.target.className == "Rect"){
+                /* the user has cliked on a para annotation*/
+                console.log('click inside annotation at ' + JSON.stringify(view_stage.getPointerPosition()));
+                console.log(evt.target) ;
+                console.log(evt.target.name());
+                /* Update score :*/
+                this.score ++ ;
+                $('#score').html(score);
+                /* Get the clicked anno :*/
+                // remove the found parasite ()= the first (the only one) element that have the correct name)
+                // from the parasite array
+                // /!\ it should have always 1 result
+                clicked_anno = this.data.splice_anno_by_name(evt.target.name());
+                console.log(clicked_anno);
+                // redraw annotation:
+                evt.target.stroke("#4CAE4C"); //green
+                this.ratio_stage.findOne('.anno_layer').draw();
+                // the array has no element left -> end game :
+                if (this.data.length == 0) {
+                    this.handle_end_game()
+                }
+            }
+        });
+
+
+    }
+
 }
 
 class YesNoActivity extends GameCore {
