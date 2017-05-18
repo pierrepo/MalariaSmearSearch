@@ -531,7 +531,7 @@ class AnnotationCore extends ViewCore {
                         self.refreash_cropper()
 
 
-                        ratio_rect = self.ratio_stage.findOne('.anno_layer').find( "."+ thiscache.parent().attr("name") );
+                        var ratio_rect = self.ratio_stage.findOne('.anno_layer').find( "."+ thiscache.parent().attr("name") );
                         ratio_rect.off('mouseover');
                         ratio_rect.off('mouseout');
                         ratio_rect.off('mousedown');
