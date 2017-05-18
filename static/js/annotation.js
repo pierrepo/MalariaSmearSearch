@@ -727,7 +727,7 @@ class YesNoActivity extends GameCore {
     }
 
     set_new_round(){
-        current_anno = this.data[this.current_i];
+        var current_anno = this.data[this.current_i];
         console.log(current_anno);
         // add the ratio annotation as a rect on the anno layer of the view stage
         this.add_annotation(current_anno);
@@ -744,7 +744,7 @@ class YesNoActivity extends GameCore {
         * answer : string
             'yes' or 'no'
         */
-        current_anno = this.data[this.current_i];
+        var current_anno = this.data[this.current_i];
 
         console.log(
             current_anno.annotation[0],
@@ -793,10 +793,10 @@ $(document).ready(function(){
     */
     function handleClickAnno(name, stage){
         console.log('in handleClickAnno');
-        activate = ! $("#annotations-list li[name="+name+"] span").hasClass( "click" );
-        transparency = (activate ? 0.5 : 0).toString();
+        var activate = ! $("#annotations-list li[name="+name+"] span").hasClass( "click" );
+        var transparency = (activate ? 0.5 : 0).toString();
         console.log (activate * 0.5) ;
-        rect = stage.findOne('.'+name);
+        var rect = stage.findOne('.'+name);
         rect.setFill('rgba(255,255,0,'+0.5 * activate+')'); // 'rgba(255,255,0,'+transparency+')'
         $("#annotations-list li[name="+name+"] span").toggleClass('click');
 
