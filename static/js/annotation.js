@@ -619,7 +619,7 @@ class FindParaActivity extends GameCore {
 
     init(fetched_data){
         console.log(fetched_data);
-        para_data = []
+        var para_data = []
         for(var i = 0; i < fetched_data.length; i++) {
             if (fetched_data[i].name[0] == 'P'){
                 this.data.push(anno);
