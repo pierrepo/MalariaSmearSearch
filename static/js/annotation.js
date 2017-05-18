@@ -511,14 +511,7 @@ class AnnotationCore extends ViewCore {
                         rect.destroy();
                         self.scale_stage.findOne('.anno_layer').draw();
                         //Resource the cropper to take the deletion into account
-                        new_url = $('#anno-konvajs .konvajs-content canvas')[0].toDataURL();
-                        //the first (and the only one) canvas selected here corresponds both to the image and annotation layer of the annotation stage.
-                        console.log (new_url);
-                        $('#anno-konvajs .konvajs-content canvas').cropper(
-                            'replace',
-                            new_url,
-                            true
-                        );
+                        self.refreash_cropper()
 
 
                         ratio_rect = self.ratio_stage.findOne('.anno_layer').find( "."+ thiscache.parent().attr("name") );
