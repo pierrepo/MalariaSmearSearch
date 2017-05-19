@@ -50,40 +50,6 @@ var add_form_field_baseid = 'add-sel-';
 
 
 
-// util functions : -----------------------------------------------------------
-
-
-
-function makeEditable(editableTarget) {
-    /*
-    Target an element
-    and use the Jeditable plugin  editable() function on it
-    with some parameters :
-        callback file path,
-        list items require a double-click to edit
-        tooltip message
-        text in the saving button
-    */
-    $(editableTarget).editable(Flask.url_for("update_anno_text", {"sample_id":sample_id , "col":col, "row":row, "anno_id":$(editableTarget).closest("li").attr("name")}), {
-        event     : 'dblclick', /*event triggering the edition*/
-        tooltip   : 'Double-click to edit...', /*tooltip msg*/
-        submit    : 'Save', /*message on the submit button*/
-        indicator : 'Saving...', /*msg printed when saving*/
-
-        type      : 'select', /*to use select as input type and not free text*/
-        /*select is built from JSON encoded array.
-         - Array keys are values for <option> tag.
-         - Array values are text shown in pulldown.*/
-        data      : ANNO_DECODER,
-
-        /*NB for server side : */
-        method    : 'POST', /*the default = POST TODO : think about PUT*/
-        name      : 'new_value', /*change default name of parameter 'name' to 'value'*/
-    });
-}
-
-
-
 
 // class definition : ---------------------------------------------------------
 
@@ -621,8 +587,40 @@ class AnnotationCore extends ViewCore {
     */
     append_to_dom_anno_list(anno){
          super.append_to_dom_anno_list(anno);
-         makeEditable("#annotations-list li[name="+anno.name+"] span");
+         this.makeEditable("#annotations-list li[name="+anno.name+"] span");
     }
+
+
+
+    makeEditable(editableTarget) {
+        /*
+        Target an element
+        and use the Jeditable plugin  editable() function on it
+        with some parameters :
+            callback file path,
+            list items require a double-click to edit
+            tooltip message
+            text in the saving button
+        */
+        $(editableTarget).editable(Flask.url_for("update_anno_text", {"sample_id":sample_id , "col":col, "row":row, "anno_id":$(editableTarget).closest("li").attr("name")}), {
+            event     : 'dblclick', /*event triggering the edition*/
+            tooltip   : 'Double-click to edit...', /*tooltip msg*/
+            submit    : 'Save', /*message on the submit button*/
+            indicator : 'Saving...', /*msg printed when saving*/
+
+            type      : 'select', /*to use select as input type and not free text*/
+            /*select is built from JSON encoded array.
+             - Array keys are values for <option> tag.
+             - Array values are text shown in pulldown.*/
+            data      : ANNO_DECODER,
+
+            /*NB for server side : */
+            method    : 'POST', /*the default = POST TODO : think about PUT*/
+            name      : 'new_value', /*change default name of parameter 'name' to 'value'*/
+        });
+    }
+
+
 
     set_cropper(){
         this.cropper_container.cropper({
