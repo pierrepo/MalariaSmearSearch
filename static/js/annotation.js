@@ -52,32 +52,6 @@ var add_form_field_baseid = 'add-sel-';
 
 // util functions : -----------------------------------------------------------
 
-/*
-* This function handles the event 'click annotations'.
-* If the mouse is on a rect or on an annotation item in the anotation list,
-* the corresponding rect and annotation item are filled in yellow
-* (with transparency of 0.5).
-* Else nothing happens.
-* Nota Bene :
-* after using this function, you have to refreash the layer containing the rect annotations
-* using the draw() function.
-*
-* @param {string} name - the name of a konva rect annotation and of an annotation item in the annotation list.
-* @param {Konva.stage} stage - stage where the annotations will be colored
-*
-*/
-function handleClickAnno(name, stage){
-    console.log('in handleClickAnno');
-    var activate = ! $("#annotations-list li[name="+name+"] span").hasClass( "click" );
-    var transparency = (activate ? 0.5 : 0).toString();
-    console.log (activate * 0.5) ;
-    var rect = stage.findOne('.'+name);
-    rect.setFill('rgba(255,255,0,'+0.5 * activate+')'); // 'rgba(255,255,0,'+transparency+')'
-    $("#annotations-list li[name="+name+"] span").toggleClass('click');
-
-}
-
-
 
 
 function makeEditable(editableTarget) {
@@ -173,16 +147,6 @@ class Annotation {
             strokeWidth:  this.stroke_width * ratio,
             name: this.name
         });
-
-        // bind the new ratio rect to mouse events :
-        ratio_rect.on('click', function(evt) {
-            var annotation = evt.target;
-            if (annotation) {
-                handleClickAnno(this.name(), view_stage);
-                view_stage_anno_layer.draw();
-            }
-        });
-
 
         return ratio_rect;
 
@@ -383,13 +347,42 @@ class ViewCore extends SessionCore {
         this.set_annotation_list_events(annotations_list_id);
     }
 
+
+    /*
+    * This function handles the event 'click annotations'.
+    * If the mouse is on a rect or on an annotation item in the anotation list,
+    * the corresponding rect and annotation item are filled in yellow
+    * (with transparency of 0.5).
+    * Else nothing happens.
+    * Nota Bene :
+    * after using this function, you have to refreash the layer containing the rect annotations
+    * using the draw() function.
+    *
+    * @param {string} name - the name of a konva rect annotation and of an annotation item in the annotation list.
+    * @param {Konva.stage} stage - stage where the annotations will be colored
+    *
+    */
+    handleClickAnno(name){
+        console.log('in handleClickAnno');
+        var activate = ! $("#annotations-list li[name="+name+"] span").hasClass( "click" );
+        var transparency = (activate ? 0.5 : 0).toString();
+        console.log (activate * 0.5) ;
+        var rect = self.ratio_stage.findOne('.'+name);
+        rect.setFill('rgba(255,255,0,'+0.5 * activate+')'); // 'rgba(255,255,0,'+transparency+')'
+        $("#annotations-list li[name="+name+"] span").toggleClass('click');
+
+    }
+
+
+
+
     /* handles span click :*/
     set_annotation_list_events(annotations_list_id){
         self = this ;
         $('#'+annotations_list_id).on("click", "span", function() {
             // Each time your mouse enters or leaves a child element,
             // mouseover is triggered
-            handleClickAnno($(this).parent().attr("name"), self.ratio_stage);
+            self.handleClickAnno($(this).parent().attr("name"));
             self.ratio_stage.findOne('.anno_layer').draw();
         })
     }
@@ -426,6 +419,13 @@ class ViewCore extends SessionCore {
 
         // the new anno is appended in the anno list :
         this.append_to_dom_anno_list(anno);
+
+        self = this;
+        // bind the new ratio rect to mouse events :
+        anno.get_ratio_rect().on('click', function(evt) {
+            self.handleClickAnno(this.name());
+            self.ratio_stage.findOne('.anno_layer').draw();
+        });
 
         // TODO : do not use the annotation code
         // the action button events are bind automatically,
