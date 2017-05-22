@@ -1243,10 +1243,10 @@ class FindParaActivity extends GameCore {
 class YesNoActivity extends GameCore {
     /* FindParaActivity class
     *
-    * Attributes
-    * ----------
-    * current_i : int
-    *   the index of the annotation the user is currently asked about.
+    * Attribute
+    * ---------
+    * current_annotation :
+    *   annotation the user is currently asked about
     */
     constructor(ratio_stage_container_id, url_for_img, url_for_data) {
         /* Constructor of YesNoActivity object
@@ -1266,7 +1266,7 @@ class YesNoActivity extends GameCore {
         * initialized instance of YesNoActivity.
         */
         super(ratio_stage_container_id, url_for_img, url_for_data);
-        this.current_i = 0 ;
+        this.current_annotation = undefined ;
     }
 
     play_game(){
@@ -1289,15 +1289,11 @@ class YesNoActivity extends GameCore {
             console.log("click on the 'yes' button");
             this.update_score_based_on_answear(event.target.id);
 
-            // end game because no more annotation :
-            if (this.current_i>= this.data.length-1 ){
+            // end game because no more annotation left :
+            if (this.data.length == 0 ){
                 this.handle_end_game();
-            }
-            // or play another round :
-            else if (this.current_i < this.data.length-1 ) {
-                console.log('round', this.current_i);
-                this.data[this.current_i].get_ratio_rect().destroy()
-                this.current_i++;
+            }else{ // or play another round :
+                this.current_anno.get_ratio_rect().destroy()
                 this.set_new_round();
             }
 
@@ -1310,10 +1306,10 @@ class YesNoActivity extends GameCore {
 
     set_new_round(){
         /* Draw the new annotation on the view stage */
-        var current_anno = this.data[this.current_i];
-        console.log(current_anno);
+        this.current_anno = this.data.pop();
+        console.log(this.current_anno);
         // add the ratio annotation as a rect on the anno layer of the view stage
-        this.show_annotation(current_anno);
+        this.show_annotation(this.current_anno);
         this.ratio_stage.findOne('.anno_layer').draw();
 
     }
@@ -1330,20 +1326,18 @@ class YesNoActivity extends GameCore {
         *   'yes' or 'no'
         */
 
-        var current_anno = this.data[this.current_i];
-
         console.log(
-            current_anno.annotation[0],
-            current_anno.annotation[0]=='P',
+            this.current_anno.annotation[0],
+            this.current_anno.annotation[0]=='P',
             answer,
             this.success,
             this.errors
         );
         if (
             // current anno is a para and the user has clicked yes :
-            (current_anno.annotation[0]==='P' && answer === 'yes')
+            (this.current_anno.annotation[0]==='P' && answer === 'yes')
             // current anno is not a para and the user has clicked no :
-            || (current_anno.annotation[0]!=='P' && answer === 'no')
+            || (this.current_anno.annotation[0]!=='P' && answer === 'no')
         ){
             this.success++;
             $('#success').html(this.success);
