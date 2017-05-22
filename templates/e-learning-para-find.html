@@ -48,46 +48,4 @@
         );
     </script>
 
-    <script>
-
-        /* This function adds the annotation on the annotation layers
-        *   of the view Konva stage (using ratio)
-        *
-        * It doesn't refresh the layer
-        *
-        * @param {object} new_anno - the newly added annotation
-        *
-        */
-        function draw_ratio_rect_from(new_anno){
-
-            // compute the ratio annotation :
-            ratio_new_anno = {
-                x: new_anno.x * ratio,
-                y: new_anno.y * ratio,
-                width: new_anno.width * ratio,
-                height: new_anno.height * ratio,
-                stroke: new_anno.stroke,
-                strokeWidth: new_anno.strokeWidth * ratio,
-                name: new_anno.name.toString() // it has to be a string !!
-            };
-
-            // add the ration annotation as a rect on the anno layer of the view stage
-            console.log(ratio_new_anno);
-            var ratio_rect = new Konva.Rect({
-              x: ratio_new_anno.x,
-              y: ratio_new_anno.y,
-              width: ratio_new_anno.width,
-              height: ratio_new_anno.height,
-              fill : null,
-              stroke: ratio_new_anno.stroke,
-              strokeWidth:  ratio_new_anno.strokeWidth,
-              name: ratio_new_anno.name.toString() // it has to be a string !!
-            });
-            view_stage_anno_layer.add(ratio_rect);
-
-            console.log(ratio_rect);
-        }
-
-
-    </script>
 {% endblock %}
