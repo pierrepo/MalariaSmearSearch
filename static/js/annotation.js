@@ -1050,7 +1050,7 @@ class GameCore extends SessionCore {
     *
     * Attributes :
     * ------------
-    * succes : int - default 0
+    * success : int - default 0
     *   the positive score / number of success
     * errors : int - default 0
     *   the negative score / number of false
@@ -1204,8 +1204,8 @@ class FindParaActivity extends GameCore {
                 console.log('click outside annotation at ' + JSON.stringify(self.ratio_stage.getPointerPosition()));
                 console.log(evt.target);
                 /* Update score :*/
-                self.error ++ ;
-                $('#error').html(error);
+                self.errors ++ ;
+                $('#errors').html(self.errors);
                 var PointerPosition = self.ratio_stage.getPointerPosition() ;
                 /* Mark the click with a small circle :*/
                 var circle = new Konva.Circle({
@@ -1224,8 +1224,8 @@ class FindParaActivity extends GameCore {
                 console.log(evt.target) ;
                 console.log(evt.target.name());
                 /* Update score :*/
-                self.score ++ ;
-                $('#score').html(score);
+                self.success ++ ;
+                $('#success').html(self.success);
                 /* Get the clicked anno :*/
                 // remove the found parasite ()= the first (the only one) element that have the correct name)
                 // from the parasite array
