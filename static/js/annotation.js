@@ -125,8 +125,8 @@ class Annotation {
         this.stroke_color = 'black' ;
         this.stroke_width = 4 ;
         this.fill_color = null ;
-        this.rect = get_new_rect() ;
-        this.ratio_rect = get_new_ratio_rect(ratio) ;
+        this.rect = this.get_new_rect() ;
+        this.ratio_rect = this.get_new_ratio_rect(ratio) ;
         this.ratio = ratio ;
     }
 
@@ -335,7 +335,7 @@ class DatArray extends Array{
         * ------
         * instance of Annotation class : the annotation that has been removed.
         */
-        anno = get_anno_by_name(name)[0]; // should always return 1 results
+        anno = this.get_anno_by_name(name)[0]; // should always return 1 results
 
         var index = this.indexOf(anno); // index of the element you want to remove
         return this.splice(index, 1)[0];
