@@ -83,7 +83,6 @@ class Annotation {
     *   the associated full-sized Konva.Rect
     * ratio_rect : Konva.Rect object - default undefined
     *   the associated ratio-sized Konva.Rect
-    * data : ??? XXX to be removed ?
     * ratio : float
     *   the ratio between the full image size and its representation in the
     *   view tool.
@@ -128,7 +127,6 @@ class Annotation {
         this.fill_color = null ;
         this.rect = undefined ;
         this.ratio_rect = undefined ;
-        this.data = undefined ;
         this.ratio = ratio ;
     }
 
