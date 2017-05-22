@@ -726,12 +726,7 @@ class ViewCore extends SessionCore {
             .append("</li>");
         */
         // Instead, we put the html in an string then append that string to the dom :
-         var html="<li class='list-group-item' name='"+anno.name+"'><span>" + ANNO_DECODER[anno.annotation] + "</span>"
-         if (user_has_right) {
-             html+=" <button class='glyphicon glyphicon-trash'></button>";
-         }
-         html+="</li>";
-
+         var html="<li class='list-group-item' name='"+anno.name+"'><span>" + ANNO_DECODER[anno.annotation] + "</span></li>";
          $("#annotations-list").append(html);
      }
 }
@@ -968,7 +963,8 @@ class AnnotationCore extends ViewCore {
         *   the annotaiton to add.
         *
         */
-         super.append_to_dom_anno_list(anno);
+         var html="<li class='list-group-item' name='"+anno.name+"'><span>" + ANNO_DECODER[anno.annotation] + "</span><button class='glyphicon glyphicon-trash'></button></li>";
+         $("#annotations-list").append(html);
          this.makeEditable("#annotations-list li[name="+anno.name+"] span");
     }
 
