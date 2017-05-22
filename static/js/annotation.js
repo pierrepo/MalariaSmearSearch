@@ -1087,7 +1087,7 @@ class GameCore extends SessionCore {
         if(confirm("Success: "+this.success+"  errors: "+this.errors+".\nDo you want to replay?")){
             location.reload();
         } else {
-            window.location.href = "{{url_for('index')}}";
+            window.location.href = Flask.url_for("index");
             // href or replace ? XXX
             //http://stackoverflow.com/a/506004
         }
