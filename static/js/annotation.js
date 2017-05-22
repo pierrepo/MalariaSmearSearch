@@ -789,7 +789,7 @@ class AnnotationCore extends ViewCore {
 
 
 
-    set_annotation_list_events(){
+    set_annotation_list_events(annotations_list_id){
         /* Set the click event on annotation list
         *
         * If the user click on annotation item, both the annotation item and the
