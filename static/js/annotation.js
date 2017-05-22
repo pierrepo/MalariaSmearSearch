@@ -125,8 +125,8 @@ class Annotation {
         this.stroke_color = 'black' ;
         this.stroke_width = 4 ;
         this.fill_color = null ;
-        this.rect = undefined ;
-        this.ratio_rect = undefined ;
+        this.rect = get_new_rect() ;
+        this.ratio_rect = get_new_ratio_rect(ratio) ;
         this.ratio = ratio ;
     }
 
