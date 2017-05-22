@@ -479,12 +479,12 @@ class SessionCore {
     }
 
 
-    fetch_img(src) {
+    fetch_img(url_for_img) {
         /* Fetched image at the provided url
         *
         * Parameter
         * ----------
-        * src : String
+        * url_for_img : String
         *   the url where image have to be retrieved.
         *
         * Return
@@ -500,14 +500,14 @@ class SessionCore {
 
         var deferred = $.Deferred();
         this.img = new Image();
-        this.img.src = src;
+        this.img.src = url_for_img;
         // once the image is loaded :
         this.img.onload = () => {
             // arrow function from ES6 :
             // unlike normal functions, arrow functions
             // inherit their this value from the context in which they're defined
             // inspired of : http://stackoverflow.com/a/30824784
-            console.log("loaded image: "+src);
+            console.log("loaded image: "+url_for_img);
             Flash.success('Image was retrieved from the server', 2000);
             deferred.resolve();
             this.ratio = this.ratio_stage.width()/this.img.naturalWidth;
