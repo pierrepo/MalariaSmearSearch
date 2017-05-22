@@ -3,6 +3,9 @@ console.log("Load annotation engine");
 
 // constants : ----------------------------------------------------------------
 
+// associative object
+// key : annotation code
+// value : annotation text, long version
 var ANNO_DECODER = {
     "PUR":"Parasite - Unknown species - Ring",
     "PUT":"Parasite - Unknown species - Trophzoide",
@@ -54,7 +57,66 @@ var add_form_field_baseid = 'add-sel-';
 // class definition : ---------------------------------------------------------
 
 class Annotation {
+    /* Annotation class
+    *
+    * Attributes
+    * ----------
+    * name : int as string
+    *   the id of the annotation
+    * annotation : string
+    *   annotation text
+    * x : int
+    *   x coord of the starting (upper left) pixel of the annotation area
+    * y : int
+    *   x coord of the starting (upper left) pixel of the annotation area
+    * width : int
+    *   width of the annotation area
+    * height : int
+    *   height of the annotation area
+    * stroke_color : string - default 'black'
+    *   the color of the stroke when the annotation area is drawn on the image
+    * stroke_width : int - default 4
+    *   the width of the stoke (in pixel) when the annotation area is drawn on the image
+    * fill_color : string - default null
+    *   the color of the fill when the annotation area is drawn on the image
+    * rect : Konva.Rect object - default undefined
+    *   the associated full-sized Konva.Rect
+    * ratio_rect : Konva.Rect object - default undefined
+    *   the associated ratio-sized Konva.Rect
+    * data : ??? XXX to be removed ?
+    * ratio : float
+    *   the ratio between the full image size and its representation in the
+    *   view tool.
+    */
     constructor(name, annotation, x, y, width, height, ratio) {
+        /* Constructor of annotation object
+        *
+        * Parameters
+        * ----------
+        * name : int as string
+        *   the id of the annotation
+        * annotation : string
+        *     annotation text
+        * x : int
+        *     x coord of the starting (upper left) pixel of the annotation area
+        * y : int
+        *     x coord of the starting (upper left) pixel of the annotation area
+        * width : int
+        *     width of the annotation area
+        * height : int
+        *     height of the annotation area
+        * ratio : float
+        *     the ratio between the full image size and its representation in the
+        *     view tool.
+        *
+        * Return
+        * ------
+        * instance of Annotation object
+        *
+        * Example :
+        * ---------
+        * an_annotation = new Annotation('1', 'test', 0, 0, 10, 10, 2)
+        */
         this.name = name.toString(); // TODO : Change the code to use id directly.
         this.annotation = annotation ;
         this.x = x ;
@@ -71,6 +133,14 @@ class Annotation {
     }
 
     get_rect(){
+        /* Getter of the `rect` attribute of annotation objects
+        *
+        * It creates a new full-sized Konva.Rect if there is currently none defined
+        *
+        * Return
+        * ------
+        * Konva.Rect instance
+        */
         if (this.rect === undefined) {
             this.rect = this.get_new_rect() ;
         }
@@ -78,6 +148,22 @@ class Annotation {
     }
 
     get_ratio_rect(ratio = undefined ){
+        /* Getter of the `ratio_rect` attribute of annotation objects
+        *
+        * It creates a new full-sized Konva.Rect if there is currently none defined.
+        * It used the previously defined ratio if none is provided or the provided one.
+        * If the provided one is the same as the defined one or if no ratio is provided
+        * but the ratio_rect is already defined, it return the defined ratio_rect.
+        *
+        * Parameter
+        * ---------
+        * ratio : float - default this.ratio
+        *   The ratio with which the ratio rect is defined
+        *
+        * Return
+        * ------
+        * Konva.Rect instance using the required ratio.
+        */
         if (ratio !== undefined && this.ratio !== ratio) {
             this.ratio = ratio;
             this.ratio_rect = this.get_new_ratio_rect(ratio);
@@ -89,6 +175,12 @@ class Annotation {
     }
 
     get_new_rect(){
+        /* Get a new rect (instance of Konva.Rect) using attribute values of the current instance
+        *
+        * Return
+        * ------
+        * Konva.Rect instance
+        */
         return new Konva.Rect({
             x: this.x,
             y: this.y,
@@ -101,6 +193,21 @@ class Annotation {
         })
     }
     get_new_ratio_rect(ratio){
+        /*  Get a new ratio_rect (instance of Konva.Rect) using attribute values of the current instance
+        *        *
+        * Parameter
+        * ---------
+        * ratio : float - default this.ratio
+        *   The ratio with which the ratio rect is defined
+        *
+        * Return
+        * ------
+        * Konva.Rect instance using the required ratio.
+        *
+        * Side effect
+        * -----------
+        * It stores the new ratio value in ratio attribute
+        */
         this.ratio = ratio;
 
         var ratio_rect = new Konva.Rect({
@@ -123,7 +230,37 @@ class Annotation {
 
 
 class DatArray extends Array{
+    /* Object that store annotations
+    * extend basic js Array objects
+    *
+    *
+    * Example
+    * -------
+    * // create a new datarray
+    * // fetched_data is an array from json ajax request
+    * // it contains information on 10 annotations.
+    * fetched_data = [element0, element1, ..., elementN]
+    * new_datarray = new DatArray (fetched_data, 2)
+    *
+    * // access the third annotation :
+    * // /!\ the indiciation begins from 0
+    * third_anno = new_datarray[2]
+    *
+    */
     constructor(fetched_data, ratio){
+        /* Constructor of annotation object
+        *
+        * Parameter
+        * ---------
+        * fetched_data : array
+        *   array from json array request
+        *   It contains information of the annations retrieve from the server
+        *   (name, annotation text, x, y, width, height)
+        *
+        * Return
+        * ------
+        * new instance of DatArray containing Annotation object for each annotation in fetched_data
+        */
         console.log(fetched_data);
 
         super()
@@ -145,11 +282,13 @@ class DatArray extends Array{
     }
 
 
-    /* Shuffle array
-    * Fisher-Yates-Durstenfeld shuffle
-    * http://stackoverflow.com/a/3718452
-    */
     shuffle() {
+        /* Shuffle the array
+        *
+        * It uses the Fisher-Yates-Durstenfeld shuffle
+        * more info here : http://stackoverflow.com/a/3718452
+        *
+        */
         var sourceArray=this
         for (var i = 0; i < sourceArray.length - 1; i++) {
             var j = i + Math.floor(Math.random() * (sourceArray.length - i));
@@ -161,15 +300,43 @@ class DatArray extends Array{
         return sourceArray;
     }
 
+
     get_anno_by_name(name){
+        /* Finds the elements of an array which satisfy a given name.
+        *
+        * The original array is not affected.
+        *
+        * Parameter
+        * ---------
+        * name : string
+        *   name of the annotation that have to be retrieve if defined
+        *
+        * Return
+        * -------
+        * Array containing element of the current instance of DatArray that matches
+        * the provided name.
+        * /!\ NB: As name should be unique, it should have only one result.
+        */
         return $.grep(this, function(e){ return e.name == name(); });
     }
 
-    // Remove an annotation by name
-    // returns the annotation that has been removed
-    // NB : /!\
-    // if several anno have the same name, only the first one is removed
+
     splice_anno_by_name(name){
+        /* Remove the annotation that matches the provided name
+        *
+        * /!\ NB : the names shuld be unique, but if several annotation have
+        * the same name, only the first one will be removed.
+        *
+        *
+        * Parameter
+        * ---------
+        * name : string
+        *   Name of the annotation we want to remove.
+        *
+        * Return
+        * ------
+        * instance of Annotation class : the annotation that has been removed.
+        */
         anno = get_anno_by_name(name)[0]; // should always return 1 results
 
         var index = this.indexOf(anno); // index of the element you want to remove
@@ -182,7 +349,41 @@ class DatArray extends Array{
 
 
 class SessionCore {
+    /* SessionCore object
+    *
+    * Store what is common between every session in MSS :
+    * Retrieve annotation data and image, set and use the view stage.
+    *
+    *
+    * Attributes
+    * ----------
+    * ratio_stage : Konva.Stage
+    *   the view stage that uses a ratio for the full-sized image to be adapted to the device.
+    * ratio : float
+    *   The ratio with which the ratio stage is defined.
+    * data : DatArray
+    *   Array that store Annotation objects from the annotation data that are retrieved from the server
+    * img : js Image
+    *   image that is retrieved from the server.
+    *
+    */
     constructor(ratio_stage_container_id, url_for_img, url_for_data) {
+        /* Constructor of SessionCore instances
+        *
+        * Parameters
+        * ----------
+        * ratio_stage_container_id : String | Element
+        *   Container selector or DOM element
+        *   on which the Konva will be applied.
+        * url_for_img : String
+        *  url where the the image can be retrieved
+        * url_for_data : String
+        *   url where the annotation data can be retrieved
+        *
+        * Return
+        * ------
+        * instance of SessionCore
+        */
 
         // create ratio view stage ...
         this.ratio_stage = new Konva.Stage({
@@ -234,15 +435,37 @@ class SessionCore {
     }
 
 
-    /*
-    To run only once image AND data are loaded :
-    */
+
     init(fetched_data){
+        /* The function that is runned once both image AND data are loaded
+        *
+        * The data attribute of the current instance is set as a DatArray built
+        * from the provided fetched data.
+        *
+        * Parameter
+        * ---------
+        * fetched_data : Array
+        *   array of objects containing information on retreived annotations
+        *   (one object per annotation).
+        *
+        */
         console.log(fetched_data);
         this.data = new DatArray(fetched_data, this.ratio) ;
     }
 
+
     fetch_data(url_for_data){
+        /* Fetched annotation data at the provided url
+        *
+        * Parameter
+        * ----------
+        * url_for_data : String
+        *   the url where annotation data have to be retrieved.
+        *
+        * Return
+        * ------
+        * jQuery XMLHttpRequest (jqXHR) promise instance.
+        */
         return $.getJSON(
             url_for_data,
             function(fetched_data){
@@ -257,7 +480,25 @@ class SessionCore {
         )
     }
 
+
     fetch_img(src) {
+        /* Fetched image at the provided url
+        *
+        * Parameter
+        * ----------
+        * src : String
+        *   the url where image have to be retrieved.
+        *
+        * Return
+        * ------
+        * Promise that will be resolved once the image is loaded
+        *
+        * Side effects
+        * ------------
+        * once the image is loaded,
+        * - it computes and sets the ratio
+        * - and it sets the image on stage.
+        */
 
         var deferred = $.Deferred();
         this.img = new Image();
@@ -282,7 +523,10 @@ class SessionCore {
 
 
     set_img_on_stage(){
-
+        /* Set the loaded image on the view stage using the correct ratio
+        *
+        * The image is set on the Layer named `ìmg_layer` of the ratio stage.
+        */
         // ratio img for ratio stage :
         var ratio_img = new Konva.Image({
           x: 0,
@@ -299,7 +543,13 @@ class SessionCore {
     }
 
     show_annotation(anno){
-        // add the ratio annotation as a rect on the anno layer of the view stage
+        /* Add the provided annotation shape (using ratio) on the anno layer of the view stage
+        *
+        * Argument
+        * ---------
+        * anno : instance of Annotation
+        *   the annotation we want to draw on the Layer named anno_layer of the view stage.
+        */
         this.ratio_stage.findOne('.anno_layer').add(anno.get_ratio_rect());
     }
 
@@ -307,28 +557,57 @@ class SessionCore {
 }
 
 class ViewCore extends SessionCore {
+    /* ViewCore objects
+    *
+    * It extends the SessionCore adding annoation list functionality.
+    *
+    */
     constructor(ratio_stage_container_id, annotations_list_id, url_for_img, url_for_data) {
+        /* Constructor of ViewCore object
+        *
+        * Parameters
+        * ----------
+        * ratio_stage_container_id : String | Element
+        *   Container selector or DOM element
+        *   on which the Konva will be applied.
+        * annotations_list_id : String
+        *   Annotation list container selector
+        * url_for_img : String
+        *  url where the the image can be retrieved
+        * url_for_data : String
+        *   url where the annotation data can be retrieved
+        *
+        * Return
+        * ------
+        * initialized instance of ViewCore.
+        * with annotation shapes drawn on the view stage,
+        * and linked to hightlightning via click event, as well as annotation in the list.
+        */
         super(ratio_stage_container_id, url_for_img, url_for_data);
 
         this.set_annotation_list_events(annotations_list_id);
     }
 
 
-    /*
-    * This function handles the event 'click annotations'.
-    * If the mouse is on a rect or on an annotation item in the anotation list,
-    * the corresponding rect and annotation item are filled in yellow
-    * (with transparency of 0.5).
-    * Else nothing happens.
-    * Nota Bene :
-    * after using this function, you have to refreash the layer containing the rect annotations
-    * using the draw() function.
-    *
-    * @param {string} name - the name of a konva rect annotation and of an annotation item in the annotation list.
-    * @param {Konva.stage} stage - stage where the annotations will be colored
-    *
-    */
     handleClickAnno(name){
+        /* Handles the event 'click annotations'.
+        *
+        * - On click :
+        * The corresponding shape on the view stage
+        * and the annotation item in the annotation list
+        * are filled in yellow (with transparency of 0.5).
+        * - On reclick : the fill is removed.
+        *
+        * NB : The function does not redraw the stage.
+        *
+        * Parameter
+        * ----------
+        * name : String
+        *   the name of an annotation
+        *   this name corresponds to konva rect shape on ratio stage
+        *   and of the name of an annotation item in the annotation list.
+        *
+        */
         console.log('in handleClickAnno');
         var activate = ! $("#annotations-list li[name="+name+"] span").hasClass( "click" );
         var transparency = (activate ? 0.5 : 0).toString();
@@ -339,11 +618,18 @@ class ViewCore extends SessionCore {
 
     }
 
-
-
-
-    /* handles span click :*/
     set_annotation_list_events(annotations_list_id){
+        /* Set the click event on annotation list
+        *
+        * If the user click on annotation item, both the annotation item and the
+        * corresponding shape on the view stage are hightlighted in yellow.
+        *
+        * Parameter
+        * ---------
+        * annotations_list_id : string
+        *   Annotation list container selector
+        *
+        */
         self = this ;
         $('#'+annotations_list_id).on("click", "span", function() {
             // Each time your mouse enters or leaves a child element,
@@ -354,6 +640,19 @@ class ViewCore extends SessionCore {
     }
 
     init(fetched_data){
+        /* The function that is runned once both image AND data are loaded
+        *
+        * The data attribute of the current instance is set as a DatArray built
+        * from the provided fetched data.
+        * The annotations are added in the annotation list and drawn on the view stage.
+        *
+        * Parameter
+        * ---------
+        * fetched_data : Array
+        *   array of objects containing information on retreived annotations
+        *   (one object per annotation).
+        *
+        */
         super.init(fetched_data);
         console.log('!!!!!!!!!!!!!!!!!!!!', fetched_data, this.data);
         for(var i = 0; i < this.data.length; i++) {
@@ -363,21 +662,22 @@ class ViewCore extends SessionCore {
         self.ratio_stage.draw();
     }
 
-
-    /* This function adds a new annotation to the session
-    * - It wraps the new annotation in action buttons (delete and edit)
-    * - It puts the new anno in the annotations list
-    * - It make the new item editable
-    * - It adds the annotation on the annotation layers of stage(s)
-    *
-    * NB :
-    * It doesn't store the new annotation in the db !
-    * It doesn't refresh the layers
-    *
-    * @param {object} Annotation - the newly added annotation
-    *
-    */
     add_annotation(anno){
+        /* Add an annotation to the session
+        *
+        * - It puts the new anno in the annotations list
+        * - It adds the annotation on the annotation layers of the view stage
+        *
+        * NB :
+        * It does npt store the new annotation in the db !
+        * It does not refresh the layers
+        *
+        * Parameter
+        * ----------
+        * anno : instance of Annotation
+        *   the annotation to add.
+        *
+        */
         console.log(anno);
 
         // add anno on ratio stage :
@@ -400,16 +700,19 @@ class ViewCore extends SessionCore {
 
 
     }
-    /* This function add an annotation in the anno list
-    *
-    * - It wraps the new annotation in action buttons (delete and edit)
-    * - It puts the new anno in the annotations list
-    * - It make the new item editable
-    *
-    * @param {object} Annotation - the annotaiton to add
-    *
-    */
+
     append_to_dom_anno_list(anno){
+        /* This function adds an annotation in the anno list
+        *
+        * - It wraps the new annotation in action buttons (delete button) # TODO : rm that from here !
+        * - It puts the new annotation in the annotations list.
+        *
+        * Parameter
+        * ---------
+        * anno : instance of Annotation
+        *   the annotaiton to add.
+        *
+        */
 
         // http://stackoverflow.com/a/12949050
         // jQuery append function close tags automatically.
@@ -436,7 +739,43 @@ class ViewCore extends SessionCore {
 }
 
 class AnnotationCore extends ViewCore {
+    /* AnnotationCore objects
+    *
+    * It extends the ViewCore adding annotation tool functionality.
+    *
+    * Attributes
+    * ----------
+    * scale_stage : Konva.Stage
+    *   the anotation stage that usesthe full-sized image.
+    * cropper_container : String
+    *   Container selector of the element of the scale_stage on with the cropper can be set.
+    */
     constructor(scale_stage_container_id, ratio_stage_container_id, annotations_list_id, url_for_img, url_for_data) {
+        /* Constructor of AnnotationCore object
+        *
+        * Parameters
+        * ----------
+        * scale_stage_container_id : String | Element
+        *   Container selector or DOM element
+        *   on which the Konva will be applied for the scale stage.
+        * ratio_stage_container_id : String | Element
+        *   Container selector or DOM element
+        *   on which the Konva will be applied for the ratio stage.
+        * annotations_list_id : String
+        *   Annotation list container selector
+        * url_for_img : String
+        *  url where the the image can be retrieved
+        * url_for_data : String
+        *   url where the annotation data can be retrieved
+        *
+        * Return
+        * ------
+        * initialized instance of AnnotationCore.
+        * with annotation shapes drawn on both the view and the annotation stage,
+        * shapes on view stage are linked to hightlightning via click event, as well as annotation in the list.
+        * a cropper is initialized on the annotation stage for the user to add new annotations.
+        * action button to delete and edit annotations are activated.
+        */
         super(ratio_stage_container_id, annotations_list_id, url_for_img, url_for_data);
 
         // we also need a scale stage for the cropper :
@@ -456,8 +795,22 @@ class AnnotationCore extends ViewCore {
     }
 
 
-    /* handle click on del button : */
+
     set_annotation_list_events(){
+        /* Set the click event on annotation list
+        *
+        * If the user click on annotation item, both the annotation item and the
+        * corresponding shape on the view stage are hightlighted in yellow.
+        * Handle click on delete button : If the user click on delete buton, he is
+        * ask to confirm, then, the associated annotation is deleted
+        * from the annotation list, the stages and the database.
+        *
+        * Parameter
+        * ---------
+        * annotations_list_id : string
+        *   Annotation list container selector
+        *
+        */
         /*link li item buttons to events
 
         link li item buttons to events using the on() function because :
@@ -520,6 +873,20 @@ class AnnotationCore extends ViewCore {
     }
 
     init(fetched_data){
+        /* The function that is runned once both image AND data are loaded
+        *
+        * The data attribute of the current instance is set as a DatArray built
+        * from the provided fetched data.
+        * The annotations are added in the annotation list
+        * and drawn on both the view and the annotation stages.
+        *
+        * Parameter
+        * ---------
+        * fetched_data : Array
+        *   array of objects containing information on retreived annotations
+        *   (one object per annotation).
+        *
+        */
         console.log(fetched_data);
         super.init(fetched_data);
 
@@ -530,6 +897,11 @@ class AnnotationCore extends ViewCore {
     }
 
     set_img_on_stage(){
+        /* Set the loaded image on the stages
+        *
+        * The image is set on the Layer named `ìmg_layer` of the ratio stage
+        * (using the ratio), and on the scale stage at its full size.
+        */
 
         // for the view ratio stage :
         super.set_img_on_stage();
@@ -556,6 +928,13 @@ class AnnotationCore extends ViewCore {
 
 
     show_annotation(anno){
+        /* Add the provided annotation shape on the anno layer of the stages
+        *
+        * Argument
+        * ---------
+        * anno : instance of Annotation
+        *   the annotation we want to draw on the Layer named anno_layer of the view stage.
+        */
         // add the ratio annotation as a rect on the anno layer of the view stage
         super.show_annotation(anno)
 
@@ -566,6 +945,7 @@ class AnnotationCore extends ViewCore {
 
 
     refreash_cropper(){
+        /* Refreash the cropper to take changes into account. */
         var new_content = this.cropper_container[0].toDataURL();
         this.cropper_container.cropper(
             'replace',
@@ -576,16 +956,20 @@ class AnnotationCore extends ViewCore {
     }
 
 
-    /* This function add an annotation in the anno list
-    *
-    * - It wraps the new annotation in action buttons (delete and edit)
-    * - It puts the new anno in the annotations list
-    * - It make the new item editable
-    *
-    * @param {object} Annotation - the annotaiton to add
-    *
-    */
+
     append_to_dom_anno_list(anno){
+        /* This function adds an annotation in the anno list
+        *
+        * - It wraps the new annotation in action buttons (delete button),
+        * - It make the item editable,
+        * - It puts the new annotation in the annotations list.
+        *
+        * Parameter
+        * ---------
+        * anno : instance of Annotation
+        *   the annotaiton to add.
+        *
+        */
          super.append_to_dom_anno_list(anno);
          this.makeEditable("#annotations-list li[name="+anno.name+"] span");
     }
@@ -593,6 +977,14 @@ class AnnotationCore extends ViewCore {
 
 
     makeEditable(editableTarget) {
+        /* Make an element editable using the plugin Jeditable
+        *
+        * Parameter
+        * ---------
+        * editableTarget : String
+        *   Container selector of the DOM element that will be editable
+        */
+
         /*
         Target an element
         and use the Jeditable plugin  editable() function on it
@@ -623,6 +1015,7 @@ class AnnotationCore extends ViewCore {
 
 
     set_cropper(){
+        /* Set the cropper on the scale stage */
         this.cropper_container.cropper({
             viewMode :1, //   0: the crop box is just within the container  ;     1: the crop box should be within the canvas -> zoom / dezoom as you want but do not select out the image ;     2: the canvas should not be within the container ;    3: the container should be within the canvas
             dragMode : 'crop', // 'crop': create a new crop box ; 'move': move the canvas  ;  'none': do nothing
@@ -651,13 +1044,46 @@ class AnnotationCore extends ViewCore {
 
 
 class GameCore extends SessionCore {
+    /* GameCore class
+    *
+    * Defines what is common to all MSS games
+    *
+    * Attributes :
+    * ------------
+    * succes : int - default 0
+    *   the positive score / number of success
+    * errors : int - default 0
+    *   the negative score / number of false
+    */
     constructor(ratio_stage_container_id, url_for_img, url_for_data) {
+        /* Constructor of GameCore object
+        *
+        * Parameters
+        * ----------
+        * ratio_stage_container_id : String | Element
+        *   Container selector or DOM element
+        *   on which the Konva will be applied for the ratio stage.
+        * url_for_img : String
+        *  url where the the image can be retrieved
+        * url_for_data : String
+        *   url where the annotation data can be retrieved
+        *
+        * Return
+        * ------
+        * initialized instance of GameCore.
+        */
         super(ratio_stage_container_id, url_for_img, url_for_data);
         this.success = 0 ;
         this.errors = 0 ;
     }
 
     handle_end_game() {
+        /* Handle the end the game
+        *
+        * Inform the user about its successses and its errors
+        * ans ak him if we want to replay.
+        *
+        */
         if(confirm("Success: "+this.success+"  errors: "+this.errors+".\nDo you want to replay?")){
             location.reload();
         } else {
@@ -668,23 +1094,73 @@ class GameCore extends SessionCore {
     }
 
     init(fetched_data){
+        /* The function that is runned once both image AND data are loaded
+        *
+        * The data attribute of the current instance is set as a DatArray built
+        * from the provided fetched data.
+        * The game is runned
+        *
+        * Parameter
+        * ---------
+        * fetched_data : Array
+        *   array of objects containing information on retreived annotations
+        *   (one object per annotation).
+        *
+        */
         console.log(fetched_data);
         super.init(fetched_data);
         this.play_game()
     }
 
+
     play_game(){
+        /* Play the game
+        *
+        * This function has to be rewritten for each game.
+        */
         console.log("starting the game");
     }
 }
 
 
 class FindParaActivity extends GameCore {
+    /* FindParaActivity class*/
+
     constructor(ratio_stage_container_id, url_for_img, url_for_data) {
+        /* Constructor of FindParaActivity object
+        *
+        * Parameters
+        * ----------
+        * ratio_stage_container_id : String | Element
+        *   Container selector or DOM element
+        *   on which the Konva will be applied for the ratio stage.
+        * url_for_img : String
+        *  url where the the image can be retrieved
+        * url_for_data : String
+        *   url where the annotation data can be retrieved
+        *
+        * Return
+        * ------
+        * initialized instance of FindParaActivity.
+        */
         super(ratio_stage_container_id, url_for_img, url_for_data);
     }
 
     init(fetched_data){
+        /* The function that is runned once both image AND data are loaded
+        *
+        * The data attribute of the current instance is set as a DatArray built
+        * from the provided fetched data.
+        * All parasite annotations are drawn invisibly on the viw stage.
+        * The game is runned.
+        *
+        * Parameter
+        * ---------
+        * fetched_data : Array
+        *   array of objects containing information on retreived annotations
+        *   (one object per annotation).
+        *
+        */
         console.log(fetched_data);
         var para_data = []
         for(var i = 0; i < fetched_data.length; i++) {
@@ -707,6 +1183,13 @@ class FindParaActivity extends GameCore {
 
 
     play_game(){
+        /* Play the game
+        *
+        * The user click on the view stage. If he click on a parasite,
+        * he earns a success point. Otherwise : he loses an error point.
+        * A user cannot click 2 times on the same parasite annotation.
+        * When all parasite annotations are found, it triggers the end of the game.
+        */
 
         /* The user triggers events by clicking on the konva : */
         self = this ;
@@ -764,12 +1247,43 @@ class FindParaActivity extends GameCore {
 }
 
 class YesNoActivity extends GameCore {
+    /* FindParaActivity class
+    *
+    * Attributes
+    * ----------
+    * current_i : int
+    *   the index of the annotation the user is currently asked about.
+    */
     constructor(ratio_stage_container_id, url_for_img, url_for_data) {
+        /* Constructor of YesNoActivity object
+        *
+        * Parameters
+        * ----------
+        * ratio_stage_container_id : String | Element
+        *   Container selector or DOM element
+        *   on which the Konva will be applied for the ratio stage.
+        * url_for_img : String
+        *  url where the the image can be retrieved
+        * url_for_data : String
+        *   url where the annotation data can be retrieved
+        *
+        * Return
+        * ------
+        * initialized instance of YesNoActivity.
+        */
         super(ratio_stage_container_id, url_for_img, url_for_data);
         this.current_i = 0 ;
     }
 
     play_game(){
+        /* Play the game
+        *
+        * Each annotation are drawn in a random order.
+        * For each annotation, the user have to tell if he thinks it is a
+        * parasite (click yes) or not (click no).
+        * If the answear is correct, the user earns a success point.
+        * Otherwise, the user loses an error point.
+        */
 
         console.log(this.data);
         this.data = this.data.shuffle();
@@ -801,6 +1315,7 @@ class YesNoActivity extends GameCore {
     }
 
     set_new_round(){
+        /* Draw the new annotation on the view stage */
         var current_anno = this.data[this.current_i];
         console.log(current_anno);
         // add the ratio annotation as a rect on the anno layer of the view stage
@@ -811,13 +1326,16 @@ class YesNoActivity extends GameCore {
 
 
     update_score_based_on_answear(answer){
-        // check if answer is correct
-        // and increment success and errors
-        /* Arguments :
-        * ------------
+        /* Update the score based on the user answear
+        *
+        * Check if the answer is correct and increment success and errors score consequently
+        *
+        * Parameter
+        * ---------
         * answer : string
-            'yes' or 'no'
+        *   'yes' or 'no'
         */
+
         var current_anno = this.data[this.current_i];
 
         console.log(
