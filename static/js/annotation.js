@@ -335,7 +335,7 @@ class DatArray extends Array{
         * ------
         * instance of Annotation class : the annotation that has been removed.
         */
-        anno = this.get_anno_by_name(name)[0]; // should always return 1 results
+        var anno = this.get_anno_by_name(name)[0]; // should always return 1 results
 
         var index = this.indexOf(anno); // index of the element you want to remove
         return this.splice(index, 1)[0];
