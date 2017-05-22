@@ -1223,7 +1223,7 @@ class FindParaActivity extends GameCore {
                 // remove the found parasite ()= the first (the only one) element that have the correct name)
                 // from the parasite array
                 // /!\ it should have always 1 result
-                clicked_anno = self.data.splice_anno_by_name(evt.target.name());
+                var clicked_anno = self.data.splice_anno_by_name(evt.target.name());
                 console.log(clicked_anno);
                 // redraw annotation:
                 evt.target.stroke("#4CAE4C"); //green
