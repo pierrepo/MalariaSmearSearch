@@ -87,7 +87,7 @@ class Annotation {
     *   the ratio between the full image size and its representation in the
     *   view tool.
     */
-    constructor(name, annotation, x, y, width, height, ratio) {
+    constructor(name, annotation, x, y, width, height, stroke_color = 'black', stroke_width = 4,  ratio) {
         /* Constructor of annotation object
         *
         * Parameters
@@ -104,6 +104,10 @@ class Annotation {
         *     width of the annotation area
         * height : int
         *     height of the annotation area
+        * stroke_color : string - default 'black'
+        *   the color of the stroke when the annotation area is drawn on the image
+        * stroke_width : int - default 4
+        *   the width of the stoke (in pixel) when the annotation area is drawn on the image
         * ratio : float
         *     the ratio between the full image size and its representation in the
         *     view tool.
@@ -122,8 +126,8 @@ class Annotation {
         this.y = y ;
         this.width = width ;
         this.height = height ;
-        this.stroke_color = 'black' ;
-        this.stroke_width = 4 ;
+        this.stroke_color = stroke_color ;
+        this.stroke_width = stroke_width ;
         this.fill_color = null ;
         this.rect = this.get_new_rect() ;
         this.ratio_rect = this.get_new_ratio_rect(ratio) ;
@@ -253,7 +257,7 @@ class DatArray extends Array{
         * fetched_data : array
         *   array from json array request
         *   It contains information of the annations retrieve from the server
-        *   (name, annotation text, x, y, width, height)
+        *   (name, annotation text, x, y, width, height, ...)
         *
         * Return
         * ------
@@ -271,6 +275,8 @@ class DatArray extends Array{
                 fetched_data[i].y,
                 fetched_data[i].width,
                 fetched_data[i].height,
+                fetched_data[i].stroke_color,
+                fetched_data[i].stroke_width,
                 ratio
             );
             this.push(anno);
@@ -1159,6 +1165,7 @@ class FindParaActivity extends GameCore {
         var para_data = []
         for(var i = 0; i < fetched_data.length; i++) {
             if (fetched_data[i].annotation[0] == 'P'){
+                fetched_data[i].stroke_color = null;
                 para_data.push(fetched_data[i]);
             }
         }
