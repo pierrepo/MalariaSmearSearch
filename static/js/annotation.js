@@ -315,7 +315,7 @@ class DatArray extends Array{
         * the provided name.
         * /!\ NB: As name should be unique, it should have only one result.
         */
-        return $.grep(this, function(e){ return e.name == name(); });
+        return $.grep(this, function(e){ return e.name == name; });
     }
 
 
