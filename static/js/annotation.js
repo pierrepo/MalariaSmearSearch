@@ -75,7 +75,7 @@ class Annotation {
     *   height of the annotation area
     * stroke_color : string - default 'black'
     *   the color of the stroke when the annotation area is drawn on the image
-    * stroke_width : int - default 4
+    * stroke_width : int - default 3
     *   the width of the stoke (in pixel) when the annotation area is drawn on the image
     * fill_color : string - default null
     *   the color of the fill when the annotation area is drawn on the image
@@ -87,7 +87,7 @@ class Annotation {
     *   the ratio between the full image size and its representation in the
     *   view tool.
     */
-    constructor(name, annotation, x, y, width, height, stroke_color = 'black', stroke_width = 4,  ratio) {
+    constructor(name, annotation, x, y, width, height, stroke_color = 'black', stroke_width = 3,  ratio) {
         /* Constructor of annotation object
         *
         * Parameters
@@ -106,7 +106,7 @@ class Annotation {
         *     height of the annotation area
         * stroke_color : string - default 'black'
         *   the color of the stroke when the annotation area is drawn on the image
-        * stroke_width : int - default 4
+        * stroke_width : int - default 3
         *   the width of the stoke (in pixel) when the annotation area is drawn on the image
         * ratio : float
         *     the ratio between the full image size and its representation in the
@@ -476,7 +476,7 @@ class SessionCore {
                 Flash.success('Annotations were fetched from the server', 2000);
                 for(var i = 0; i < fetched_data.length; i++) {
                     fetched_data[i].stroke = 'black';
-                    fetched_data[i].strokeWidth = 4;
+                    fetched_data[i].strokeWidth = 3;
                     fetched_data[i].name = fetched_data[i].id.toString(); // TODO : Change the code to use id directly.
                     console.log(i, fetched_data[i]);
                 }
