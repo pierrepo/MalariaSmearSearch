@@ -1034,6 +1034,8 @@ class AnnotationCore extends ViewCore {
             dragMode : 'crop', // 'crop': create a new crop box ; 'move': move the canvas  ;  'none': do nothing
             autoCrop : true, //enable / disable the default image crop when initialize.
             autoCropArea : 0.1,
+            modal: false, // True =  Show the black modal above the image and under the crop box.
+            guides: false, // True = Show the dashed lines above the crop box.
             crop: function(e) {
                 // Output the result data for cropping image.
                 console.log(e.x);
