@@ -616,7 +616,7 @@ class ViewCore extends SessionCore {
         var activate = ! $("#annotations-list li[name="+name+"] span").hasClass( "click" );
         var transparency = (activate ? 0.5 : 0).toString();
         console.log (activate * 0.5) ;
-        var rect = self.ratio_stage.findOne('.'+name);
+        var rect = this.ratio_stage.findOne('.'+name);
         rect.setFill('rgba(255,255,0,'+0.5 * activate+')'); // 'rgba(255,255,0,'+transparency+')'
         $("#annotations-list li[name="+name+"] span").toggleClass('click');
 
@@ -634,7 +634,7 @@ class ViewCore extends SessionCore {
         *   Annotation list container selector
         *
         */
-        self = this ;
+        var self = this ;
         $('#'+annotations_list_id).on("click", "span", function() {
             // Each time your mouse enters or leaves a child element,
             // mouseover is triggered
@@ -663,7 +663,7 @@ class ViewCore extends SessionCore {
             this.add_annotation(this.data[i]);
             console.log(this.data[i]);
         }
-        self.ratio_stage.draw();
+        this.ratio_stage.draw();
     }
 
     add_annotation(anno){
@@ -690,7 +690,7 @@ class ViewCore extends SessionCore {
         // the new anno is appended in the anno list :
         this.append_to_dom_anno_list(anno);
 
-        self = this;
+        var self = this;
         // bind the new ratio rect to mouse events :
         anno.get_ratio_rect().on('click', function(evt) {
             self.handleClickAnno(this.name());
@@ -819,7 +819,7 @@ class AnnotationCore extends ViewCore {
         - and 2) new items appended to the page are automatically bound by
             the same handler. Killer.
         */
-        self = this ;
+        var self = this ;
         super.set_annotation_list_events(annotations_list_id);
 
         $('#'+annotations_list_id).on('click', '.glyphicon-trash', function(){
@@ -889,7 +889,7 @@ class AnnotationCore extends ViewCore {
         console.log(fetched_data);
         super.init(fetched_data);
 
-        self.scale_stage.draw();
+        this.scale_stage.draw();
         this.refreash_cropper();
         Flash.success('Annotations were added on both the view and the annotation canvas. Everything is ready.', 3000);
 
@@ -1193,7 +1193,7 @@ class FindParaActivity extends GameCore {
         */
 
         /* The user triggers events by clicking on the konva : */
-        self = this ;
+        var self = this ;
 
         // the event is link to stage -> the user can click on image or on shape
         //https://konvajs.github.io/docs/events/Stage_Events.html
