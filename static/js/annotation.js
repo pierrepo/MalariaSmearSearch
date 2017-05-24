@@ -87,7 +87,7 @@ class Annotation {
     *   the ratio between the full image size and its representation in the
     *   view tool.
     */
-    constructor(name, annotation, x, y, width, height, stroke_color = 'black', stroke_width = 3,  ratio) {
+    constructor(name, ratio, annotation, x, y, width, height, stroke_color = 'black', stroke_width = 3) {
         /* Constructor of annotation object
         *
         * Parameters
@@ -120,7 +120,9 @@ class Annotation {
         * ---------
         * an_annotation = new Annotation('1', 'test', 0, 0, 10, 10, 2)
         */
+        console.log(ratio);
         this.name = name.toString(); // TODO : Change the code to use id directly.
+        this.ratio = ratio ;
         this.annotation = annotation ;
         this.x = x ;
         this.y = y ;
@@ -129,9 +131,8 @@ class Annotation {
         this.stroke_color = stroke_color ;
         this.stroke_width = stroke_width ;
         this.fill_color = null ;
-        this.rect = this.get_new_rect() ;
-        this.ratio_rect = this.get_new_ratio_rect(ratio) ;
-        this.ratio = ratio ;
+        this.rect = this.get_rect() ;
+        this.ratio_rect = this.get_ratio_rect(ratio) ;
     }
 
     get_rect(){
@@ -166,6 +167,8 @@ class Annotation {
         * ------
         * Konva.Rect instance using the required ratio.
         */
+        console.trace();
+        console.log(ratio, ratio !== undefined, this.ratio_rect === undefined,  this.ratio !== ratio);
         if (ratio !== undefined && this.ratio !== ratio) {
             this.ratio = ratio;
             this.ratio_rect = this.get_new_ratio_rect(ratio);
@@ -194,7 +197,7 @@ class Annotation {
             name: this.name
         })
     }
-    get_new_ratio_rect(ratio){
+    get_new_ratio_rect(ratio = this.ratio){
         /*  Get a new ratio_rect (instance of Konva.Rect) using attribute values of the current instance
         *        *
         * Parameter
@@ -270,14 +273,14 @@ class DatArray extends Array{
         for(var i = 0; i < fetched_data.length; i++) {
             var anno = new Annotation(
                 fetched_data[i].name,
+                ratio,
                 fetched_data[i].annotation,
                 fetched_data[i].x,
                 fetched_data[i].y,
                 fetched_data[i].width,
                 fetched_data[i].height,
                 fetched_data[i].stroke_color,
-                fetched_data[i].stroke_width,
-                ratio
+                fetched_data[i].stroke_width
             );
             this.push(anno);
         }
