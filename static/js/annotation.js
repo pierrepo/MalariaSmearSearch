@@ -532,6 +532,7 @@ class SessionCore {
         * The image is set on the Layer named `ìmg_layer` of the ratio stage.
         */
         // ratio img for ratio stage :
+        console.log('set_img_on_stage core');
         var ratio_img = new Konva.Image({
           x: 0,
           y: 0,
@@ -554,6 +555,7 @@ class SessionCore {
         * anno : instance of Annotation
         *   the annotation we want to draw on the Layer named anno_layer of the view stage.
         */
+        console.log('show_annotation core');
         this.ratio_stage.findOne('.anno_layer').add(anno.get_ratio_rect());
     }
 
@@ -612,6 +614,7 @@ class ViewCore extends SessionCore {
         *   and of the name of an annotation item in the annotation list.
         *
         */
+        console.log('handleClickAnno view core');
         console.log('in handleClickAnno');
         var activate = ! $("#annotations-list li[name="+name+"] span").hasClass( "click" );
         var transparency = (activate ? 0.5 : 0).toString();
@@ -634,6 +637,7 @@ class ViewCore extends SessionCore {
         *   Annotation list container selector
         *
         */
+        console.log('set_annotation_list_events view core');
         var self = this ;
         $('#'+annotations_list_id).on("click", "span", function() {
             // Each time your mouse enters or leaves a child element,
@@ -657,6 +661,7 @@ class ViewCore extends SessionCore {
         *   (one object per annotation).
         *
         */
+        console.log('init view core');
         super.init(fetched_data);
         console.log('!!!!!!!!!!!!!!!!!!!!', fetched_data, this.data);
         for(var i = 0; i < this.data.length; i++) {
@@ -682,6 +687,7 @@ class ViewCore extends SessionCore {
         *   the annotation to add.
         *
         */
+        console.log('add_annotation view core');
         console.log(anno);
 
         // add anno on ratio stage :
@@ -732,6 +738,7 @@ class ViewCore extends SessionCore {
             .append("</li>");
         */
         // Instead, we put the html in an string then append that string to the dom :
+         console.log('append_to_dom_anno_list view core');
          var html="<li class='list-group-item' name='"+anno.name+"'><span>" + ANNO_DECODER[anno.annotation] + "</span></li>";
          $("#annotations-list").append(html);
      }
@@ -886,6 +893,7 @@ class AnnotationCore extends ViewCore {
         *   (one object per annotation).
         *
         */
+        console.log('init annotation core');
         console.log(fetched_data);
         super.init(fetched_data);
 
@@ -901,7 +909,7 @@ class AnnotationCore extends ViewCore {
         * The image is set on the Layer named `ìmg_layer` of the ratio stage
         * (using the ratio), and on the scale stage at its full size.
         */
-
+        console.log('set_img_on_stage annotation core');
         // for the view ratio stage :
         super.set_img_on_stage();
 
@@ -935,6 +943,7 @@ class AnnotationCore extends ViewCore {
         *   the annotation we want to draw on the Layer named anno_layer of the view stage.
         */
         // add the ratio annotation as a rect on the anno layer of the view stage
+        console.log('show_annotation annotation core');
         super.show_annotation(anno)
 
         // add the ratio annotation as a rect on the anno layer of the view stage
@@ -969,6 +978,7 @@ class AnnotationCore extends ViewCore {
         *   the annotaiton to add.
         *
         */
+         console.log('append_to_dom_anno_list annotation core');
          var html="<li class='list-group-item' name='"+anno.name+"'><span>" + ANNO_DECODER[anno.annotation] + "</span><button class='glyphicon glyphicon-trash'></button></li>";
          $("#annotations-list").append(html);
          this.makeEditable("#annotations-list li[name="+anno.name+"] span");
