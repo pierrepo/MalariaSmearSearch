@@ -1207,16 +1207,18 @@ class FindParaActivity extends GameCore {
                 self.errors ++ ;
                 $('#errors').html(self.errors);
                 var PointerPosition = self.ratio_stage.getPointerPosition() ;
-                /* Mark the click with a small circle :*/
-                var circle = new Konva.Circle({
+                /* Mark the click with a small cross-shaped star :*/
+                var star = new Konva.Star({
                     x: PointerPosition.x,
                     y: PointerPosition.y,
-                    radius: 4,
-                    fill: '#D43F3A', //red
-                    stroke: '#D43F3A', //red
+                    numPoints: 4, // make it look like a cross
+                    innerRadius: 1,
+                    outerRadius: 10,
+                    fill: 'red',
+                    stroke: 'red',
                     strokeWidth: 1
                 });
-                self.ratio_stage.findOne('.anno_layer').add(circle);
+                self.ratio_stage.findOne('.anno_layer').add(star);
                 self.ratio_stage.findOne('.anno_layer').draw();
             }else if (evt.target.className == "Rect"){
                 /* the user has cliked on a para annotation*/
