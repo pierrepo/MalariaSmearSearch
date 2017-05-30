@@ -123,11 +123,112 @@
         var sample_id = {{sample_id}}
         var col = {{col}}
         var row ={{row}}
-
     </script>
 
     <script type="text/javascript" src="{{ url_for('static', filename='js/flash-messages.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}"></script>
 
-    <script type="text/javascript" src="{{ url_for('static', filename='js/annotation.js') }}">
+    <script>
+        /**************************************************************************/
+        /**************************************************************************/
+        if (user_has_right) {
+            var session = new AnnotationCore(
+                scale_stage_container_id,
+                ratio_stage_container_id,
+                annotations_list_id,
+                url_for_img,
+                url_for_data
+            )
+
+
+
+            $( "#toggle-mode" ).click(function() {
+
+                // Toggle button Annotate <-> View
+                var value = $(this).text();
+                console.log(value);
+
+                if ($( "#icon-text" ).text().trim() == "Annotate" ) {
+                    // Change button text and icon Annotate -> View
+                    $( "#icon-annotate" ).hide();
+                    $( "#icon-view" ).show();
+                    $( "#icon-text" ).text("View");
+                    // Show annotation stuff : the cropper div and the input form
+                    $( ".anno-stuff" ).show();
+                    // Hide rendered kanva :
+                    $( "#view-konvajs" ).hide();
+                }else{
+                     // Change button text and icon View -> Annotate
+                    $( "#icon-annotate" ).show();
+                    $( "#icon-view" ).hide();
+                    $( "#icon-text" ).text("Annotate");
+                    // Hide anno stuff : cropper div, the input form :
+                    $( ".anno-stuff" ).hide();
+                    // Show rendered kanva :
+                    $( "#view-konvajs" ).show();
+                    // Destroy the cropper :
+                    //$('#anno-konvajs .konvajs-content canvas').cropper("destroy");
+                }
+            });
+
+            $('#add-new').submit(function(){
+                var newAnnotationText= $( "#new-list-item-text option:selected" ).text();
+
+                $.ajax({
+
+                    url :  Flask.url_for("add_anno", {"sample_id":sample_id , "col":col, "row":row}),
+                    type: "POST",
+                    data : $('#add-new').serialize(),
+
+                    success: function(theResponse){
+
+                        console.log(theResponse);
+
+                        var anno = new Annotation(
+                            theResponse.toString(),
+                            session.ratio,
+                            $('#new-list-item-text').val(),
+                            $('#add-sel-x').val(),
+                            $('#add-sel-y').val(),
+                            $('#add-sel-width').val(),
+                            $('#add-sel-height').val()
+                        );
+
+                        // Add in datarray, list dom and konvas :
+                        session.add_annotation(anno);
+
+                        // Refreash the stages :
+
+                        session.scale_stage.findOne('.anno_layer').draw();
+                        session.refreash_cropper()
+
+                        session.ratio_stage.findOne('.anno_layer').draw();
+
+                        // clear the input fields after submission :
+                        // That makes adding a bunch of annotation items in sequence very easy and natural.
+                        $('#add-new').get(0).reset()
+
+
+                        Flash.success("The annotation was added", 2000);
+                    },
+                    error: function(){
+                        // TODO
+                        // uh oh, didn't work. Error message?
+                    }
+                });
+
+                return false; // prevent default form submission -> no page refresh
+            });
+        }else{
+            var session = new ViewCore(
+                ratio_stage_container_id,
+                annotations_list_id,
+                url_for_img,
+                url_for_data
+            )
+        }
+
+
     </script>
+
 {% endblock %}
