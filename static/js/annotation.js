@@ -1069,6 +1069,10 @@ class GameCore extends SessionCore {
     *   the positive score / number of success
     * errors : int - default 0
     *   the negative score / number of false
+    * timeoutID : a numeric, non-zero value
+    *   it identifies the timer created by the call to setTimeout();
+    *   this value can be passed to clearTimeout() to cancel the timeout
+    *
     */
     constructor(ratio_stage_container_id, url_for_img, url_for_data) {
         /* Constructor of GameCore object
@@ -1090,6 +1094,8 @@ class GameCore extends SessionCore {
         super(ratio_stage_container_id, url_for_img, url_for_data);
         this.success = 0 ;
         this.errors = 0 ;
+        this.timeoutID = undefined ;
+        this.remaining_time = undefined ;
     }
 
     handle_end_game() {
@@ -1125,6 +1131,35 @@ class GameCore extends SessionCore {
         console.log(fetched_data);
         super.init(fetched_data);
         this.play_game()
+    }
+
+    set_timer(seconds){
+        /* Call handle_timeout after x milliseconds
+        *
+        * Parameter
+        * ---------
+        * seconds : int
+        *   The number of seconds to wait before executing the handler
+        *
+        */
+        this.remaining_time = seconds ;
+        this.timeoutID = window.setInterval(this.handle_interval, 1 * 1000); // every second
+
+    }
+
+    handle_interval(){
+        this.remaining_time -- ;
+        console.log(this.remaining_time + 'seconds left !')
+        if (this.remaining_time) <= 0 {
+            console.log('no remaining time !')
+            this.handle_timeout();
+        }
+    }
+
+    handle_timeout(){
+        /* Handler called when the time is out */
+        alert("Time is out.")
+        window.clearInterval(this.timeoutID);
     }
 
 
