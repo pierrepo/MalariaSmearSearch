@@ -1143,16 +1143,17 @@ class GameCore extends SessionCore {
         *
         */
         this.remaining_time = seconds ;
-        this.timeoutID = window.setInterval(this.handle_interval, 1 * 1000); // every second
+        this.timeoutID = window.setInterval(this.handle_interval, 1 * 1000, this); // every second
 
     }
 
-    handle_interval(){
-        this.remaining_time -- ;
-        console.log(this.remaining_time + 'seconds left !')
-        if (this.remaining_time) <= 0 {
+    handle_interval(self){
+        // use param self and not directly this because this is the window and not the GameSession
+        self.remaining_time -- ;
+        console.log(self.remaining_time + 'seconds left !')
+        if (self.remaining_time) <= 0 {
             console.log('no remaining time !')
-            this.handle_timeout();
+            self.handle_timeout();
         }
     }
 
