@@ -1336,6 +1336,20 @@ class YesNoActivity extends GameCore {
         this.current_annotation = undefined ;
     }
 
+
+    handle_timeout(){
+        super.handle_timeout();
+        this.errors ++ ;
+
+        // end game because no more annotation left :
+        if (this.data.length == 0 ){
+            this.handle_end_game();
+        }else{ // or play another round :
+            this.current_anno.get_ratio_rect().destroy()
+            this.set_new_round();
+        }
+    }
+
     play_game(){
         /* Play the game
         *
@@ -1378,6 +1392,11 @@ class YesNoActivity extends GameCore {
         // add the ratio annotation as a rect on the anno layer of the view stage
         this.show_annotation(this.current_anno);
         this.ratio_stage.findOne('.anno_layer').draw();
+
+
+        // set the timer with 5 seconds :
+        this.set_timer (5);
+
 
     }
 
