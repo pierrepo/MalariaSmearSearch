@@ -1232,6 +1232,10 @@ class FindParaActivity extends GameCore {
         this.play_game();
     }
 
+    handle_timeout(){
+        super.handle_timeout();
+        this.handle_end_game();
+    }
 
     play_game(){
         /* Play the game
@@ -1241,6 +1245,10 @@ class FindParaActivity extends GameCore {
         * A user cannot click 2 times on the same parasite annotation.
         * When all parasite annotations are found, it triggers the end of the game.
         */
+
+        // set the timer :
+        // with 5 seconds for each parasite annotations
+        this.set_timer (this.data.length * 5); // this.data == para anno only
 
         /* The user triggers events by clicking on the konva : */
         var self = this ;
