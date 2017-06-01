@@ -1151,6 +1151,14 @@ class GameCore extends SessionCore {
         // use param self and not directly this because this is the window and not the GameSession
         self.remaining_time -- ;
         console.log(self.remaining_time + 'seconds left !')
+
+
+        if (self.remaining_time <= 5) {
+            $('#timer').css('color', 'red');
+        }
+
+        $('#timer').html(self.remaining_time); 
+
         if (self.remaining_time <= 0) {
             console.log('no remaining time !')
             self.handle_timeout();
