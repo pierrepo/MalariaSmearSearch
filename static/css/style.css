@@ -15,6 +15,11 @@
     margin-right: 5px;
 }
 
+.roundish{
+    border-radius: 20px;
+    margin: 0px;
+}
+
 .big-text {
     font-size: 2rem;
     margin-bottom: 30px;
@@ -127,7 +132,7 @@ a.link-silent {
 
 
 /**********************************************************************
- footer 
+ footer
 **********************************************************************/
 /* Sticky footer:
  https://www.codementor.io/tips/4292721368/twitter-bootstrap-3-sticky-footer

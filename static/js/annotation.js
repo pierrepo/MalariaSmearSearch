@@ -1069,6 +1069,10 @@ class GameCore extends SessionCore {
     *   the positive score / number of success
     * errors : int - default 0
     *   the negative score / number of false
+    * timeoutID : a numeric, non-zero value
+    *   it identifies the timer created by the call to setTimeout();
+    *   this value can be passed to clearTimeout() to cancel the timeout
+    *
     */
     constructor(ratio_stage_container_id, url_for_img, url_for_data) {
         /* Constructor of GameCore object
@@ -1090,6 +1094,8 @@ class GameCore extends SessionCore {
         super(ratio_stage_container_id, url_for_img, url_for_data);
         this.success = 0 ;
         this.errors = 0 ;
+        this.timeoutID = undefined ;
+        this.remaining_time = undefined ;
     }
 
     handle_end_game() {
@@ -1125,6 +1131,44 @@ class GameCore extends SessionCore {
         console.log(fetched_data);
         super.init(fetched_data);
         this.play_game()
+    }
+
+    set_timer(seconds){
+        /* Call handle_timeout after x milliseconds
+        *
+        * Parameter
+        * ---------
+        * seconds : int
+        *   The number of seconds to wait before executing the handler
+        *
+        */
+        this.remaining_time = seconds ;
+        this.timeoutID = window.setInterval(this.handle_interval, 1 * 1000, this); // every second
+
+    }
+
+    handle_interval(self){
+        // use param self and not directly this because this is the window and not the GameSession
+        self.remaining_time -- ;
+        console.log(self.remaining_time + 'seconds left !')
+
+
+        if (self.remaining_time <= 5) {
+            $('#timer').css('color', 'red');
+        }
+
+        $('#timer').html(self.remaining_time); 
+
+        if (self.remaining_time <= 0) {
+            console.log('no remaining time !')
+            self.handle_timeout();
+        }
+    }
+
+    handle_timeout(){
+        /* Handler called when the time is out */
+        alert("Time is out.")
+        window.clearInterval(this.timeoutID);
     }
 
 
@@ -1197,6 +1241,10 @@ class FindParaActivity extends GameCore {
         this.play_game();
     }
 
+    handle_timeout(){
+        super.handle_timeout();
+        this.handle_end_game();
+    }
 
     play_game(){
         /* Play the game
@@ -1206,6 +1254,10 @@ class FindParaActivity extends GameCore {
         * A user cannot click 2 times on the same parasite annotation.
         * When all parasite annotations are found, it triggers the end of the game.
         */
+
+        // set the timer :
+        // with 5 seconds for each parasite annotations
+        this.set_timer (this.data.length * 5); // this.data == para anno only
 
         /* The user triggers events by clicking on the konva : */
         var self = this ;
@@ -1293,6 +1345,20 @@ class YesNoActivity extends GameCore {
         this.current_annotation = undefined ;
     }
 
+
+    handle_timeout(){
+        super.handle_timeout();
+        this.errors ++ ;
+
+        // end game because no more annotation left :
+        if (this.data.length == 0 ){
+            this.handle_end_game();
+        }else{ // or play another round :
+            this.current_anno.get_ratio_rect().destroy()
+            this.set_new_round();
+        }
+    }
+
     play_game(){
         /* Play the game
         *
@@ -1335,6 +1401,11 @@ class YesNoActivity extends GameCore {
         // add the ratio annotation as a rect on the anno layer of the view stage
         this.show_annotation(this.current_anno);
         this.ratio_stage.findOne('.anno_layer').draw();
+
+
+        // set the timer with 5 seconds :
+        this.set_timer (5);
+
 
     }
 
