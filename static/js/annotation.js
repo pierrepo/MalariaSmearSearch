@@ -1142,7 +1142,9 @@ class GameCore extends SessionCore {
         *   The number of seconds to wait before executing the handler
         *
         */
+        clearInterval(this.timeoutID);
         this.remaining_time = seconds ;
+        console.log("set remaining time : ", this.remaining_time);
         this.timeoutID = window.setInterval(this.handle_interval, 1 * 1000, this); // every second
 
     }
@@ -1157,7 +1159,7 @@ class GameCore extends SessionCore {
             $('#timer').css('color', 'red');
         }
 
-        $('#timer').html(self.remaining_time); 
+        $('#timer').html(self.remaining_time);
 
         if (self.remaining_time <= 0) {
             console.log('no remaining time !')
