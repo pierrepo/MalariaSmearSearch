@@ -1351,6 +1351,7 @@ class YesNoActivity extends GameCore {
     handle_timeout(){
         super.handle_timeout();
         this.errors ++ ;
+        $('#errors').html(this.errors);
 
         // end game because no more annotation left :
         if (this.data.length == 0 ){
