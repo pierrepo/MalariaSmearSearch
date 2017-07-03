@@ -12,8 +12,8 @@ class Config(object):
     #http://flask-sqlalchemy.pocoo.org/2.1/binds/
     #engine://user:password@host:port/database
     SQLALCHEMY_BINDS = {
-        'users': 'sqlite:///users.db',
-        'data': 'sqlite:///data.db'
+        'users': 'sqlite:///data/users.db',
+        'data': 'sqlite:///data/data.db'
     }
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -23,13 +23,13 @@ class Config(object):
     # paths config :
     TOP_LEVEL_DIR = '.'
 
-    CHUNKS_DEST = TOP_LEVEL_DIR + '/chunks'
+    CHUNKS_DEST = TOP_LEVEL_DIR + '/data/chunks'
 
     #-----
     # configuration of Flask-Uploads
 
     UPLOADS_DEFAULT_DEST = TOP_LEVEL_DIR + '/default_up'
-    UPLOADED_SAMPLES_DEST = TOP_LEVEL_DIR + '/samples'
+    UPLOADED_SAMPLES_DEST = TOP_LEVEL_DIR + '/data/samples'
 
 class ProductionConfig(Config):
     pass

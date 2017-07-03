@@ -10,13 +10,13 @@ run:
 # clean all data and reset database
 reset-all:
 	@echo "clean databases"
-	rm -f data.db users.db
+	rm -f data/data.db data/users.db
 
 	@echo "clean samples"
-	rm -f samples/*.jpg samples/*.jpeg samples/*.png
+	rm -f data/samples/*.jpg data/samples/*.jpeg data/samples/*.png
 
 	@echo "clean chunks"
-	rm -f chunks/*.jpg chunks/*.jpeg chunks/*.png
+	rm -f data/chunks/*.jpg data/chunks/*.jpeg data/chunks/*.png
 
 	@echo "build databases"
 	. ./venv/bin/activate; \
@@ -25,4 +25,4 @@ reset-all:
 
 
 backup-data:
-	tar zcvf data-backup-${DATE}.tgz samples/ chunks/ data.db users.db
+	tar zcvf data-backup-${DATE}.tgz data/samples/ data/chunks/ data/data.db data/users.db
