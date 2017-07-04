@@ -7,17 +7,17 @@ venv/
 *.pyc
 
 # uploaded photos
-samples/*.jpg
-samples/*.jpeg
-samples/*.png
+data/samples/*.jpg
+data/samples/*.jpeg
+data/samples/*.png
 
 # chunks
-chunks/*.jpg
-chunks/*.jpeg
-chunks/*.png
+data/chunks/*.jpg
+data/chunks/*.jpeg
+data/chunks/*.png
 
 # databases
-*.db
+data/*.db
 
 # data backups
 *.tgz

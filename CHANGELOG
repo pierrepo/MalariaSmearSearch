@@ -1,5 +1,8 @@
 **Dev**
 - add timer for games
+- merge JS core files
+- add F. knowlesi parasite
+- mv all data to data/ folder
 
 **1.0.0**
 - completely new JS engine
