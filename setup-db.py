@@ -24,7 +24,7 @@ db.session.add(admin)
 db.session.commit()
 
 
-# put the User in data.db :
+# put the User in data/data.db :
 dat_user = model.User()
 dat_user.username = admin.username
 dat_user.primary_institution = i_up7d
