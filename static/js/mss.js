@@ -43,6 +43,39 @@ var ANNO_DECODER = {
     "ART":"Artefact"
  }
 
+var COLOR = {
+    "PUR":'black',
+    "PUT":'black',
+    "PUS":'black',
+    "PUG":'black',
+    "PUU":'black',
+    "PFR":'black',
+    "PFT":'black',
+    "PFS":'black',
+    "PFG":'black',
+    "PFU":'black',
+    "PMR":'black',
+    "PMT":'black',
+    "PMS":'black',
+    "PMG":'black',
+    "PMU":'black',
+    "POR":'black',
+    "POT":'black',
+    "POS":'black',
+    "POG":'black',
+    "POU":'black',
+    "PVR":'black',
+    "PVT":'black',
+    "PVS":'black',
+    "PVG":'black',
+    "PVU":'black',
+    "RBC":'red',
+    "WBC":'white',
+    "THR":'violet',
+    "ART":'blue'
+}
+
+
 
 var scale_stage_container_id = 'anno-konvajs';
 var ratio_stage_container_id = 'view-konvajs';
@@ -92,7 +125,7 @@ class Annotation {
     *   the ratio between the full image size and its representation in the
     *   view tool.
     */
-    constructor(name, ratio, annotation, x, y, width, height, stroke_color = 'black', stroke_width = 3) {
+    constructor(name, ratio, annotation, x, y, width, height, stroke_color, stroke_width = 3) {
         /* Constructor of annotation object
         *
         * Parameters
@@ -483,7 +516,6 @@ class SessionCore {
             function(fetched_data){
                 Flash.success('Annotations were fetched from the server', 2000);
                 for(var i = 0; i < fetched_data.length; i++) {
-                    fetched_data[i].stroke = 'black';
                     fetched_data[i].strokeWidth = 3;
                     fetched_data[i].name = fetched_data[i].id.toString(); // TODO : Change the code to use id directly.
                     console.log(i, fetched_data[i]);
@@ -670,6 +702,11 @@ class ViewCore extends SessionCore {
         *
         */
         console.log('init view core');
+
+        for(var i = 0; i < fetched_data.length; i++) {
+            fetched_data[i].stroke_color = COLOR[fetched_data[i].annotation]||'black';
+        }
+
         super.init(fetched_data);
         console.log('!!!!!!!!!!!!!!!!!!!!', fetched_data, this.data);
         for(var i = 0; i < this.data.length; i++) {
@@ -1350,6 +1387,29 @@ class YesNoActivity extends GameCore {
         */
         super(ratio_stage_container_id, url_for_img, url_for_data);
         this.current_annotation = undefined ;
+    }
+
+    init(fetched_data){
+        /* The function that is runned once both image AND data are loaded
+        *
+        * The data attribute of the current instance is set as a DatArray built
+        * from the provided fetched data.
+        * All parasite annotations are drawn invisibly on the viw stage.
+        * The game is runned.
+        *
+        * Parameter
+        * ---------
+        * fetched_data : Array
+        *   array of objects containing information on retreived annotations
+        *   (one object per annotation).
+        *
+        */
+        console.log(fetched_data);
+        for(var i = 0; i < fetched_data.length; i++) {
+            fetched_data[i].stroke_color = 'black';
+        }
+        console.log(fetched_data);
+        super.init(fetched_data);
     }
 
 
