@@ -53,8 +53,7 @@ class UploadForm(FlaskForm):
     comment = TextAreaField('Comment', render_kw={"placeholder": "URL, legend, etc...", "rows": 3, "cols": 70})
     license = RadioField('License', choices=[
             ('CC0',  'CC0 / Public Domain: Freeing content globally without restrictions'),
-            ('BY',  'CC-BY: Attribution'),
-            ('BY-SA',  'CC-BY-SA: Attribution + ShareAlike')
+            ('BY',  'CC-BY: Attribution')
             ], validators=[Required()], default='BY' )
     provider = TextAreaField('Provider', render_kw={"rows": 3, "cols": 70}, validators=[Required()])
     magnification =IntegerField ('Microscope magnification factor', widget=NumberInput(), render_kw={"placeholder": "e.g. 100"}, validators=[Optional()], default=None )
