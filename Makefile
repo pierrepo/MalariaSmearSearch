@@ -25,4 +25,4 @@ reset-all:
 
 
 backup-data:
-	tar zcvf data-backup-${DATE}.tgz data/samples/ data/chunks/ data/data.db data/users.db
+	tar zcvf data-backup-${DATE}.tgz data/*
