@@ -73,7 +73,7 @@ class LoginForm(FlaskForm):
     """
     Form for user login.
     """
-    username = TextField('Username', validators=[Required(), Length(min=5, max=80)])
+    username = TextField('Username', validators=[Required(), Length(min=4, max=80)])
     password = PasswordField('Password', validators=[Required()])
     idle_ttl = RadioField('Idle Session Timeout', default='tmp', choices=[
             ('tmp',  '20 minutes'),
