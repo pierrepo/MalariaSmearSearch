@@ -1,6 +1,7 @@
 .PHONY: run reset-all backup-data
 
-DATE=$(shell date +"%Y-%m-%d")
+DATE=$(shell date +"%Y%m%d")
+HOST=$(shell hostname)
 
 # run the web server in the virtual environnement
 run:
@@ -25,4 +26,4 @@ reset-all:
 
 
 backup-data:
-	tar zcvf data-backup-${DATE}.tgz data/*
+	tar zcvf data-backup-${HOST}-${DATE}.tgz data/*
